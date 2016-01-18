@@ -1,0 +1,43 @@
+# Docker compose file for NAP and meetbouten
+
+web:
+  restart: always
+  build: ./web
+  expose:
+    - "8000"
+  links:
+    - postgres:postgres
+  volumes:
+    - /usr/src/app/static
+  env_file: .env
+  command: /usr/local/bin/gunicorn docker_django.wsgi:application -w 2 -b :8000
+  environment:
+      DISCOVERY_MODE: env
+      SECRET_KEY: hmza=$)j(tuainnvk415z*fwj^4#)*+!y20_n+yn1a$%=9yh=o
+
+nginx:
+  restart: always
+  build: ./nginx
+  ports:
+    - "80:80"
+  volumes:
+    - /www/static
+  volumes_from:
+    - web
+  links:
+    - web:web
+
+postgres:
+  restart: always
+  build: ./postgres
+  volumes_from:
+    - data
+  ports:
+    - "5432:5432"
+
+data:
+  restart: always
+  image: postgres:latest
+  volumes:
+    - /var/lib/postgresql
+  command: "true
