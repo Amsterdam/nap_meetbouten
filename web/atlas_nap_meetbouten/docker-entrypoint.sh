@@ -10,4 +10,4 @@ python manage.py collectstatic --noinput
 yes yes | python manage.py migrate --noinput
 
 # run uwsgi
-uwsgi --ini /app/mirigata/docker-uwsgi.ini
+uwsgi --ini /app/atlas_nap_meetbouten/uwsgi.ini
