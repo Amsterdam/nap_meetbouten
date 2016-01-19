@@ -12,8 +12,8 @@ web:
   env_file: .env
   command: /usr/local/bin/gunicorn docker_django.wsgi:application -w 2 -b :8000
   environment:
-      DISCOVERY_MODE: env
-      SECRET_KEY: hmza=$)j(tuainnvk415z*fwj^4#)*+!y20_n+yn1a$%=9yh=o
+    DISCOVERY_MODE: env
+    SECRET_KEY: hoi
 
 nginx:
   restart: always
@@ -37,7 +37,7 @@ postgres:
 
 data:
   restart: always
-  image: postgres:latest
+  build: ./postgres
   volumes:
     - /var/lib/postgresql
-  command: "true
+  command: "true"
