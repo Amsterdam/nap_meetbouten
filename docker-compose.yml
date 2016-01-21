@@ -15,25 +15,13 @@ web:
     DISCOVERY_MODE: env
     SECRET_KEY: hoi
 
-nginx:
-  restart: always
-  build: ./nginx
-  ports:
-    - "80:80"
-  volumes:
-    - /www/static
-  volumes_from:
-    - web
-  links:
-    - web:web
-
 postgres:
   restart: always
   build: ./postgres
   volumes_from:
     - data
   ports:
-    - "5432:5432"
+    - "5433:5433"
 
 data:
   restart: always
