@@ -1,5 +1,11 @@
 # Docker compose file for NAP and meetbouten
 
+postgres:
+  restart: always
+  image: kartoza/postgis
+  ports:
+    - "5434:5432"
+
 web:
   restart: always
   build: ./web
@@ -10,22 +16,7 @@ web:
   volumes:
     - /usr/src/app/static
   env_file: .env
-  command: /app/docker-entrypoint.sh
+  command: /app/atlas_nap_meetbouten/docker-entrypoint.sh
   environment:
     DISCOVERY_MODE: env
     SECRET_KEY: hoi
-
-postgres:
-  restart: always
-  build: ./postgres
-  volumes_from:
-    - data
-  ports:
-    - "5433:5433"
-
-data:
-  restart: always
-  build: ./postgres
-  volumes:
-    - /var/lib/postgresql
-  command: "true"
