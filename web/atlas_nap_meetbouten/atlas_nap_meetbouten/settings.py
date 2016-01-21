@@ -22,7 +22,6 @@ ALLOWED_HOSTS = [
 ] + IP_ADDRESSES
 
 
-
 # Application definition
 
 INSTALLED_APPS = (
@@ -132,3 +131,5 @@ LOGIN_REDIRECT_URL = '/'
 LOGIN_URL = '/login'
 
 INTERNAL_IPS = ['127.0.0.1']
+
+DECIMAL_SEPARATOR = ','
