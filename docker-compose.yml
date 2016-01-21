@@ -9,8 +9,8 @@ postgres:
 web:
   restart: always
   build: ./web
-  expose:
-    - "8000"
+  ports:
+    - "8000:8000"
   links:
     - postgres:postgres
   volumes:

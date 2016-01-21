@@ -7,12 +7,9 @@ WORKDIR /app/atlas_nap_meetbouten
 EXPOSE 8000
 
 RUN apt-get update
-RUN apt-get install -y python3-pip python3-dev libgeos-dev
+RUN apt-get install -y libgeos-dev
 RUN pip install --upgrade pip
 RUN adduser --system datapunt
-
-COPY requirements.txt /app/
-RUN pip install -r /app/requirements.txt
 
 RUN pip install uwsgi
 RUN mkdir /app/static && chown datapunt /app/static
