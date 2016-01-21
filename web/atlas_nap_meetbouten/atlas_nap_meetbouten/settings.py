@@ -12,7 +12,15 @@ IP_ADDRESSES = [i.get('addr', '')
                 for interface in netifaces.interfaces()
                 for i in netifaces.ifaddresses(interface).get(netifaces.AF_INET, [])]
 
-ALLOWED_HOSTS = ['localhost', '192.168.99.100', '.mirigata.com'] + IP_ADDRESSES
+ALLOWED_HOSTS = [
+    '127.0.0.1',
+    'localhost',
+    '.localdomain',
+    '.datalabamsterdam.nl',
+    '.datapunt.amsterdam.nl',
+    '.amsterdam.nl',
+] + IP_ADDRESSES
+
 
 
 # Application definition
@@ -30,6 +38,8 @@ INSTALLED_APPS = (
 
     'datasets.nap',
     'datasets.meetbouten',
+
+    'datapunt_generic',
 )
 
 if DEBUG:
@@ -46,7 +56,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.security.SecurityMiddleware',
 )
 
-ROOT_URLCONF = 'mirigata.urls'
+ROOT_URLCONF = 'atlas_nap_meetbouten.urls'
 
 TEMPLATES = [
     {
