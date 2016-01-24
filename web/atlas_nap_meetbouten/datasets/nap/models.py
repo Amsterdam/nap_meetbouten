@@ -42,7 +42,7 @@ class Peilmerk(mixins.ImportStatusMixin):
     jaar = models.IntegerField()
     merk = models.SmallIntegerField(choices=MERK_CHOICES)
     omschrijving = models.TextField()
-    windrichting = models.CharField(max_length=1)
+    windrichting = models.CharField(max_length=2)
     muurvlak_x = models.IntegerField()
     muurvlak_y = models.IntegerField()
     geometrie = geo.PointField(null=True, srid=28992)

@@ -3,9 +3,10 @@ import os
 import csv
 
 from django.conf import settings
+from django.contrib.gis.geos import GEOSGeometry
 
 from datapunt_generic.batch import batch
-from datapunt_generic.generic import geo, database
+from datapunt_generic.generic import database
 
 from .models import Peilmerk
 
@@ -27,17 +28,40 @@ class ImportNapTask(batch.BasicTask):
 
     def process(self):
         source = os.path.join(self.path, "NAP_PEILMERK.dat")
-        with open(source) as f:
+        with open(source, encoding='cp1252') as f:
             rows = csv.reader(f, delimiter='|', quotechar='$')
             self.peilmerken = [result for result in (self.process_row(row) for row in rows) if result]
 
-        # Peilmerk.objects.bulk_create(self.peilmerken.values(), batch_size=database.BATCH_SIZE)
+        Peilmerk.objects.bulk_create(self.peilmerken, batch_size=database.BATCH_SIZE)
 
     def process_row(self, r):
-        pk = r[0]
+        row = list()
+        for i in range(0, len(r)):
+            val = r[i]
 
-        return pk, Peilmerk(
+            val = val.replace("^10", "\n")
+
+            if val[-2:] == '$$':
+                val = val[0:len(val)-2]
+
+            if val == '$':
+                val = ''
+
+            row.append(val.strip())
+
+        pk = row[0]
+
+        return Peilmerk(
             pk=pk,
+            hoogte=row[1],
+            jaar=int(row[2]),
+            merk=int(row[3]),
+            omschrijving=row[4],
+            windrichting=row[5],
+            muurvlak_x=int(row[6] or 0),
+            muurvlak_y=int(row[7] or 0),
+            rws_nummer=row[8],
+            geometrie=GEOSGeometry(row[9]),
         )
 
 
