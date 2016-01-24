@@ -47,3 +47,5 @@ class Peilmerk(mixins.ImportStatusMixin):
     muurvlak_y = models.IntegerField()
     geometrie = geo.PointField(null=True, srid=28992)
     rws_nummer = models.CharField(max_length=10)
+
+    objects = geo.GeoManager()

@@ -4,6 +4,7 @@ import netifaces
 from datapunt_generic.generic.database import get_docker_host
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+DIVA_DIR = os.path.abspath(os.path.join(BASE_DIR, './', 'diva'))
 
 SECRET_KEY = os.getenv("SECRET_KEY", "default-secret")
 DEBUG = False
@@ -40,8 +41,6 @@ INSTALLED_APPS = (
     'rest_framework',
     'rest_framework_gis',
     'corsheaders',
-
-    'atlas_nap_meetbouten',
 
     'datasets.nap',
     'datasets.meetbouten',
