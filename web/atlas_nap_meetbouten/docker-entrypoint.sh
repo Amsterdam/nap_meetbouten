@@ -5,8 +5,6 @@ set -e
 
 cd /app/atlas_nap_meetbouten
 
-ls -l
-
 # collect static files
 python manage.py collectstatic --noinput
 

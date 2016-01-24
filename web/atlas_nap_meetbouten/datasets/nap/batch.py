@@ -1,14 +1,11 @@
-import datetime
-import hashlib
 import logging
 import os
 import csv
 
-from django import db
 from django.conf import settings
 
 from datapunt_generic.batch import batch
-from datapunt_generic.generic import geo, database, uva2
+from datapunt_generic.generic import geo, database
 
 from .models import Peilmerk
 
@@ -31,10 +28,10 @@ class ImportNapTask(batch.BasicTask):
     def process(self):
         source = os.path.join(self.path, "NAP_PEILMERK.dat")
         with open(source) as f:
-            rows = csv.reader(f, delimiter='|')
+            rows = csv.reader(f, delimiter='|', quotechar='$')
             self.peilmerken = [result for result in (self.process_row(row) for row in rows) if result]
 
-        Peilmerk.objects.bulk_create(self.peilmerken.values(), batch_size=database.BATCH_SIZE)
+        # Peilmerk.objects.bulk_create(self.peilmerken.values(), batch_size=database.BATCH_SIZE)
 
     def process_row(self, r):
         pk = r[0]

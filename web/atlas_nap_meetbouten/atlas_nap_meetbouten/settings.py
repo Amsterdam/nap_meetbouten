@@ -1,7 +1,7 @@
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
 import netifaces
-
+from datapunt_generic.generic.database import get_docker_host
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -32,6 +32,14 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.humanize',
+
+    'django_jenkins',
+    'django_extensions',
+
+    'django.contrib.gis',
+    'rest_framework',
+    'rest_framework_gis',
+    'corsheaders',
 
     'atlas_nap_meetbouten',
 
@@ -82,11 +90,11 @@ WSGI_APPLICATION = 'atlas_nap_meetbouten.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.contrib.gis.db.backends.postgis',
-        'NAME': os.getenv("DB_NAME"),
-        'USER': os.getenv("DB_USER"),
-        'PASSWORD': os.getenv("DB_PASS"),
-        'HOST': os.getenv("DB_SERVICE"),
-        'PORT': os.getenv("DB_PORT"),
+        'NAME': os.getenv('DB_NAME', 'postgres'),
+        'USER': os.getenv('DB_USER', 'docker'),
+        'PASSWORD': os.getenv('DB_PASS', 'docker'),
+        'HOST': os.getenv('DB_SERVICE', get_docker_host()),
+        'PORT': os.getenv('DB_PORT', '5432'),
     }
 }
 
@@ -131,5 +139,3 @@ LOGIN_REDIRECT_URL = '/'
 LOGIN_URL = '/login'
 
 INTERNAL_IPS = ['127.0.0.1']
-
-DECIMAL_SEPARATOR = ','
