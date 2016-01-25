@@ -8,7 +8,7 @@ from geo_views import migrate
 
 class Migration(migrations.Migration):
     dependencies = [
-        ('nap', '0002_auto_20160124_1817')
+        ('nap', '0001_initial')
     ]
 
     operations = [

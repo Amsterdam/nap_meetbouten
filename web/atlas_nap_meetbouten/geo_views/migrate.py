@@ -49,6 +49,3 @@ class ManageView(Operation):
 
     def describe(self):
         return "Create view {}".format(self.view_name)
-
-
-

@@ -8,6 +8,7 @@ from django.contrib.gis.geos import GEOSGeometry
 from datapunt_generic.batch import batch
 from datapunt_generic.generic import database
 
+from datasets.generic.csv import cleanup_row, parse_decimal
 from .models import Peilmerk
 
 log = logging.getLogger(__name__)
@@ -35,29 +36,18 @@ class ImportNapTask(batch.BasicTask):
         Peilmerk.objects.bulk_create(self.peilmerken, batch_size=database.BATCH_SIZE)
 
     def process_row(self, r):
-        row = list()
-        for i in range(0, len(r)):
-            val = r[i]
-
-            # het kenmerk 'omschrijving' bevat karakters chr13 (=carriage return)
-            # en ^10 (=line feed). Deze moeten terug gecodeerd worden.
-            val = val.replace("^10", "\n")
-            val = val.replace("chr13", "\r")
-
-            # the double quotes setting with $ is not working like I would like it to
-            if val[-2:] == '$$':
-                val = val[0:len(val)-2]
-
-            if val == '$':
-                val = ''
-
-            row.append(val.strip())
+        row = cleanup_row(r, replace=True)
 
         pk = row[0]
+        merk = row[3]
+
+        if merk not in Peilmerk.MERK_CHOICES:
+            log.warn("Peilmerk {} references non-existing merk {}; skipping".format(pk, merk))
+            return
 
         return Peilmerk(
             pk=pk,
-            hoogte=row[1],
+            hoogte=parse_decimal(row[1]),
             jaar=int(row[2]),
             merk=int(row[3]),
             omschrijving=row[4],
