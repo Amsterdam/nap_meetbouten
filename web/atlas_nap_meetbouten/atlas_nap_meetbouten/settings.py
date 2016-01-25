@@ -42,11 +42,13 @@ INSTALLED_APPS = (
     'rest_framework_gis',
     'corsheaders',
 
+    'atlas_api',
     'datasets.nap',
     'datasets.meetbouten',
 
     'datapunt_generic.batch',
     'datapunt_generic.generic',
+    'datapunt_generic.health',
 )
 
 if DEBUG:
@@ -139,3 +141,5 @@ LOGIN_REDIRECT_URL = '/'
 LOGIN_URL = '/login'
 
 INTERNAL_IPS = ['127.0.0.1']
+
+HEALTH_MODEL = 'nap.Peilmerk'

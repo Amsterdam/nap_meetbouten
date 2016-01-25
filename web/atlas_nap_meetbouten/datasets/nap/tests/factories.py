@@ -10,10 +10,13 @@ class PeilmerkFactory(factory.DjangoModelFactory):
 
     id = fuzzy.FuzzyText(length=10)
     hoogte = fuzzy.FuzzyText(length=8)
-    jaar = fuzzy.FuzzyDecimal(1)
-    merk = fuzzy.FuzzyChoice(choices=(models.Peilmerk.MERK_CHOICES,))
+    jaar = fuzzy.FuzzyDecimal(low=1985, high=2016)
+    merk = fuzzy.FuzzyChoice(choices=(
+        models.Peilmerk.MERK_0,
+        models.Peilmerk.MERK_1)
+    )
     omschrijving = fuzzy.FuzzyText(length=30)
     windrichting = fuzzy.FuzzyText(length=1)
-    muurvlak_x = fuzzy.FuzzyInteger(1)
-    muurvlak_y = fuzzy.FuzzyInteger(1)
+    muurvlak_x = fuzzy.FuzzyInteger(low=1, high=10)
+    muurvlak_y = fuzzy.FuzzyInteger(low=1, high=10)
     rws_nummer = fuzzy.FuzzyText(length=10)
