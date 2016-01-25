@@ -9,6 +9,9 @@ class BrowseDatasetsTestCase(APITestCase):
     """
     datasets = [
         'nap/peilmerk',
+        'meetbouten/meetbout',
+        'meetbouten/referentiepunt',
+        'meetbouten/rollaag',
     ]
 
     def setUp(self):

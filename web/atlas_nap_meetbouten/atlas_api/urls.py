@@ -2,6 +2,7 @@ from django.conf.urls import url, include
 from rest_framework import routers
 
 from datasets.nap.views import PeilViewSet
+from datasets.meetbouten.views import *
 
 
 class DocumentedRouter(routers.DefaultRouter):
@@ -22,6 +23,11 @@ class DocumentedRouter(routers.DefaultRouter):
 router = DocumentedRouter()
 
 router.register(r'nap/peilmerk', PeilViewSet)
+
+router.register(r'meetbouten/meetbout', MeetboutViewSet)
+router.register(r'meetbouten/meting', MetingViewSet)
+router.register(r'meetbouten/referentiepunt', ReferentiepuntViewSet)
+router.register(r'meetbouten/rollaag', RollaagViewSet)
 
 urlpatterns = [
     url(r'^auth/', include('rest_framework.urls', namespace='rest_framework')),

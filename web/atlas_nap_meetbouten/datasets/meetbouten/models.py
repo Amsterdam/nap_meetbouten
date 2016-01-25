@@ -7,24 +7,6 @@ from datapunt_generic.generic import mixins
 from datasets.nap.models import Peilmerk
 
 
-# $$12281260$$|
-# $$$$|
-# 123258|
-# 485769|
-# 1,1186|
-# 17,6000000000001|
-# $$19941128$$|
-# 5|
-# |
-# $$N$$|
-# $$M$$|
-# $$Oosterpark 51$$|
-# $$$$|
-# 3,58082497212933|
-# $$A$$|
-# $$AN25 $$|
-# 4|
-# POINT (123258.0 485769.0)
 class Meetbout(mixins.ImportStatusMixin):
     STATUS_ACTUEEL = 'A'
     STATUS_VERVALLEN = 'V'
@@ -77,13 +59,6 @@ class Meetbout(mixins.ImportStatusMixin):
     objects = geo.GeoManager()
 
 
-# $$13089003$$|
-# 122586|
-# 485483|
-# 1,4186|
-# $$19940318$$|
-# $$Wibautstraat 87A/93H$$|
-# POINT (122586.0 485483.0)
 class Referentiepunt(mixins.ImportStatusMixin):
     id = models.CharField(max_length=10, primary_key=True)
     locatie_x = models.DecimalField(
@@ -108,23 +83,6 @@ class Referentiepunt(mixins.ImportStatusMixin):
     objects = geo.GeoManager()
 
 
-# 27391|
-# $$19950814$$|
-# $$H$$|
-# ,9201|
-# ,399999999999956|
-# $$13781412$$|
-# $$13789003$$|
-# $$$$|
-# $$$$|
-# ,453416149068315|
-# 1,19999999999998|
-# $$Fugro$$|
-# 6|
-# 553|
-# |
-# $$K$$|
-# $$W$$
 class Meting(mixins.ImportStatusMixin):
     TYPE_NULMETING = 'N'
     TYPE_HERHALINGSMETING = 'H'
@@ -171,11 +129,6 @@ class Meting(mixins.ImportStatusMixin):
     wvi = models.CharField(max_length=50, null=True)
 
 
-# $$AK25$$|
-# 1|
-# 121287|
-# 485235|
-# POINT (121287.0 485245.0)
 class Rollaag(mixins.ImportStatusMixin):
     id = models.IntegerField(primary_key=True)
     meetbout = models.ForeignKey(Meetbout)  # Rollaag aan meetbout koppelen (via bouwbloknummer),
