@@ -4,13 +4,13 @@ postgres:
   restart: always
   image: kartoza/postgis
   ports:
-    - "5434:5432"
+    - "5401:5432"
 
 web:
   restart: always
   build: ./web
   ports:
-    - "8000:8000"
+    - "8100:8000"
   links:
     - postgres:postgres
   volumes:

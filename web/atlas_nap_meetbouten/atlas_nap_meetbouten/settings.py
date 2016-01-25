@@ -96,7 +96,7 @@ DATABASES = {
         'USER': os.getenv('DB_USER', 'docker'),
         'PASSWORD': os.getenv('DB_PASS', 'docker'),
         'HOST': os.getenv('DB_SERVICE', get_docker_host()),
-        'PORT': os.getenv('DB_PORT', '5432'),
+        'PORT': os.getenv('DB_PORT', 5432),
     }
 }
 
