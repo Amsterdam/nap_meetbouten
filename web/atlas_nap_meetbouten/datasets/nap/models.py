@@ -38,7 +38,7 @@ class Peilmerk(mixins.ImportStatusMixin):
     )
 
     id = models.CharField(max_length=10, primary_key=True)
-    hoogte = models.CharField(max_length=10)
+    hoogte = models.DecimalField(decimal_places=4, max_digits=10)
     jaar = models.IntegerField()
     merk = models.SmallIntegerField(choices=MERK_CHOICES)
     omschrijving = models.TextField()
