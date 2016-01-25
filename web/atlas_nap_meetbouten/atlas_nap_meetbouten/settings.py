@@ -45,7 +45,8 @@ INSTALLED_APPS = (
     'datasets.nap',
     'datasets.meetbouten',
 
-    'datapunt_generic',
+    'datapunt_generic.batch',
+    'datapunt_generic.generic',
 )
 
 if DEBUG:
