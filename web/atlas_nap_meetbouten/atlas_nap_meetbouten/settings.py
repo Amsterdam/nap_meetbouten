@@ -42,6 +42,7 @@ INSTALLED_APPS = (
     'rest_framework_gis',
     'corsheaders',
 
+    'geo_views',
     'atlas_api',
     'datasets.nap',
     'datasets.meetbouten',
