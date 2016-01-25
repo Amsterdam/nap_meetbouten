@@ -1,49 +1,29 @@
 from django.core.management import BaseCommand
 
 import datasets.nap.batch
+import datasets.meetbouten.batch
 
 from datapunt_generic.batch import batch
 
 
 class Command(BaseCommand):
-
-    ordered = ['nap']
+    ordered = ['nap', 'meetbouten']
 
     imports = dict(
         nap=[datasets.nap.batch.ImportNapJob],
+        meetbouten=[],
     )
 
     indexes = dict(
         nap=[],
-    )
-
-    backup_indexes = dict(
-        nap=[],
-    )
-
-    restore_indexes = dict(
-        nap=[],
+        meetbouten=[],
     )
 
     def add_arguments(self, parser):
-        parser.add_argument(
-            'dataset',
-            nargs='*',
-            default=self.ordered,
-            help="Dataset to import, choose from {}".format(
-                ', '.join(self.imports.keys())))
-
-        parser.add_argument('--backup-indexes-es',
-                            action='store_true',
-                            dest='backup_indexes_es',
-                            default=False,
-                            help='Backup elsatic search')
-
-        parser.add_argument('--restore-indexes-es',
-                            action='store_true',
-                            dest='restore_indexes_es',
-                            default=False,
-                            help='Restore elsatic search index')
+        parser.add_argument('dataset',
+                            nargs='*',
+                            default=self.ordered,
+                            help="Dataset to import, choose from {}".format(', '.join(self.imports.keys())))
 
         parser.add_argument('--no-import',
                             action='store_false',
@@ -56,10 +36,6 @@ class Command(BaseCommand):
                             dest='run-index',
                             default=True,
                             help='Skip elastic search indexing')
-
-        parser.add_argument('--noinput', '--no-input',
-                            action='store_false', dest='interactive', default=True,
-                            help='Tells Django to NOT prompt the user for input of any kind.')
 
     def handle(self, *args, **options):
         dataset = options['dataset']
@@ -74,7 +50,6 @@ class Command(BaseCommand):
         self.stdout.write("Importing {}".format(", ".join(sets)))
 
         for ds in sets:
-
             if options['run-import']:
                 for job_class in self.imports[ds]:
                     batch.execute(job_class())
