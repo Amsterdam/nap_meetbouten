@@ -102,7 +102,7 @@ class Referentiepunt(mixins.ImportStatusMixin):
     locatie = models.CharField(max_length=255)
     locatie_x = models.IntegerField()
     locatie_y = models.IntegerField()
-    hoogte = models.DecimalField()
+    hoogte = models.DecimalField(decimal_places=4, max_digits=10)
     datum = models.DateField()
     geometrie = geo.PointField(null=True, srid=28992)
     peilmerk = models.ForeignKey(Peilmerk)
