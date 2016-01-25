@@ -142,4 +142,34 @@ LOGIN_URL = '/login'
 
 INTERNAL_IPS = ['127.0.0.1']
 
+REST_FRAMEWORK = dict(
+    PAGE_SIZE=25,
+    DEFAULT_AUTHENTICATION_CLASSES=(
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    ),
+    DEFAULT_PAGINATION_CLASS='drf_hal_json.pagination.HalPageNumberPagination',
+    DEFAULT_PARSER_CLASSES=('drf_hal_json.parsers.JsonHalParser',),
+    DEFAULT_RENDERER_CLASSES=(
+        'drf_hal_json.renderers.JsonHalRenderer',
+        'rest_framework.renderers.JSONRenderer',
+        'rest_framework.renderers.BrowsableAPIRenderer'
+    ),
+    DEFAULT_FILTER_BACKENDS=('rest_framework.filters.DjangoFilterBackend',),
+)
+
+CORS_ORIGIN_REGEX_WHITELIST = (
+    '^(https?://)?localhost(:\d+)?$',
+    '^(https?://)?.*\.datalabamsterdam\.nl$',
+    '^(https?://)?.*\.amsterdam\.nl$',
+)
+
+# Security
+
+SECURE_CONTENT_TYPE_NOSNIFF = True
+SECURE_BROWSER_XSS_FILTER = True
+# CSRF_COOKIE_SECURE = True
+CSRF_COOKIE_HTTPONLY = True
+X_FRAME_OPTIONS = 'DENY'
+
 HEALTH_MODEL = 'nap.Peilmerk'

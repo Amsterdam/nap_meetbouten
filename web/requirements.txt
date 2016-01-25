@@ -1,10 +1,10 @@
-Django==1.8.5
+Django==1.9.1
 Markdown==2.6.2
 coverage==4.0
 django-braces==1.8.1
 django-cors-headers==1.1.0
 django-debug-toolbar==1.4
-django-extensions==1.5.7
+django-extensions==1.6.1
 django-filter==0.11.0
 django-jenkins==0.18.1
 django-shotgun==0.2
@@ -24,4 +24,4 @@ requests==2.7.0
 six==1.9.0
 sphinx-me==0.3
 netifaces==0.10.4
-datapunt-generic==1.2.3
+datapunt-generic==1.2.4
