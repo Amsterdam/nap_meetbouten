@@ -31,5 +31,4 @@ def parse_decimal(d):
     try:
         return Decimal(d.replace(',', '.'))
     except InvalidOperation:
-        print('unable to convert %s' % d)
-        return 0
+        return Decimal()

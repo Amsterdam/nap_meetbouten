@@ -70,6 +70,43 @@ class ImportMeetboutenTask(batch.BasicTask):
         )
 
 
+class ImportReferentiepuntenTask(batch.BasicTask):
+    name = "Import Referentiepunten"
+    referentiepunten = dict()
+
+    def __init__(self, path):
+        self.path = path
+
+    def before(self):
+        database.clear_models(models.Referentiepunt)
+
+    def after(self):
+        pass
+
+    def process(self):
+        source = os.path.join(self.path, "MBT_REFERENTIEPUNT.dat")
+        with open(source, encoding='cp1252') as f:
+            rows = csv.reader(f, delimiter='|', quotechar='$', doublequote=True)
+            self.referentiepunten = [result for result in (self.process_row(row) for row in rows) if result]
+
+        models.Referentiepunt.objects.bulk_create(self.referentiepunten, batch_size=database.BATCH_SIZE)
+
+    def process_row(self, r):
+        row = cleanup_row(r, replace=True)
+
+        pk = row[0]
+
+        return models.Referentiepunt(
+            pk=pk,
+            locatie_x=parse_decimal(row[1]),
+            locatie_y=parse_decimal(row[2]),
+            hoogte_nap=parse_decimal(row[3]),
+            datum=uva_datum(row[4]),
+            locatie=row[5],
+            geometrie=GEOSGeometry(row[6]),
+        )
+
+
 class ImportMeetboutenJob(object):
     name = "Import meetbouten"
 
@@ -82,5 +119,6 @@ class ImportMeetboutenJob(object):
 
     def tasks(self):
         return [
-            ImportMeetboutenTask(self.meetbouten)
+            ImportMeetboutenTask(self.meetbouten),
+            ImportReferentiepuntenTask(self.meetbouten),
         ]
