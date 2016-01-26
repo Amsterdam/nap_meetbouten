@@ -162,3 +162,9 @@ CSRF_COOKIE_HTTPONLY = True
 X_FRAME_OPTIONS = 'DENY'
 
 HEALTH_MODEL = 'nap.Peilmerk'
+
+NAP_DECIMAL_PLACES = 4
+NAP_MAX_DIGITS = 7  # if this is not enough, we have bigger problems
+
+ZAKKING_DECIMAL_PLACES = 13
+ZAKKING_MAX_DIGITS = 20

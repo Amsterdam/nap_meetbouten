@@ -7,11 +7,11 @@ def cleanup_row(csv_row, replace=False):
     for i in range(0, len(csv_row)):
         val = csv_row[i]
 
-        # het kenmerk 'omschrijving' bevat karakters chr13 (=carriage return)
-        # en ^10 (=line feed). Deze moeten terug gecodeerd worden.
+        # replace(replace(replace(:BOUT_NR,'^10',chr(10)),'^13',chr(13)),'^36',chr(36))
         if replace:
-            val = val.replace("^10", "\n")
-            val = val.replace("chr13", "\r")
+            val = val.replace("^10", chr(10))
+            val = val.replace("chr13", chr(13)).val.replace("^13", chr(13))
+            val = val.replace("^36", chr(36))
 
         # the double quotes setting with $ is not working like I would like it to
         if val[-2:] == '$$':

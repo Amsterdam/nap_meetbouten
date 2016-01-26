@@ -1,4 +1,5 @@
 from django.db import models
+from django.conf import settings
 from django.contrib.gis.db import models as geo
 
 from datapunt_generic.generic import mixins
@@ -34,17 +35,36 @@ class Meetbout(mixins.ImportStatusMixin):
     )
 
     id = models.CharField(max_length=10, primary_key=True)
-    locatie_x = models.IntegerField()
-    locatie_y = models.IntegerField()
-    locatie = models.TextField()
-    bouwblokzijde = models.CharField(max_length=10)
-    blokeenheid = models.CharField(max_length=10)
-    status = models.CharField(max_length=1, choices=STATUS_CHOICES)
+    buurt = models.CharField(max_length=50, null=True)
+    locatie_x = models.IntegerField(null=True)
+    locatie_y = models.IntegerField(null=True)
+    hoogte_nap = models.DecimalField(
+            max_digits=settings.NAP_MAX_DIGITS,
+            decimal_places=settings.NAP_DECIMAL_PLACES,
+            null=True
+    )
+    zakking_cumulatief = models.DecimalField(
+            max_digits=settings.ZAKKING_MAX_DIGITS,
+            decimal_places=settings.ZAKKING_DECIMAL_PLACES,
+            null=True
+    )
+    datum = models.DateField(null=True)
+    bouwblokzijde = models.CharField(max_length=10, null=True)
+    eigenaar = models.CharField(max_length=50, null=True)
     beveiligd = models.BooleanField(default=False)
-    eigenaar = models.CharField(max_length=100)
-    nabij_adres = models.CharField(max_length=255)
-    bouwbloknummer = models.CharField(max_length=4)
-    stadsdeel_code = models.CharField(max_length=3)
+    deelraad = models.CharField(max_length=50, null=True)
+    nabij_adres = models.CharField(max_length=255, null=True)
+    locatie = models.CharField(max_length=50, null=True)
+    zakkingssnelheid = models.DecimalField(
+            max_digits=settings.ZAKKING_MAX_DIGITS,
+            decimal_places=settings.ZAKKING_DECIMAL_PLACES,
+            null=True
+    )
+    status = models.CharField(max_length=1, choices=STATUS_CHOICES, null=True)
+    bouwbloknummer = models.CharField(max_length=4, null=True)
+    blokeenheid = models.SmallIntegerField(null=True)
+
+    stadsdeel_code = models.CharField(max_length=3, null=True)
 
 
 # 27391|
@@ -81,10 +101,22 @@ class Meting(mixins.ImportStatusMixin):
     type = models.CharField(max_length=1, choices=TYPE_CHOICES)
     datum = models.DateField()
     dagen_vorige_meting = models.IntegerField(default=0)
-    hoogte = models.DecimalField(decimal_places=4, max_digits=10)
+    hoogte_nap = models.DecimalField(
+            max_digits=settings.NAP_MAX_DIGITS,
+            decimal_places=settings.NAP_DECIMAL_PLACES,
+            null=True
+    )
     zakking = models.IntegerField()
-    zakkingssnelheid = models.DecimalField(decimal_places=5, max_digits=10)
-    zakking_cumulatief = models.IntegerField()
+    zakkingssnelheid = models.DecimalField(
+            max_digits=settings.ZAKKING_MAX_DIGITS,
+            decimal_places=settings.ZAKKING_DECIMAL_PLACES,
+            null=True
+    )
+    zakking_cumulatief = models.DecimalField(
+            max_digits=settings.ZAKKING_MAX_DIGITS,
+            decimal_places=settings.ZAKKING_DECIMAL_PLACES,
+            null=True
+    )
     ingewonnen = models.CharField(max_length=10)
     meetbout = models.ForeignKey(Meetbout)
     refereert_aan = models.ForeignKey('Referentiepunt')
@@ -102,7 +134,11 @@ class Referentiepunt(mixins.ImportStatusMixin):
     locatie = models.CharField(max_length=255)
     locatie_x = models.IntegerField()
     locatie_y = models.IntegerField()
-    hoogte = models.DecimalField(decimal_places=4, max_digits=10)
+    hoogte_nap = models.DecimalField(
+            max_digits=settings.NAP_MAX_DIGITS,
+            decimal_places=settings.NAP_DECIMAL_PLACES,
+            null=True
+    )
     datum = models.DateField()
     geometrie = geo.PointField(null=True, srid=28992)
     peilmerk = models.ForeignKey(Peilmerk)
