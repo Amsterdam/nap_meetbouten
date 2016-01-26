@@ -1,22 +1,18 @@
-# Docker compose file for NAP and meetbouten
-
-postgres:
-  restart: always
-  image: kartoza/postgis
+database:
+  image: admin.datapunt.amsterdam.nl:5000/atlas/postgres
   ports:
     - "5401:5432"
+  environment:
+    POSTGRES_PASSWORD: insecure
+
 
 web:
-  restart: always
   build: ./web
   ports:
     - "8100:8000"
   links:
-    - postgres:postgres
-  volumes:
-    - /usr/src/app/static
-  env_file: .env
-  command: /app/atlas_nap_meetbouten/docker-entrypoint.sh
+    - database:database
   environment:
-    DISCOVERY_MODE: env
     SECRET_KEY: hoi
+    DB_NAME: postgres
+    DB_PASSWORD: insecure
