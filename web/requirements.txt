@@ -24,4 +24,3 @@ requests==2.7.0
 six==1.9.0
 sphinx-me==0.3
 netifaces==0.10.4
-datapunt-generic==1.1.5

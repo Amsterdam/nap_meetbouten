@@ -47,6 +47,7 @@ INSTALLED_APPS = (
 
     'datapunt_generic.batch',
     'datapunt_generic.generic',
+    'datapunt_generic.health',
 )
 
 if DEBUG:
