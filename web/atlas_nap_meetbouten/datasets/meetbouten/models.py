@@ -83,7 +83,7 @@ class Meting(mixins.ImportStatusMixin):
     dagen_vorige_meting = models.IntegerField(default=0)
     hoogte = models.DecimalField(decimal_places=4, max_digits=10)
     zakking = models.IntegerField()
-    zakkingssnelheid = models.DecimalField()
+    zakkingssnelheid = models.DecimalField(decimal_places=5, max_digits=10)
     zakking_cumulatief = models.IntegerField()
     ingewonnen = models.CharField(max_length=10)
     meetbout = models.ForeignKey(Meetbout)
