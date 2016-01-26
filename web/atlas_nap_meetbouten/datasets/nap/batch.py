@@ -47,6 +47,7 @@ class ImportNapTask(batch.BasicTask):
             log.warn("Peilmerk {} references non-existing merk {}; skipping".format(pk, merk))
             return
 
+        # PEILMERKNR,HOOGTE,JAAR,MERK,OMSCHRIJVING,WINDRICHTING,X_MUURVLAK,Y_MUURVLAK,RWSNR,GEOMETRIE
         return Peilmerk(
             pk=pk,
             hoogte=parse_decimal(row[1]),
