@@ -1,4 +1,4 @@
-from decimal import Decimal
+from decimal import Decimal, InvalidOperation
 
 
 # cleanup row as returned from csv parser
@@ -10,7 +10,7 @@ def cleanup_row(csv_row, replace=False):
         # replace(replace(replace(:BOUT_NR,'^10',chr(10)),'^13',chr(13)),'^36',chr(36))
         if replace:
             val = val.replace("^10", chr(10))
-            val = val.replace("chr13", chr(13)).val.replace("^13", chr(13))
+            val = val.replace("chr13", chr(13)).replace("^13", chr(13))
             val = val.replace("^36", chr(36))
 
         # the double quotes setting with $ is not working like I would like it to
@@ -26,4 +26,10 @@ def cleanup_row(csv_row, replace=False):
 
 
 def parse_decimal(d):
-    return Decimal(d.replace(',', '.'))
+    d = '0' if d == '' else d
+
+    try:
+        return Decimal(d.replace(',', '.'))
+    except InvalidOperation:
+        print('unable to convert %s' % d)
+        return 0

@@ -8,7 +8,7 @@ from django.contrib.gis.geos import GEOSGeometry
 from datapunt_generic.batch import batch
 from datapunt_generic.generic import database
 
-from datasets.generic.csv import cleanup_row, parse_decimal
+from datapunt_generic.generic.csv import cleanup_row, parse_decimal
 from .models import Peilmerk
 
 log = logging.getLogger(__name__)
@@ -17,11 +17,13 @@ log = logging.getLogger(__name__)
 class ImportNapTask(batch.BasicTask):
     name = "Import NAP"
     peilmerken = dict()
+    merk_choices = dict()
 
     def __init__(self, path):
         self.path = path
 
     def before(self):
+        self.merk_choices = dict(Peilmerk.MERK_CHOICES)
         database.clear_models(Peilmerk)
 
     def after(self):
@@ -41,9 +43,9 @@ class ImportNapTask(batch.BasicTask):
         pk = row[0]
         merk = row[3]
 
-        # if merk not in Peilmerk.MERK_CHOICES:
-        #     log.warn("Peilmerk {} references non-existing merk {}; skipping".format(pk, merk))
-        #     return
+        if merk not in self.merk_choices:
+            log.warn("Peilmerk {} references non-existing merk {}; skipping".format(pk, merk))
+            return
 
         return Peilmerk(
             pk=pk,

@@ -36,8 +36,16 @@ class Meetbout(mixins.ImportStatusMixin):
 
     id = models.CharField(max_length=10, primary_key=True)
     buurt = models.CharField(max_length=50, null=True)
-    locatie_x = models.IntegerField(null=True)
-    locatie_y = models.IntegerField(null=True)
+    locatie_x = models.DecimalField(
+            max_digits=10,
+            decimal_places=2,
+            null=True
+    )
+    locatie_y = models.DecimalField(
+            max_digits=10,
+            decimal_places=2,
+            null=True
+    )
     hoogte_nap = models.DecimalField(
             max_digits=settings.NAP_MAX_DIGITS,
             decimal_places=settings.NAP_DECIMAL_PLACES,
@@ -64,7 +72,40 @@ class Meetbout(mixins.ImportStatusMixin):
     bouwbloknummer = models.CharField(max_length=4, null=True)
     blokeenheid = models.SmallIntegerField(null=True)
 
-    stadsdeel_code = models.CharField(max_length=3, null=True)
+    geometrie = geo.PointField(null=True, srid=28992)
+
+    objects = geo.GeoManager()
+
+
+# $$13089003$$|
+# 122586|
+# 485483|
+# 1,4186|
+# $$19940318$$|
+# $$Wibautstraat 87A/93H$$|
+# POINT (122586.0 485483.0)
+class Referentiepunt(mixins.ImportStatusMixin):
+    id = models.CharField(max_length=10, primary_key=True)
+    locatie_x = models.DecimalField(
+            max_digits=10,
+            decimal_places=2,
+            null=True
+    )
+    locatie_y = models.DecimalField(
+            max_digits=10,
+            decimal_places=2,
+            null=True
+    )
+    hoogte_nap = models.DecimalField(
+            max_digits=settings.NAP_MAX_DIGITS,
+            decimal_places=settings.NAP_DECIMAL_PLACES,
+            null=True
+    )
+    datum = models.DateField(null=True)
+    locatie = models.CharField(max_length=255, null=True)
+    geometrie = geo.PointField(null=True, srid=28992)
+
+    objects = geo.GeoManager()
 
 
 # 27391|
@@ -98,15 +139,20 @@ class Meting(mixins.ImportStatusMixin):
     )
 
     id = models.CharField(max_length=10, primary_key=True)
-    type = models.CharField(max_length=1, choices=TYPE_CHOICES)
-    datum = models.DateField()
-    dagen_vorige_meting = models.IntegerField(default=0)
+    datum = models.DateField(null=True)
+    type = models.CharField(max_length=1, choices=TYPE_CHOICES, null=True)
     hoogte_nap = models.DecimalField(
             max_digits=settings.NAP_MAX_DIGITS,
             decimal_places=settings.NAP_DECIMAL_PLACES,
             null=True
     )
-    zakking = models.IntegerField()
+    zakking = models.DecimalField(
+            max_digits=settings.ZAKKING_MAX_DIGITS,
+            decimal_places=settings.ZAKKING_DECIMAL_PLACES,
+            null=True
+    )
+    meetbout = models.ForeignKey(Meetbout)
+    refereert_aan = models.ManyToManyField(Referentiepunt)
     zakkingssnelheid = models.DecimalField(
             max_digits=settings.ZAKKING_MAX_DIGITS,
             decimal_places=settings.ZAKKING_DECIMAL_PLACES,
@@ -117,33 +163,12 @@ class Meting(mixins.ImportStatusMixin):
             decimal_places=settings.ZAKKING_DECIMAL_PLACES,
             null=True
     )
-    ingewonnen = models.CharField(max_length=10)
-    meetbout = models.ForeignKey(Meetbout)
-    refereert_aan = models.ForeignKey('Referentiepunt')
-    gemeten_door = models.CharField(max_length=50)
-
-
-# $$13089003$$|
-# 122586|
-# 485483|
-# 1,4186|
-# $$19940318$$|
-# $$Wibautstraat 87A/93H$$|
-# POINT (122586.0 485483.0)
-class Referentiepunt(mixins.ImportStatusMixin):
-    locatie = models.CharField(max_length=255)
-    locatie_x = models.IntegerField()
-    locatie_y = models.IntegerField()
-    hoogte_nap = models.DecimalField(
-            max_digits=settings.NAP_MAX_DIGITS,
-            decimal_places=settings.NAP_DECIMAL_PLACES,
-            null=True
-    )
-    datum = models.DateField()
-    geometrie = geo.PointField(null=True, srid=28992)
-    peilmerk = models.ForeignKey(Peilmerk)
-
-    objects = geo.GeoManager()
+    ploeg = models.CharField(max_length=50)
+    type_int = models.SmallIntegerField(null=True)
+    dagen_vorige_meting = models.IntegerField(default=0)
+    pandmsl = models.CharField(max_length=50, null=True)
+    deelraad = models.CharField(max_length=50, null=True)
+    wvi = models.CharField(max_length=50, null=True)
 
 
 # $$AK25$$|
@@ -153,7 +178,17 @@ class Referentiepunt(mixins.ImportStatusMixin):
 # POINT (121287.0 485245.0)
 class Rollaag(mixins.ImportStatusMixin):
     id = models.IntegerField(primary_key=True)
-    meetbout = models.ForeignKey(Meetbout)
+    meetbout = models.ForeignKey(Meetbout)  # Rollaag aan meetbout koppelen (via bouwbloknummer),
+    locatie_x = models.DecimalField(
+            max_digits=10,
+            decimal_places=2,
+            null=True
+    )
+    locatie_y = models.DecimalField(
+            max_digits=10,
+            decimal_places=2,
+            null=True
+    )
     geometrie = geo.PointField(null=True, srid=28992)
 
     objects = geo.GeoManager()
