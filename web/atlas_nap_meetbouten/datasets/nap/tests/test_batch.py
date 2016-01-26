@@ -12,7 +12,7 @@ class ImportNapTest(TaskTestCase):
         self.run_task()
 
         imported = models.Peilmerk.objects.all()
-        self.assertEqual(len(imported), 957)
+        self.assertEqual(len(imported), 639)
 
         a = models.Peilmerk.objects.get(pk='10480009')
         self.assertEqual(a.omschrijving, 'Spuistraat 94')

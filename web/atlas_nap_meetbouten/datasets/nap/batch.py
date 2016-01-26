@@ -41,9 +41,9 @@ class ImportNapTask(batch.BasicTask):
         pk = row[0]
         merk = row[3]
 
-        if merk not in Peilmerk.MERK_CHOICES:
-            log.warn("Peilmerk {} references non-existing merk {}; skipping".format(pk, merk))
-            return
+        # if merk not in Peilmerk.MERK_CHOICES:
+        #     log.warn("Peilmerk {} references non-existing merk {}; skipping".format(pk, merk))
+        #     return
 
         return Peilmerk(
             pk=pk,

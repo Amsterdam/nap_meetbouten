@@ -9,7 +9,6 @@ class PeilmerkFactory(factory.DjangoModelFactory):
         model = models.Peilmerk
 
     id = fuzzy.FuzzyText(length=10)
-    hoogte = fuzzy.FuzzyText(length=8)
     jaar = fuzzy.FuzzyDecimal(low=1985, high=2016)
     merk = fuzzy.FuzzyChoice(choices=(
         models.Peilmerk.MERK_0,
