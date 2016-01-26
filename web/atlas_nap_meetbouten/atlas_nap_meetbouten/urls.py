@@ -6,7 +6,7 @@ from django.contrib import admin
 import datapunt_generic.batch.views as b_views
 
 urlpatterns = [
-    url(r'^api/', include('atlas_api.urls'), name="homepage"),
+    url(r'^metingen/', include('atlas_api.urls'), name="homepage"),
     url(r'^jobs/?$', b_views.JobListView.as_view(), name='job-list'),
     url(r'^jobs/(?P<pk>.*)$', b_views.JobDetailView.as_view(), name='job-detail'),
     url(r'^admin/', include(admin.site.urls)),
