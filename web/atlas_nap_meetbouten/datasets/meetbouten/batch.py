@@ -16,7 +16,7 @@ log = logging.getLogger(__name__)
 
 
 class ImportMeetboutenTask(batch.BasicTask):
-    name = "Import Meetbouten"
+    name = "Import MBT_MEETBOUT"
     meetbouten = dict()
     status_choices = dict()
 
@@ -34,9 +34,9 @@ class ImportMeetboutenTask(batch.BasicTask):
         source = os.path.join(self.path, "MBT_MEETBOUT.dat")
         with open(source, encoding='cp1252') as f:
             rows = csv.reader(f, delimiter='|', quotechar='$', doublequote=True)
-            self.meetbouten = [result for result in (self.process_row(row) for row in rows) if result]
+            meetbouten = [result for result in (self.process_row(row) for row in rows) if result]
 
-        models.Meetbout.objects.bulk_create(self.meetbouten, batch_size=database.BATCH_SIZE)
+        models.Meetbout.objects.bulk_create(meetbouten, batch_size=database.BATCH_SIZE)
 
     def process_row(self, r):
         row = cleanup_row(r, replace=True)
@@ -71,7 +71,7 @@ class ImportMeetboutenTask(batch.BasicTask):
 
 
 class ImportReferentiepuntenTask(batch.BasicTask):
-    name = "Import Referentiepunten"
+    name = "Import MBT_REFERENTIEPUNT"
     referentiepunten = dict()
 
     def __init__(self, path):
@@ -87,9 +87,9 @@ class ImportReferentiepuntenTask(batch.BasicTask):
         source = os.path.join(self.path, "MBT_REFERENTIEPUNT.dat")
         with open(source, encoding='cp1252') as f:
             rows = csv.reader(f, delimiter='|', quotechar='$', doublequote=True)
-            self.referentiepunten = [result for result in (self.process_row(row) for row in rows) if result]
+            referentiepunten = [result for result in (self.process_row(row) for row in rows) if result]
 
-        models.Referentiepunt.objects.bulk_create(self.referentiepunten, batch_size=database.BATCH_SIZE)
+        models.Referentiepunt.objects.bulk_create(referentiepunten, batch_size=database.BATCH_SIZE)
 
     def process_row(self, r):
         row = cleanup_row(r, replace=True)
@@ -107,6 +107,66 @@ class ImportReferentiepuntenTask(batch.BasicTask):
         )
 
 
+class ImportMetingTask(batch.BasicTask):
+    name = "Import MBT_METING"
+    type_choices = dict()
+    meetbouten = set()
+    referentiepunten = list()
+
+    def __init__(self, path):
+        self.path = path
+
+    def before(self):
+        self.type_choices = dict(models.Meting.TYPE_CHOICES)
+        self.meetbouten = set(models.Meetbout.objects.values_list("pk", flat=True))
+        self.referentiepunten = set(models.Referentiepunt.objects.values_list("pk", flat=True))
+        database.clear_models(models.Meetbout)
+
+    def after(self):
+        self.referentiepunten.clear()
+
+    def process(self):
+        source = os.path.join(self.path, "MBT_METING.dat")
+        with open(source, encoding='cp1252') as f:
+            rows = csv.reader(f, delimiter='|', quotechar='$', doublequote=True)
+            metingen = [result for result in (self.process_row(row) for row in rows) if result]
+
+        models.Meetbout.objects.bulk_create(metingen, batch_size=database.BATCH_SIZE)
+
+    def process_row(self, r):
+        row = cleanup_row(r, replace=True)
+
+        pk = row[0]
+        meting_type = row[2]
+
+        if meting_type not in self.type_choices:
+            log.warn("Meting {} references non-existing type {}; skipping".format(pk, meting_type))
+            return
+
+        meetbout_id = row[5]
+        if meetbout_id not in self.meetbouten:
+            log.warn("Meting {} references non-existing meetbout {}; skipping".format(pk, meetbout_id))
+            return
+
+        meting = models.Meting(
+            pk=pk,
+            datum=uva_datum(row[1]),
+            type=meting_type,
+            hoogte_nap=parse_decimal(row[3]),
+            zakking=parse_decimal(row[4]),
+            meetbout_id=meetbout_id,
+            zakkingssnelheid=parse_decimal(row[9]),
+            zakking_cumulatief=parse_decimal(row[10]),
+            ploeg=row[11],
+            type_int=int(row[12]) if row[12] else None,
+            dagen_vorige_meting=int(row[13]) if row[13] else None,
+            pandmsl=row[14],
+            deelraad=row[15],
+            wvi=row[16],
+        )
+        meting.save()
+
+
 class ImportMeetboutenJob(object):
     name = "Import meetbouten"
 
@@ -121,4 +181,6 @@ class ImportMeetboutenJob(object):
         return [
             ImportMeetboutenTask(self.meetbouten),
             ImportReferentiepuntenTask(self.meetbouten),
+            ImportMetingTask(self.meetbouten),
         ]
+

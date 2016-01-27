@@ -110,7 +110,9 @@ class Meting(mixins.ImportStatusMixin):
             null=True
     )
     meetbout = models.ForeignKey(Meetbout)
-    refereert_aan = models.ManyToManyField(Referentiepunt)
+    refereert_aan = models.ManyToManyField(
+            Referentiepunt
+    )
     zakkingssnelheid = models.DecimalField(
             max_digits=settings.ZAKKING_MAX_DIGITS,
             decimal_places=settings.ZAKKING_DECIMAL_PLACES,
@@ -127,6 +129,15 @@ class Meting(mixins.ImportStatusMixin):
     pandmsl = models.CharField(max_length=50, null=True)
     deelraad = models.CharField(max_length=50, null=True)
     wvi = models.CharField(max_length=50, null=True)
+
+
+class ReferentiepuntMeting(mixins.ImportStatusMixin):
+    id = models.CharField(max_length=30, primary_key=True)
+    referentiepunt = models.ForeignKey(Referentiepunt)
+    meting = models.ForeignKey(Meting)
+
+    def __str__(self):
+        return "{}-{}-{}".format(self.id, self.referentiepunt_id, self.meting_id)
 
 
 class Rollaag(mixins.ImportStatusMixin):
