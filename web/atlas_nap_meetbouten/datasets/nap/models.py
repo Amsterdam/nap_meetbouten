@@ -21,20 +21,20 @@ class Peilmerk(mixins.ImportStatusMixin):
     MERK_99 = 99
 
     MERK_CHOICES = (
-        (MERK_0, "ronde bout met opschrift NAP"),
-        (MERK_1, "ronde bout (aan de bovenzijde) zonder opschrift of met opschrift anders dan NAP"),
-        (MERK_2, "kleine ronde bout"),
-        (MERK_3, "knopbout"),
-        (MERK_4, "vierkante bout met of zonder groeven"),
-        (MERK_5, "kleine ronde kruisbout"),
-        (MERK_7, "bijzondere merktekens, bijvoorbeeld zeskantige bout, stalen pen, enz."),
-        (MERK_13, "kopbout"),
-        (MERK_14, "inbusbout (cilinderschroef met binnen zeskant) in slaganker M6"),
-        (MERK_15, "koperen hakkelbout"),
-        (MERK_16, "koperen bout"),
-        (MERK_17, "RVS-bout"),
-        (MERK_18, "koperen bout met 3 Andreas kruizen"),
-        (MERK_99, "onbekend"),
+        (MERK_0, "ronde bout met opschrift NAP (0)"),
+        (MERK_1, "ronde bout (aan de bovenzijde) zonder opschrift of met opschrift anders dan NAP (1)"),
+        (MERK_2, "kleine ronde bout (2)"),
+        (MERK_3, "knopbout (3)"),
+        (MERK_4, "vierkante bout met of zonder groeven (4)"),
+        (MERK_5, "kleine ronde kruisbout (5)"),
+        (MERK_7, "bijzondere merktekens, bijvoorbeeld zeskantige bout, stalen pen, enz. (7)"),
+        (MERK_13, "kopbout (13)"),
+        (MERK_14, "inbusbout (cilinderschroef met binnen zeskant) in slaganker M6 (14)"),
+        (MERK_15, "koperen hakkelbout (15)"),
+        (MERK_16, "koperen bout (16)"),
+        (MERK_17, "RVS-bout (17)"),
+        (MERK_18, "koperen bout met 3 Andreas kruizen (18)"),
+        (MERK_99, "onbekend (99)"),
     )
 
     id = models.CharField(max_length=10, primary_key=True)
@@ -49,3 +49,6 @@ class Peilmerk(mixins.ImportStatusMixin):
     rws_nummer = models.CharField(max_length=10, null=True)
 
     objects = geo.GeoManager()
+
+    def __str__(self):
+        return "{} {}".format(self.id)
