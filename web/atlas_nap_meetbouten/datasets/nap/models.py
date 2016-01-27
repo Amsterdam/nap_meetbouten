@@ -51,4 +51,4 @@ class Peilmerk(mixins.ImportStatusMixin):
     objects = geo.GeoManager()
 
     def __str__(self):
-        return "{} {}".format(self.id)
+        return "{} {}".format(self.id, self.omschrijving)

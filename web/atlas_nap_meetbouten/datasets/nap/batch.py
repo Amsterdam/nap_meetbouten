@@ -41,7 +41,7 @@ class ImportNapTask(batch.BasicTask):
         row = cleanup_row(r, replace=True)
 
         pk = row[0]
-        merk = row[3]
+        merk = int(row[3])
 
         if merk not in self.merk_choices:
             log.warn("Peilmerk {} references non-existing merk {}; skipping".format(pk, merk))

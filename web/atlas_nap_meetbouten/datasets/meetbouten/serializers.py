@@ -66,16 +66,23 @@ class MeetboutDetail(MeetboutenMixin, rest.HALSerializer):
             '_display',
 
             'id',
+            'buurt',
             'locatie_x',
             'locatie_y',
+            'hoogte_nap',
+            'zakking_cumulatief',
+            'datum',
             'bouwblokzijde',
-            'blokeenheid',
-            'status',
-            'beveiligd',
             'eigenaar',
+            'beveiligd',
+            'deelraad',
             'nabij_adres',
+            'locatie',
+            'zakkingssnelheid',
+            'status',
             'bouwbloknummer',
-            'stadsdeel_code',
+            'blokeenheid',
+            'geometrie',
         )
 
 
