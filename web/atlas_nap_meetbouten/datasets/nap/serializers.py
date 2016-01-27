@@ -1,3 +1,5 @@
+from rest_framework import serializers
+
 from datapunt_generic.generic import rest
 from . import models
 
@@ -19,6 +21,7 @@ class Peilmerk(NapMixin, rest.HALSerializer):
 
 
 class PeilmerkDetail(NapMixin, rest.HALSerializer):
+    merk = serializers.CharField(source='get_merk_display')
     _display = rest.DisplayField()
 
     class Meta:
