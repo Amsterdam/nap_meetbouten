@@ -133,6 +133,7 @@ INTERNAL_IPS = ['127.0.0.1']
 
 REST_FRAMEWORK = dict(
     PAGE_SIZE=25,
+    MAX_PAGINATE_BY=100,
     DEFAULT_AUTHENTICATION_CLASSES=(
         'rest_framework.authentication.BasicAuthentication',
         'rest_framework.authentication.SessionAuthentication',
@@ -145,6 +146,7 @@ REST_FRAMEWORK = dict(
         'rest_framework.renderers.BrowsableAPIRenderer'
     ),
     DEFAULT_FILTER_BACKENDS=('rest_framework.filters.DjangoFilterBackend',),
+    COERCE_DECIMAL_TO_STRING=False,
 )
 
 CORS_ORIGIN_REGEX_WHITELIST = (
