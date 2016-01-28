@@ -1,13 +1,22 @@
-FROM python:3.5-onbuild
+FROM python:3.5
+MAINTAINER datapunt@amsterdam.nl
 
 ENV PYTHONUNBUFFERED 1
 
-MAINTAINER datapunt@amsterdam.nl
+EXPOSE 8000
 
-RUN apt-get update
+RUN apt-get update && \
+	apt-get install -y libgeos-dev && \
+	adduser --system datapunt && \
+	mkdir -p /static && \
+	chown datapunt /static && \
+	pip install uwsgi
 
-RUN apt-get install -y python3-pip python3-dev
+WORKDIR /app
+COPY requirements.txt /app/
+RUN pip install --no-cache-dir -r requirements.txt
 
+USER datapunt
 COPY atlas_nap_meetbouten /app/
-
 CMD /app/docker-entrypoint.sh
+

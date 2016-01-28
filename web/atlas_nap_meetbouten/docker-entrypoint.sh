@@ -3,6 +3,8 @@
 set -u
 set -e
 
+cd /app
+
 # collect static files
 python manage.py collectstatic --noinput
 
@@ -10,4 +12,4 @@ python manage.py collectstatic --noinput
 yes yes | python manage.py migrate --noinput
 
 # run uwsgi
-uwsgi --ini /app/atlas_nap_meetbouten/uwsgi.ini
+exec uwsgi --ini /app/uwsgi.ini
