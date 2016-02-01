@@ -6,11 +6,11 @@ from django.conf import settings
 from django.contrib.gis.geos import GEOSGeometry
 
 from datapunt_generic.batch import batch
-from datapunt_generic.generic import database
+from datapunt_generic.generic import database, index
 
 from datapunt_generic.generic.csv import cleanup_row, parse_decimal
 from datapunt_generic.generic.uva2 import uva_indicatie, uva_datum
-from . import models
+from . import models, documents
 
 log = logging.getLogger(__name__)
 
@@ -184,3 +184,79 @@ class ImportMeetboutenJob(object):
             ImportMetingTask(self.meetbouten),
         ]
 
+#
+# Elastic jobs
+#
+
+
+class IndexMeetboutenTask(index.ImportIndexTask):
+    name = "index meetbouten aanduidingen"
+
+    queryset = models.Meetbout.objects
+
+    def convert(self, obj):
+        return documents.from_meetbout(obj)
+
+
+class DeleteMeetboutenIndexTask(index.DeleteIndexTask):
+    index = settings.ELASTIC_INDICES['MEETBOUTEN']
+    doc_types = [documents.Meetbout]
+
+
+class DeleteMeetboutenBackupIndexTask(index.DeleteIndexTask):
+    index = settings.ELASTIC_INDICES['MEETBOUTEN']
+    doc_types = [documents.Meetbout]
+
+
+class BackupMeetboutenIndexTask(index.CopyIndexTask):
+    """
+    Backup elastic Meetbouten Index
+    """
+    name = 'Backup meetbouten index in elastic'
+
+    index = settings.ELASTIC_INDICES['MEETBOUTEN']
+    target = settings.ELASTIC_INDICES['MEETBOUTEN'] + 'backup'
+
+
+class RestoreMeetboutenIndexTask(index.CopyIndexTask):
+    """
+    Restore elastic BAG Index
+    """
+    name = 'Restore backup meetbouten index in elastic'
+
+    index = settings.ELASTIC_INDICES['MEETBOUTEN'] + 'backup'
+    target = settings.ELASTIC_INDICES['MEETBOUTEN']
+
+
+class IndexMeetboutenJob(object):
+    name = "Create new search-index for meetbouten data in database"
+
+    def tasks(self):
+        return [
+            DeleteMeetboutenIndexTask(),
+            IndexMeetboutenTask()
+        ]
+
+
+class BackupMeetboutenJob(object):
+    """
+    Backup elastic BAG documents
+    """
+    name = "Backup elastic-index Meetbouten"
+
+    def tasks(self):
+        return [
+            DeleteMeetboutenBackupIndexTask,
+            BackupMeetboutenIndexTask(),
+        ]
+
+
+class RestoreMeetboutenJob(object):
+
+    name = "Restore Backup elastic-index Meetbouten"
+
+    def tasks(self):
+        return [
+            DeleteMeetboutenIndexTask(),
+            RestoreMeetboutenIndexTask()
+        ]

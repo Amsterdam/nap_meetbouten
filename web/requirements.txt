@@ -23,3 +23,4 @@ python-dateutil==2.4.2
 requests==2.7.0
 six==1.9.0
 sphinx-me==0.3
+tqdm==3.4.0
