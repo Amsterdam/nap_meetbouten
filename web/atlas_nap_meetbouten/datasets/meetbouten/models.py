@@ -102,28 +102,30 @@ class Meting(mixins.ImportStatusMixin):
     datum = models.DateField(null=True)
     type = models.CharField(max_length=1, choices=TYPE_CHOICES, null=True)
     hoogte_nap = models.DecimalField(
-            max_digits=settings.NAP_MAX_DIGITS,
-            decimal_places=settings.NAP_DECIMAL_PLACES,
-            null=True
+        max_digits=settings.NAP_MAX_DIGITS,
+        decimal_places=settings.NAP_DECIMAL_PLACES,
+        null=True
     )
     zakking = models.DecimalField(
-            max_digits=settings.ZAKKING_MAX_DIGITS,
-            decimal_places=settings.ZAKKING_DECIMAL_PLACES,
-            null=True
+        max_digits=settings.ZAKKING_MAX_DIGITS,
+        decimal_places=settings.ZAKKING_DECIMAL_PLACES,
+        null=True
     )
     meetbout = models.ForeignKey(Meetbout)
     refereert_aan = models.ManyToManyField(
-            Referentiepunt
+        Referentiepunt,
+        through='ReferentiepuntMeting',
+        related_name='metingen'
     )
     zakkingssnelheid = models.DecimalField(
-            max_digits=settings.ZAKKING_MAX_DIGITS,
-            decimal_places=settings.ZAKKING_DECIMAL_PLACES,
-            null=True
+        max_digits=settings.ZAKKING_MAX_DIGITS,
+        decimal_places=settings.ZAKKING_DECIMAL_PLACES,
+        null=True
     )
     zakking_cumulatief = models.DecimalField(
-            max_digits=settings.ZAKKING_MAX_DIGITS,
-            decimal_places=settings.ZAKKING_DECIMAL_PLACES,
-            null=True
+        max_digits=settings.ZAKKING_MAX_DIGITS,
+        decimal_places=settings.ZAKKING_DECIMAL_PLACES,
+        null=True
     )
     ploeg = models.CharField(max_length=50)
     type_int = models.SmallIntegerField(null=True)
@@ -132,9 +134,11 @@ class Meting(mixins.ImportStatusMixin):
     deelraad = models.CharField(max_length=50, null=True)
     wvi = models.CharField(max_length=50, null=True)
 
+    def __str__(self):
+        return '{}'.format(self.pk)
+
 
 class ReferentiepuntMeting(mixins.ImportStatusMixin):
-    id = models.CharField(max_length=30, primary_key=True)
     referentiepunt = models.ForeignKey(Referentiepunt)
     meting = models.ForeignKey(Meting)
 

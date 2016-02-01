@@ -95,7 +95,7 @@ DATABASES = {
         'USER': os.getenv('DB_NAME', 'postgres'),
         'PASSWORD': os.getenv('DB_PASSWORD', 'insecure'),
         'HOST': os.getenv('DATABASE_PORT_5432_TCP_ADDR', get_docker_host()),
-        'PORT': os.getenv('DATABASE_PORT_5432_TCP_PORT', '5401'),
+        'PORT': os.getenv('DATABASE_PORT_5432_TCP_PORT', '5432'),
     }
 }
 

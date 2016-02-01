@@ -22,7 +22,6 @@ class ReferentiepuntFactory(factory.DjangoModelFactory):
         model = models.Referentiepunt
 
     locatie = fuzzy.FuzzyText(length=10)
-    peilmerk = factory.SubFactory(PeilmerkFactory)
 
 
 class MetingFactory(factory.DjangoModelFactory):

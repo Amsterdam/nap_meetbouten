@@ -111,27 +111,27 @@ class ImportMetingTask(batch.BasicTask):
     name = "Import MBT_METING"
     type_choices = dict()
     meetbouten = set()
-    referentiepunten = list()
+    referentiepunten = set()
 
     def __init__(self, path):
         self.path = path
 
     def before(self):
-        self.type_choices = dict(models.Meting.TYPE_CHOICES)
-        self.meetbouten = set(models.Meetbout.objects.values_list("pk", flat=True))
+        database.clear_models(models.Meting)
+        # database.clear_models(models.ReferentiepuntMeting)
         self.referentiepunten = set(models.Referentiepunt.objects.values_list("pk", flat=True))
-        database.clear_models(models.Meetbout)
+        self.type_choices = dict(models.Meting.TYPE_CHOICES)
+        self.meetbouten = frozenset(models.Meetbout.objects.values_list("pk", flat=True))
 
     def after(self):
-        self.referentiepunten.clear()
+        self.meetbouten = None
 
     def process(self):
         source = os.path.join(self.path, "MBT_METING.dat")
         with open(source, encoding='cp1252') as f:
             rows = csv.reader(f, delimiter='|', quotechar='$', doublequote=True)
-            metingen = [result for result in (self.process_row(row) for row in rows) if result]
-
-        models.Meetbout.objects.bulk_create(metingen, batch_size=database.BATCH_SIZE)
+            for row in rows:
+                self.process_row(row)
 
     def process_row(self, r):
         row = cleanup_row(r, replace=True)
@@ -145,7 +145,7 @@ class ImportMetingTask(batch.BasicTask):
 
         meetbout_id = row[5]
         if meetbout_id not in self.meetbouten:
-            log.warn("Meting {} references non-existing meetbout {}; skipping".format(pk, meetbout_id))
+            # log.warn("Meting {} references non-existing meetbout {}; skipping".format(pk, meetbout_id))
             return
 
         meting = models.Meting(
@@ -165,6 +165,34 @@ class ImportMetingTask(batch.BasicTask):
             wvi=row[16],
         )
         meting.save()
+
+        ref = int(row[6]) if row[6] else None
+        if ref in self.referentiepunten:
+            mr = models.ReferentiepuntMeting(
+                meting_id=meting.id,
+                referentiepunt_id=ref
+            )
+            mr.save()
+
+        ref = int(row[7]) if row[7] else None
+        if ref in self.referentiepunten:
+            mr = models.ReferentiepuntMeting(
+                meting_id=meting.id,
+                referentiepunt_id=ref
+            )
+            mr.save()
+
+        ref = int(row[8]) if row[8] else None
+        if ref in self.referentiepunten:
+            mr = models.ReferentiepuntMeting(
+                meting_id=meting.id,
+                referentiepunt_id=ref
+            )
+            mr.save()
+
+        print(models.ReferentiepuntMeting.objects.all())
+
+        return meting
 
 
 class ImportMeetboutenJob(object):

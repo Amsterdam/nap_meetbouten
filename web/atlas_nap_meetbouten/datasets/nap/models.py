@@ -52,3 +52,4 @@ class Peilmerk(mixins.ImportStatusMixin):
 
     def __str__(self):
         return "{} {}".format(self.id, self.omschrijving)
+
