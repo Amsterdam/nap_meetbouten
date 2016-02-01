@@ -15,7 +15,7 @@ from . import models, documents
 log = logging.getLogger(__name__)
 
 
-class ImportMeetboutenTask(batch.BasicTask):
+class ImportMeetboutTask(batch.BasicTask):
     name = "Import MBT_MEETBOUT"
     meetbouten = dict()
     status_choices = dict()
@@ -70,7 +70,7 @@ class ImportMeetboutenTask(batch.BasicTask):
         )
 
 
-class ImportReferentiepuntenTask(batch.BasicTask):
+class ImportReferentiepuntTask(batch.BasicTask):
     name = "Import MBT_REFERENTIEPUNT"
     referentiepunten = dict()
 
@@ -183,6 +183,47 @@ class ImportMetingTask(batch.BasicTask):
             self.referentiepunt_relations.append(rm)
 
 
+class ImportRollaagTask(batch.BasicTask):
+    name = "Import MBT_ROLLAAG"
+    meetbouten = dict()
+
+    def __init__(self, path):
+        self.path = path
+
+    def before(self):
+        database.clear_models(models.Rollaag)
+        self.meetbouten = {k: v for (k, v) in models.Meetbout.objects.values_list("bouwbloknummer", "pk")}
+
+    def after(self):
+        self.meetbouten.clear()
+
+    def process(self):
+        source = os.path.join(self.path, "MBT_ROLLAAG.dat")
+        with open(source, encoding='cp1252') as f:
+            rows = csv.reader(f, delimiter='|', quotechar='$', doublequote=True)
+            rollagen = [result for result in (self.process_row(row) for row in rows) if result]
+
+            models.Rollaag.objects.bulk_create(rollagen, batch_size=database.BATCH_SIZE)
+
+    def process_row(self, r):
+        row = cleanup_row(r, replace=True)
+
+        pk = row[1]
+        meetbout_id = self.meetbouten.get(row[0])
+
+        if not meetbout_id:
+            log.warn("Rollaag {} references non-existing meetbout {}; skipping".format(pk, row[0]))
+            return
+
+        return models.Rollaag(
+            pk=pk,
+            meetbout_id=meetbout_id,
+            locatie_x=parse_decimal(row[2]),
+            locatie_y=parse_decimal(row[3]),
+            geometrie=GEOSGeometry(row[4]),
+        )
+
+
 class ImportMeetboutenJob(object):
     name = "Import meetbouten"
 
@@ -195,8 +236,8 @@ class ImportMeetboutenJob(object):
 
     def tasks(self):
         return [
-            ImportMeetboutenTask(self.meetbouten),
-            ImportReferentiepuntenTask(self.meetbouten),
+            ImportMeetboutTask(self.meetbouten),
+            ImportReferentiepuntTask(self.meetbouten),
             ImportMetingTask(self.meetbouten),
         ]
 
