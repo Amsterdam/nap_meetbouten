@@ -84,6 +84,9 @@ class Referentiepunt(mixins.ImportStatusMixin):
 
     objects = geo.GeoManager()
 
+    def __str__(self):
+        return '{}'.format(self.pk)
+
 
 class Meting(mixins.ImportStatusMixin):
     TYPE_NULMETING = 'N'
@@ -138,12 +141,12 @@ class Meting(mixins.ImportStatusMixin):
         return '{}'.format(self.pk)
 
 
-class ReferentiepuntMeting(mixins.ImportStatusMixin):
+class ReferentiepuntMeting(models.Model):
     referentiepunt = models.ForeignKey(Referentiepunt)
     meting = models.ForeignKey(Meting)
 
     def __str__(self):
-        return "{}-{}-{}".format(self.id, self.referentiepunt_id, self.meting_id)
+        return "{}-{}".format(self.referentiepunt_id, self.meting_id)
 
 
 class Rollaag(mixins.ImportStatusMixin):

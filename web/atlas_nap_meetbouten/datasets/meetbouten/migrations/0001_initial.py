@@ -81,7 +81,6 @@ class Migration(migrations.Migration):
             name='ReferentiepuntMeting',
             fields=[
                 ('id', models.AutoField(auto_created=True, serialize=False, verbose_name='ID', primary_key=True)),
-                ('date_modified', models.DateTimeField(auto_now=True)),
                 ('meting', models.ForeignKey(to='meetbouten.Meting')),
                 ('referentiepunt', models.ForeignKey(to='meetbouten.Referentiepunt')),
             ],

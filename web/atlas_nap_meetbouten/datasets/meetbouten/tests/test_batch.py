@@ -52,7 +52,6 @@ class ImportMetingTest(TaskTestCase):
         imported = models.Meting.objects.all()
         self.assertEqual(len(imported), 2)
 
-        meting = models.Meting.objects.get(pk='25376')
+        meting = models.Meting.objects.get(pk='31410')
         self.assertEqual(meting.type, models.Meting.TYPE_HERHALINGSMETING)
-
         self.assertEqual(len(meting.refereert_aan.all()), 2)

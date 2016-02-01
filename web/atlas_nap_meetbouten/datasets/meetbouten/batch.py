@@ -118,12 +118,12 @@ class ImportMetingTask(batch.BasicTask):
 
     def before(self):
         database.clear_models(models.Meting)
-        # database.clear_models(models.ReferentiepuntMeting)
-        self.referentiepunten = set(models.Referentiepunt.objects.values_list("pk", flat=True))
         self.type_choices = dict(models.Meting.TYPE_CHOICES)
+        self.referentiepunten = frozenset(models.Referentiepunt.objects.values_list("pk", flat=True))
         self.meetbouten = frozenset(models.Meetbout.objects.values_list("pk", flat=True))
 
     def after(self):
+        self.referentiepunten = None
         self.meetbouten = None
 
     def process(self):
@@ -145,10 +145,10 @@ class ImportMetingTask(batch.BasicTask):
 
         meetbout_id = row[5]
         if meetbout_id not in self.meetbouten:
-            # log.warn("Meting {} references non-existing meetbout {}; skipping".format(pk, meetbout_id))
+            log.warn("Meting {} references non-existing meetbout {}; skipping".format(pk, meetbout_id))
             return
 
-        meting = models.Meting(
+        meting = models.Meting.objects.create(
             pk=pk,
             datum=uva_datum(row[1]),
             type=meting_type,
@@ -164,35 +164,19 @@ class ImportMetingTask(batch.BasicTask):
             deelraad=row[15],
             wvi=row[16],
         )
-        meting.save()
 
-        ref = int(row[6]) if row[6] else None
-        if ref in self.referentiepunten:
-            mr = models.ReferentiepuntMeting(
-                meting_id=meting.id,
-                referentiepunt_id=ref
-            )
-            mr.save()
-
-        ref = int(row[7]) if row[7] else None
-        if ref in self.referentiepunten:
-            mr = models.ReferentiepuntMeting(
-                meting_id=meting.id,
-                referentiepunt_id=ref
-            )
-            mr.save()
-
-        ref = int(row[8]) if row[8] else None
-        if ref in self.referentiepunten:
-            mr = models.ReferentiepuntMeting(
-                meting_id=meting.id,
-                referentiepunt_id=ref
-            )
-            mr.save()
-
-        print(models.ReferentiepuntMeting.objects.all())
+        for i in range(6, 9):
+            self.create_relation(meting, row[i])
 
         return meting
+
+    def create_relation(self, meting, ref):
+        if ref in self.referentiepunten:
+            rm = models.ReferentiepuntMeting(
+                referentiepunt_id=ref,
+                meting=meting
+            )
+            rm.save()
 
 
 class ImportMeetboutenJob(object):
