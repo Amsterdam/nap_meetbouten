@@ -112,6 +112,7 @@ class ImportMetingTask(batch.BasicTask):
     type_choices = dict()
     meetbouten = set()
     referentiepunten = set()
+    referentiepunt_relations = list()
 
     def __init__(self, path):
         self.path = path
@@ -132,6 +133,9 @@ class ImportMetingTask(batch.BasicTask):
             rows = csv.reader(f, delimiter='|', quotechar='$', doublequote=True)
             for row in rows:
                 self.process_row(row)
+
+            models.ReferentiepuntMeting.objects.bulk_create(self.referentiepunt_relations,
+                                                            batch_size=database.BATCH_SIZE)
 
     def process_row(self, r):
         row = cleanup_row(r, replace=True)
@@ -176,7 +180,7 @@ class ImportMetingTask(batch.BasicTask):
                 referentiepunt_id=ref,
                 meting=meting
             )
-            rm.save()
+            self.referentiepunt_relations.append(rm)
 
 
 class ImportMeetboutenJob(object):

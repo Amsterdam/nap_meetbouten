@@ -12,13 +12,6 @@ DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
-def _get_docker_host():
-    d_host = os.getenv('DOCKER_HOST', None)
-    if d_host:
-        return re.match(r'tcp://(.*?):\d+', d_host).group(1)
-    return 'localhost'
-
-
 
 # Application definition
 
@@ -100,7 +93,7 @@ DATABASES = {
 }
 
 
-ELASTIC_SEARCH_HOSTS = [_get_docker_host()]
+ELASTIC_SEARCH_HOSTS = [get_docker_host()]
 
 print('ELASTIC_HOST %s' % ELASTIC_SEARCH_HOSTS)
 
