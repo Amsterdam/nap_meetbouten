@@ -1,5 +1,7 @@
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
+import sys
+
 from datapunt_generic.generic.database import get_docker_host
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -9,6 +11,14 @@ SECRET_KEY = os.getenv("SECRET_KEY", "default-secret")
 DEBUG = False
 
 ALLOWED_HOSTS = ['*']
+
+def _get_docker_host():
+    d_host = os.getenv('DOCKER_HOST', None)
+    if d_host:
+        return re.match(r'tcp://(.*?):\d+', d_host).group(1)
+    return 'localhost'
+
+
 
 # Application definition
 
@@ -88,6 +98,25 @@ DATABASES = {
         'PORT': os.getenv('DATABASE_PORT_5432_TCP_PORT', '5401'),
     }
 }
+
+
+ELASTIC_SEARCH_HOSTS = [_get_docker_host()]
+
+print('ELASTIC_HOST %s' % ELASTIC_SEARCH_HOSTS)
+
+
+ELASTIC_INDICES = dict(
+    MEETBOUTEN='meetbouten', NAP='nap')
+
+TESTING = len(sys.argv) > 1 and sys.argv[1] == 'test'
+
+if TESTING:
+    for k, v in ELASTIC_INDICES.items():
+        ELASTIC_INDICES[k] = ELASTIC_INDICES[k] + 'test'
+
+BATCH_SETTINGS = dict(
+    batch_size=100000
+)
 
 
 # Internationalization

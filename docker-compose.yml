@@ -17,3 +17,12 @@ web:
     SECRET_KEY: hoi
     DB_NAME: postgres
     DB_PASSWORD: insecure
+
+elasticsearch:
+  build: docker-compose/elasticsearch
+  command: elasticsearch -Des.node.name="Atlas"
+  ports:
+    - "9200:9200"
+    - "9300:9300"
+
+

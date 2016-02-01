@@ -4,7 +4,7 @@ from django.contrib.gis.db import models as geo
 
 from datapunt_generic.generic import mixins
 
-from datasets.nap.models import Peilmerk
+# from datasets.nap.models import Peilmerk
 
 
 class Meetbout(mixins.ImportStatusMixin):
@@ -17,7 +17,9 @@ class Meetbout(mixins.ImportStatusMixin):
     )
 
     id = models.CharField(max_length=10, primary_key=True)
+
     buurt = models.CharField(max_length=50, null=True)
+
     locatie_x = models.DecimalField(
             max_digits=10,
             decimal_places=2,
