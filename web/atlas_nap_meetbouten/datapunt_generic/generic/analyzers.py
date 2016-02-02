@@ -38,6 +38,7 @@ huisnummer_generate = analysis.char_filter(
         $1h 1-h
         $1i 1-i
         $1j 1-j
+        $1j 1-k
     """
 )
 
@@ -103,10 +104,10 @@ naam = es.analyzer(
 
 postcode = es.analyzer(
     'postcode',
-    #tokenizer='keyword',
+    # tokenizer='keyword',
     tokenizer=postcode_ngram,
     filter=['standard', 'lowercase'],
-    #char_filter=[postcode_stripper],
+    # char_filter=[postcode_stripper],
 )
 
 huisnummer = es.analyzer(
