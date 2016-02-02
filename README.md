@@ -23,8 +23,9 @@ The API should now be available on http://localhost:8000/
 
 To run an import, execute:
 
-	./atlas_import/manage.py run_import
+	./atlas_nap_meetbouten/manage.py run_import
+
 
 To see the various options for partial imports, execute:
 
-	./atlas_import/manage.py run_import --help
+	./atlas_nap_meetbouten/manage.py run_import --help
