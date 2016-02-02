@@ -1,7 +1,8 @@
 from rest_framework.test import APITestCase
 
-from datasets.nap.tests.factories import PeilmerkFactory
-from datasets.meetbouten.tests.factories import MeetboutFactory
+from datasets.nap.tests import factories as factories_nap
+from datasets.meetbouten.tests import factories as factories_meetbouten
+
 
 class BrowseDatasetsTestCase(APITestCase):
     """
@@ -11,13 +12,17 @@ class BrowseDatasetsTestCase(APITestCase):
     datasets = [
         'nap/peilmerk',
         'meetbouten/meetbout',
-        # 'meetbouten/referentiepunt',
-        # 'meetbouten/rollaag',
+        'meetbouten/referentiepunt',
+        'meetbouten/rollaag',
+        'meetbouten/meting',
     ]
 
     def setUp(self):
-        PeilmerkFactory.create()
-        MeetboutFactory.create()
+        factories_nap.PeilmerkFactory.create()
+        factories_meetbouten.MeetboutFactory.create()
+        factories_meetbouten.ReferentiepuntFactory.create()
+        factories_meetbouten.RollaagFactory.create()
+        factories_meetbouten.MetingFactory.create()
 
     def test_root(self):
         response = self.client.get('/{}/'.format(self.root))

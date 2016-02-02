@@ -12,7 +12,6 @@ class ImportMeetboutenTest(TaskTestCase):
     def task(self):
         return batch.ImportMeetboutTask(NAP)
 
-    @skip('')
     def test_import(self):
         self.run_task()
 
@@ -27,7 +26,6 @@ class ImportReferentiepuntenTest(TaskTestCase):
     def task(self):
         return batch.ImportReferentiepuntTask(NAP)
 
-    @skip('')
     def test_import(self):
         self.run_task()
 
@@ -48,7 +46,6 @@ class ImportMetingTest(TaskTestCase):
     def task(self):
         return batch.ImportMetingTask(NAP)
 
-    @skip('')
     def test_import(self):
         self.run_task()
 

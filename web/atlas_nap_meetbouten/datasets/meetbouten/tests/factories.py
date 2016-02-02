@@ -21,6 +21,7 @@ class ReferentiepuntFactory(factory.DjangoModelFactory):
     class Meta:
         model = models.Referentiepunt
 
+    id = fuzzy.FuzzyText(length=10)
     locatie = fuzzy.FuzzyText(length=10)
 
 
@@ -34,12 +35,12 @@ class MetingFactory(factory.DjangoModelFactory):
         models.Meting.TYPE_SCHATTING)
     )
     meetbout = factory.SubFactory(MeetboutFactory)
-    refereert_aan = factory.SubFactory(ReferentiepuntFactory)
+    # refereert_aan = factory.SubFactory(ReferentiepuntFactory)
 
 
 class RollaagFactory(factory.DjangoModelFactory):
     class Meta:
-        model = models.Referentiepunt
+        model = models.Rollaag
 
     id = fuzzy.FuzzyInteger(low=1, high=100)
     meetbout = factory.SubFactory(MeetboutFactory)

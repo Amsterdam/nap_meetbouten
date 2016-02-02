@@ -1,3 +1,5 @@
+from rest_framework import serializers
+
 from datapunt_generic.generic import rest
 from . import models
 
@@ -57,6 +59,7 @@ class Rollaag(MeetboutenMixin, rest.HALSerializer):
 
 # detail serializers
 class MeetboutDetail(MeetboutenMixin, rest.HALSerializer):
+    status = serializers.CharField(source='get_status_display')
     _display = rest.DisplayField()
 
     class Meta:
@@ -86,33 +89,8 @@ class MeetboutDetail(MeetboutenMixin, rest.HALSerializer):
         )
 
 
-class MetingDetail(MeetboutenMixin, rest.HALSerializer):
-    meetbout = rest.RelatedSummaryField()
-    _display = rest.DisplayField()
-
-    class Meta:
-        model = models.Meetbout
-        fields = (
-            '_links',
-            '_display',
-
-            'id',
-            'type',
-            'datum',
-            'dagen_vorige_meting',
-            'hoogte',
-            'zakking',
-            'zakkingssnelheid',
-            'zakking_cumulatief',
-            'ingewonnen',
-            'meetbout',
-            'refereert_aan',
-            'gemeten_door',
-        )
-
-
 class ReferentiepuntDetail(MeetboutenMixin, rest.HALSerializer):
-    peilmerk = rest.RelatedSummaryField()
+    metingen = rest.RelatedSummaryField()
     _display = rest.DisplayField()
 
     class Meta:
@@ -121,27 +99,53 @@ class ReferentiepuntDetail(MeetboutenMixin, rest.HALSerializer):
             '_links',
             '_display',
 
+            'id',
             'locatie',
             'locatie_x',
             'locatie_y',
-            'hoogte',
+            'hoogte_nap',
             'datum',
-            'peilmerk',
+            'locatie',
+            'metingen',
             'geometrie',
         )
 
 
-class RollaagDetail(MeetboutenMixin, rest.HALSerializer):
-    meetbout = rest.RelatedSummaryField()
+class MetingDetail(MeetboutenMixin, rest.HALSerializer):
+    type = serializers.CharField(source='get_type_display')
     _display = rest.DisplayField()
 
     class Meta:
-        model = models.Referentiepunt
+        model = models.Meting
+        fields = (
+            '_links',
+            '_display',
+
+            'id',
+            'datum',
+            'type',
+            'hoogte_nap',
+            'zakking',
+            'meetbout',
+            'zakkingssnelheid',
+            'zakking_cumulatief',
+            'ploeg',
+            'dagen_vorige_meting',
+        )
+
+
+class RollaagDetail(MeetboutenMixin, rest.HALSerializer):
+    _display = rest.DisplayField()
+
+    class Meta:
+        model = models.Rollaag
         fields = (
             '_links',
             '_display',
 
             'id',
             'meetbout',
+            'locatie_x',
+            'locatie_y',
             'geometrie',
         )
