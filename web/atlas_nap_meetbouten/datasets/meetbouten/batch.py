@@ -239,6 +239,7 @@ class ImportMeetboutenJob(object):
             ImportMeetboutTask(self.meetbouten),
             ImportReferentiepuntTask(self.meetbouten),
             ImportMetingTask(self.meetbouten),
+            ImportRollaagTask(self.meetbouten),
         ]
 
 #
