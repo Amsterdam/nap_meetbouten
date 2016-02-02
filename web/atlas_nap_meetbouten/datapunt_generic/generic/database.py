@@ -18,17 +18,8 @@ def clear_models(*models):
 
 def get_docker_host(host='database'):
     """
-    Integrate this (postactivate virtualenv) bash code here?
-
-    DB_DOCKER_NAME='kartoza/postgis'
-    CONTAINER=$(docker ps | grep $DB_DOCKER_NAME | awk '{ print $1 }')
-    DOCKER_HOST=$(docker inspect $CONTAINER | grep IPAddress | awk '{ print $2 }' | tr -d ',"' | tr -d 'null')
-
-    DB_DOCKER_NAME='postgres'
-    DB_CONTAINER=$(docker ps | grep $DB_DOCKER_NAME | awk '{ print $1 }')
-    DOCKER_HOST=$(docker inspect $DB_CONTAINER | grep '"IPAddress":' | head -1 | awk '{ print $2 }' | tr -d ',"')
-
-    export DOCKER_HOST
+    if any container name matches 'host' name the ip is returned
+    else returns 'localhost'
     """
     d_host = None
     output = subprocess.check_output(['docker', 'ps'], universal_newlines=True)
