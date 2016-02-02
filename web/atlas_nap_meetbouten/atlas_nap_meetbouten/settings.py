@@ -93,8 +93,8 @@ DATABASES = {
 }
 
 
-
-ELASTIC_SEARCH_HOSTS = [get_docker_host(host='elastic')]
+ELASTIC_SEARCH_HOSTS = [
+    get_docker_host(host='atlasnapmeetbouten_elasticsearch_1')]
 
 print('ELASTIC_HOST %s' % ELASTIC_SEARCH_HOSTS)
 

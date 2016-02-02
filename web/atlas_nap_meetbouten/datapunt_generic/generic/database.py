@@ -35,7 +35,7 @@ def get_docker_host(host='database'):
     container_lines = output.split('\n')[1:-1]
     container_names = [line.split()[-1] for line in container_lines]
 
-    print('Found dockers %s' % container_names)
+    print('Dockers containers: \n %s' % ', '.join(container_names))
 
     def get_ip(name):
         ip_data = subprocess.check_output([
