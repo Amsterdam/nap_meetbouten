@@ -14,11 +14,25 @@ class Migration(migrations.Migration):
 
     operations = [
         migrate.ManageView(
-                view_name="geo_meetbouten_meetbout",
-                sql="SELECT id, status, zakkingssnelheid, geometrie FROM meetbouten_meetbout"
+            view_name="geo_meetbouten_meetbout",
+            sql="""
+SELECT
+    id,
+    status,
+    zakkingssnelheid,
+    geometrie
+FROM meetbouten_meetbout
+"""
         ),
         migrate.ManageView(
-                view_name="geo_meetbouten_referentiepunt",
-                sql="SELECT id, hoogte_nap,geometrie FROM meetbouten_referentiepunt"
+            view_name="geo_meetbouten_referentiepunt",
+            sql="""
+SELECT
+    id,
+    hoogte_nap,
+    geometrie
+FROM
+    meetbouten_referentiepunt
+"""
         ),
     ]

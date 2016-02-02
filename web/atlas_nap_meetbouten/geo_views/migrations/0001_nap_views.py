@@ -12,5 +12,7 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrate.ManageView(view_name="geo_nap_peilmerk", sql="SELECT id, hoogte, geometrie FROM nap_peilmerk"),
+        migrate.ManageView(
+            view_name="geo_nap_peilmerk",
+            sql="SELECT id, hoogte, geometrie FROM nap_peilmerk"),
     ]
