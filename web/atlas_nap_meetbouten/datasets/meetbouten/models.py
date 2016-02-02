@@ -132,7 +132,7 @@ class Meting(mixins.ImportStatusMixin):
     )
     ploeg = models.CharField(max_length=50)
     type_int = models.SmallIntegerField(null=True)
-    dagen_vorige_meting = models.IntegerField(default=0)
+    dagen_vorige_meting = models.IntegerField(default=0, null=True)
     pandmsl = models.CharField(max_length=50, null=True)
     deelraad = models.CharField(max_length=50, null=True)
     wvi = models.CharField(max_length=50, null=True)
