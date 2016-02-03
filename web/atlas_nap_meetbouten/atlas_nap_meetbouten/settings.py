@@ -94,8 +94,9 @@ DATABASES = {
 
 
 ELASTIC_SEARCH_HOSTS = [
-    "%s:%s".format(os.getenv('ELASTIC_PORT_9200_TCP_ADDR', get_docker_host()),
-                   os.getenv('ELASTIC_PORT_9200_TCP_PORT', 9201))
+        "http://{}:{}".format(
+            os.getenv('ELASTIC_PORT_9200_TCP_ADDR', get_docker_host()),
+            os.getenv('ELASTIC_PORT_9200_TCP_PORT', 9201))
 ]
 
 ELASTIC_INDICES = dict(

@@ -1,8 +1,12 @@
 from django.conf.urls import url, include
 from rest_framework import routers
 
+from django.conf import settings
+
 from datasets.nap.views import PeilViewSet
 from datasets.meetbouten.views import *
+
+from . import views as searchviews
 
 
 class DocumentedRouter(routers.DefaultRouter):
@@ -44,6 +48,22 @@ router.register(r'meetbouten/meetbout', MeetboutViewSet)
 router.register(r'meetbouten/meting', MetingViewSet)
 router.register(r'meetbouten/referentiepunt', ReferentiepuntViewSet)
 router.register(r'meetbouten/rollaag', RollaagViewSet)
+
+
+# Search related
+
+router.register(r'meetbouten/typeahead',
+                searchviews.TypeaheadViewSet, base_name='typeahead')
+
+router.register(r'meetbouten/search',
+                searchviews.SearchMeetboutViewSet, base_name='search')
+
+
+if settings.DEBUG:
+    router.register(r'meetbouten/search/test',
+                    searchviews.SearchTestViewSet,
+                    base_name='search/test')
+
 
 urlpatterns = [
     url(r'^auth/', include('rest_framework.urls', namespace='rest_framework')),
