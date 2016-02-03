@@ -10,6 +10,9 @@ class MeetboutFactory(factory.DjangoModelFactory):
         model = models.Meetbout
 
     id = fuzzy.FuzzyText(length=10)
+
+    bouwbloknummer = fuzzy.FuzzyText(length=4)
+
     bouwblokzijde = fuzzy.FuzzyText(length=10)
     status = fuzzy.FuzzyChoice(choices=(
         models.Meetbout.STATUS_VERVALLEN,
