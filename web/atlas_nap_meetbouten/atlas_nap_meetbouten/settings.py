@@ -88,16 +88,15 @@ DATABASES = {
         'USER': os.getenv('DB_NAME', 'postgres'),
         'PASSWORD': os.getenv('DB_PASSWORD', 'insecure'),
         'HOST': os.getenv('DATABASE_PORT_5432_TCP_ADDR', get_docker_host()),
-        'PORT': os.getenv('DATABASE_PORT_5432_TCP_PORT', '5432'),
+        'PORT': os.getenv('DATABASE_PORT_5432_TCP_PORT', '5401'),
     }
 }
 
 
 ELASTIC_SEARCH_HOSTS = [
-    get_docker_host(host='atlasnapmeetbouten_elasticsearch_1')]
-
-print('ELASTIC_HOSTS: %s' % ELASTIC_SEARCH_HOSTS)
-
+    "%s:%s".format(os.getenv('ELASTIC_PORT_9200_TCP_ADDR', get_docker_host()),
+                   os.getenv('ELASTIC_PORT_9200_TCP_PORT', 9201))
+]
 
 ELASTIC_INDICES = dict(
     MEETBOUTEN='meetbouten', NAP='nap')
