@@ -226,14 +226,19 @@ class SearchViewSet(viewsets.ViewSet):
             self.normalize_bucket(field, request)
             for field in result.aggregations['by_type']['buckets']]
 
+    def get_url(self, request, hit):
+        """
+        Get a detail API url for hit
+        """
+        return _get_url()
+
     def normalize_hit(self, hit, request):
         result = OrderedDict()
-        result['_links'] = _get_url(request, hit)
+        result['_links'] = self.get_url(request, hit)
 
         result['type'] = hit.meta.doc_type
         result['dataset'] = hit.meta.index
-        # result['uri'] = _get_url(
-        #     request, hit.meta.doc_type, hit.meta.id) + "?full"
+
         result.update(hit.to_dict())
 
         return result

@@ -8,9 +8,24 @@ from django.conf import settings
 from elasticsearch_dsl import Search, Q
 
 from datapunt_generic.generic import searchviews
+from datapunt_generic.generic import rest
 
 
 log = logging.getLogger('search')
+
+
+_details = {
+    'meetbout': 'meetbout-detail',
+}
+
+
+def _get_url(request, hit):
+    doc_type, id = hit.meta.doc_type, hit.meta.id
+
+    if doc_type in _details:
+        return rest.get_links(
+            view_name=_details[doc_type],
+            kwargs=dict(pk=id), request=request)
 
 
 MEETBOUTEN = settings.ELASTIC_INDICES['MEETBOUTEN']
@@ -117,6 +132,9 @@ class SearchMeetboutViewSet(searchviews.SearchViewSet):
     """
     url_name = 'search/meetbouten'
     search_query = search_meetbout_query
+
+    def get_url(self, request, hit):
+        return _get_url(request, hit)
 
 
 def get_autocomplete_response(client, query):
