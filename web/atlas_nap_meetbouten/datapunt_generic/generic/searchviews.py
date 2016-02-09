@@ -42,14 +42,13 @@ class TypeaheadViewSet(viewsets.ViewSet):
 
     """
 
-    def get_autocomplete_response(self, client, query):
+    def get_autocomplete_response(self, query):
         return {}
 
     metadata_class = QueryMetadata
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.client = Elasticsearch(settings.ELASTIC_SEARCH_HOSTS)
 
     def list(self, request, *args, **kwargs):
         if 'q' not in request.query_params:
@@ -58,15 +57,15 @@ class TypeaheadViewSet(viewsets.ViewSet):
         query = request.query_params['q']
         query = query.lower()
 
-        response = self.get_autocomplete_response(self.client, query)
+        response = self.get_autocomplete_response(query)
         return Response(response)
 
 
-def mulitimatch_Q(query):
+def multimatch_Q(query):
     """
     main 'One size fits all' search query used
     """
-    log.debug('%20s %s', mulitimatch_Q.__name__, query)
+    log.debug('%20s %s', multimatch_Q.__name__, query)
 
     return Q(
         "multi_match",
@@ -87,7 +86,7 @@ def mulitimatch_Q(query):
     )
 
 
-def default_search_query(view, client, query):
+def default_search_query(view, query):
     """
     Execute search.
 
@@ -96,9 +95,9 @@ def default_search_query(view, client, query):
     """
 
     return (
-        Search(client)
+        Search()
         .query(
-            mulitimatch_Q(query)
+            multimatch_Q(query)
         )
     )
 
@@ -178,12 +177,7 @@ class SearchViewSet(viewsets.ViewSet):
         query = request.query_params['q']
         query = query.lower()
 
-        client = Elasticsearch(
-            settings.ELASTIC_SEARCH_HOSTS,
-            raise_on_error=True
-        )
-
-        search = self.search_query(client, query)[start:end]
+        search = self.search_query(query)[start:end]
 
         try:
             result = search.execute()
