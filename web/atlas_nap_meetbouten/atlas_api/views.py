@@ -31,11 +31,11 @@ def _get_url(request, hit):
 MEETBOUTEN = settings.ELASTIC_INDICES['MEETBOUTEN']
 
 
-def multimatch_meetbout_Q(query):
+def mulitimatch_meetbout_Q(query):
     """
     Main 'One size fits all' search query used
     """
-    log.debug('%20s %s', multimatch_meetbout_Q.__name__, query)
+    log.debug('%20s %s', mulitimatch_meetbout_Q.__name__, query)
 
     return Q(
         "multi_match",
@@ -64,15 +64,16 @@ def add_sorting():
     )
 
 
-def search_meetbout_query(view, query):
+def search_meetbout_query(view, client, query):
     """
     Execute search on adresses
     """
     return (
         Search()
+        .using(client)
         .index(MEETBOUTEN)
         .query(
-            multimatch_meetbout_Q(query)
+            mulitimatch_meetbout_Q(query)
         )
         .sort(*add_sorting())
     )
@@ -91,7 +92,7 @@ def fuzzy_match(query):
              prefix_length=2, fields=fuzzy_fields)
 
 
-def autocomplete_query(query):
+def autocomplete_query(client, query):
     """
     provice autocomplete suggestions
     """
@@ -110,6 +111,7 @@ def autocomplete_query(query):
 
     return (
         Search()
+        .using(client)
         .index(MEETBOUTEN)
         .query(
             Q(
@@ -128,7 +130,7 @@ class SearchTestViewSet(searchviews.SearchViewSet):
 class SearchMeetboutViewSet(searchviews.SearchViewSet):
     """
     Given a query parameter `q`, this function returns a subset of
-    all addressable objects that match the adres elastic search query.
+    all adressable objects that match the adres elastic search query.
     """
     url_name = 'search/meetbouten'
     search_query = search_meetbout_query
@@ -137,8 +139,8 @@ class SearchMeetboutViewSet(searchviews.SearchViewSet):
         return _get_url(request, hit)
 
 
-def get_autocomplete_response(query):
-    result = autocomplete_query(query)[0:20].execute()
+def get_autocomplete_response(client, query):
+    result = autocomplete_query(client, query)[0:20].execute()
     matches = OrderedDict()
 
     # group_by doc_type
@@ -165,5 +167,5 @@ class TypeaheadViewSet(searchviews.TypeaheadViewSet):
     """
     Autocomplete boutnummers
     """
-    def get_autocomplete_response(self, query):
-        return get_autocomplete_response(query)
+    def get_autocomplete_response(self, client, query):
+        return get_autocomplete_response(client, query)
