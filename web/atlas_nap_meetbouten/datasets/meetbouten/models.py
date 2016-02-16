@@ -60,6 +60,9 @@ class Meetbout(mixins.ImportStatusMixin):
 
     objects = geo.GeoManager()
 
+    def __str__(self):
+        return "{} ({})".format(self.nabij_adres, self.id)
+
 
 class Referentiepunt(mixins.ImportStatusMixin):
     id = models.CharField(max_length=10, primary_key=True)
@@ -114,7 +117,7 @@ class Meting(mixins.ImportStatusMixin):
         decimal_places=settings.ZAKKING_DECIMAL_PLACES,
         null=True
     )
-    meetbout = models.ForeignKey(Meetbout)
+    meetbout = models.ForeignKey(Meetbout, related_name="metingen")
     refereert_aan = models.ManyToManyField(
         Referentiepunt,
         through='ReferentiepuntMeting',
@@ -151,7 +154,7 @@ class ReferentiepuntMeting(models.Model):
 
 class Rollaag(mixins.ImportStatusMixin):
     id = models.IntegerField(primary_key=True)
-    meetbout = models.ForeignKey(Meetbout)  # Rollaag aan meetbout koppelen (via bouwbloknummer),
+    meetbout = models.ForeignKey(Meetbout, related_name='rollagen')  # Rollaag aan meetbout koppelen (via bouwbloknummer),
     locatie_x = models.DecimalField(
             max_digits=10,
             decimal_places=2,
@@ -165,3 +168,6 @@ class Rollaag(mixins.ImportStatusMixin):
     geometrie = geo.PointField(null=True, srid=28992)
 
     objects = geo.GeoManager()
+
+    def __str__(self):
+        return "{}".format(self.id)
