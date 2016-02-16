@@ -126,6 +126,7 @@ class ReferentiepuntDetail(MeetboutenMixin, rest.HALSerializer):
 
 class MetingDetail(MeetboutenMixin, rest.HALSerializer):
     type = serializers.CharField(source='get_type_display')
+    refereert_aan = rest.RelatedSummaryField()
     _display = rest.DisplayField()
 
     class Meta:
@@ -144,6 +145,7 @@ class MetingDetail(MeetboutenMixin, rest.HALSerializer):
             'zakking_cumulatief',
             'ploeg',
             'dagen_vorige_meting',
+            'refereert_aan',
         )
 
 
