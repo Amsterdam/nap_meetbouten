@@ -60,7 +60,7 @@ class ReferentiepuntViewSet(rest.AtlasViewSet):
     queryset = models.Referentiepunt.objects.all()
     serializer_detail_class = serializers.ReferentiepuntDetail
     serializer_class = serializers.Referentiepunt
-    filter_fields = ('metingen__id')
+    filter_fields = ('metingen__id', )
 
 
 class RollaagViewSet(rest.AtlasViewSet):
