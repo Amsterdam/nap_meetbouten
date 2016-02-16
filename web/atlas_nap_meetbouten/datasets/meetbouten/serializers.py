@@ -60,6 +60,8 @@ class Rollaag(MeetboutenMixin, rest.HALSerializer):
 # detail serializers
 class MeetboutDetail(MeetboutenMixin, rest.HALSerializer):
     status = serializers.CharField(source='get_status_display')
+    bouwblok = serializers.SerializerMethodField()
+    rollaag = serializers.SerializerMethodField()
     _display = rest.DisplayField()
 
     class Meta:
@@ -83,10 +85,25 @@ class MeetboutDetail(MeetboutenMixin, rest.HALSerializer):
             'locatie',
             'zakkingssnelheid',
             'status',
+            'bouwblok',
             'bouwbloknummer',
             'blokeenheid',
+            'rollaag',
             'geometrie',
         )
+
+    def get_bouwblok(self, obj):
+        link = "/gebieden/bouwblok/{}".format(obj.bouwbloknummer)
+        req = self.context.get('request')
+        if req:
+            link = req.build_absolute_uri(link)
+        return link
+
+    def get_rollaag(self, obj):
+        if obj.bouwbloknummer:
+            return 'http://atlas.amsterdam.nl/rollagen/{}.jpg'.format(obj.bouwbloknummer.lower())
+
+        return None
 
 
 class ReferentiepuntDetail(MeetboutenMixin, rest.HALSerializer):
