@@ -9,6 +9,9 @@ NAP = 'diva/meetbouten'
 
 
 class ImportMeetboutenTest(TaskTestCase):
+    def setUp(self):
+        self.laag_ad24 = factories.RollaagFactory.create(bouwblok='AD24')
+
     def task(self):
         return batch.ImportMeetboutTask(NAP)
 
@@ -20,6 +23,7 @@ class ImportMeetboutenTest(TaskTestCase):
 
         meetbout = models.Meetbout.objects.get(pk='11081251')
         self.assertEqual(meetbout.nabij_adres, 'Wenslauerstraat 48')
+        self.assertEqual(meetbout.rollaag, self.laag_ad24)
 
 
 class ImportReferentiepuntenTest(TaskTestCase):
@@ -58,10 +62,6 @@ class ImportMetingTest(TaskTestCase):
 
 
 class ImportRollaagTest(TaskTestCase):
-    meetbout = None
-
-    def setUp(self):
-        self.meetbout = factories.MeetboutFactory.create(bouwbloknummer='AH11')
 
     def task(self):
         return batch.ImportRollaagTask(NAP)
@@ -70,5 +70,5 @@ class ImportRollaagTest(TaskTestCase):
         self.run_task()
 
         imported = models.Rollaag.objects.all()
-        self.assertEqual(len(imported), 1)
-        self.assertEqual(imported[0].meetbout_id, self.meetbout.pk)
+        self.assertEqual(len(imported), 436)
+        self.assertEqual(imported[0].bouwblok, 'AK25')

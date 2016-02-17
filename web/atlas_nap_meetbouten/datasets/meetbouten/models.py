@@ -56,6 +56,8 @@ class Meetbout(mixins.ImportStatusMixin):
     bouwbloknummer = models.CharField(max_length=4, null=True)
     blokeenheid = models.SmallIntegerField(null=True)
 
+    rollaag = models.ForeignKey('Rollaag', related_name="meetbouten", null=True)
+
     geometrie = geo.PointField(null=True, srid=28992)
 
     objects = geo.GeoManager()
@@ -154,7 +156,8 @@ class ReferentiepuntMeting(models.Model):
 
 class Rollaag(mixins.ImportStatusMixin):
     id = models.IntegerField(primary_key=True)
-    meetbout = models.ForeignKey(Meetbout, related_name='rollagen')  # Rollaag aan meetbout koppelen (via bouwbloknummer),
+
+    bouwblok = models.CharField(max_length=4, null=True)
     locatie_x = models.DecimalField(
             max_digits=10,
             decimal_places=2,
