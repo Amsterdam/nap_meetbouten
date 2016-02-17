@@ -5,6 +5,14 @@ from .. import models
 from datasets.nap.tests.factories import PeilmerkFactory
 
 
+class RollaagFactory(factory.DjangoModelFactory):
+    class Meta:
+        model = models.Rollaag
+
+    id = fuzzy.FuzzyInteger(low=1, high=100)
+    bouwblok = fuzzy.FuzzyText(length=4)
+
+
 class MeetboutFactory(factory.DjangoModelFactory):
     class Meta:
         model = models.Meetbout
@@ -18,6 +26,7 @@ class MeetboutFactory(factory.DjangoModelFactory):
         models.Meetbout.STATUS_VERVALLEN,
         models.Meetbout.STATUS_ACTUEEL)
     )
+    rollaag = factory.SubFactory(RollaagFactory)
 
 
 class ReferentiepuntFactory(factory.DjangoModelFactory):
@@ -37,13 +46,4 @@ class MetingFactory(factory.DjangoModelFactory):
         models.Meting.TYPE_NULMETING,
         models.Meting.TYPE_SCHATTING)
     )
-    meetbout = factory.SubFactory(MeetboutFactory)
-    # refereert_aan = factory.SubFactory(ReferentiepuntFactory)
-
-
-class RollaagFactory(factory.DjangoModelFactory):
-    class Meta:
-        model = models.Rollaag
-
-    id = fuzzy.FuzzyInteger(low=1, high=100)
     meetbout = factory.SubFactory(MeetboutFactory)

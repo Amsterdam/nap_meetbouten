@@ -19,16 +19,18 @@ class ImportMeetboutTask(batch.BasicTask):
     name = "Import MBT_MEETBOUT"
     meetbouten = dict()
     status_choices = dict()
+    rollagen = dict()
 
     def __init__(self, path):
         self.path = path
 
     def before(self):
         self.status_choices = dict(models.Meetbout.STATUS_CHOICES)
+        self.rollagen = dict(models.Rollaag.objects.values_list('bouwblok', 'pk'))
         database.clear_models(models.Meetbout)
 
     def after(self):
-        pass
+        self.rollagen.clear()
 
     def process(self):
         source = os.path.join(self.path, "MBT_MEETBOUT.dat")
@@ -48,6 +50,7 @@ class ImportMeetboutTask(batch.BasicTask):
             log.warn("Meetbout {} references non-existing status {}; skipping".format(pk, status))
             return
 
+        bouwblok = row[15]
         return models.Meetbout(
             pk=pk,
             buurt=row[1],
@@ -64,7 +67,8 @@ class ImportMeetboutTask(batch.BasicTask):
             locatie=row[12],
             zakkingssnelheid=parse_decimal(row[13]),
             status=status,
-            bouwbloknummer=row[15],
+            bouwbloknummer=bouwblok,
+            rollaag_id=self.rollagen.get(bouwblok),
             blokeenheid=row[16] or 0,
             geometrie=GEOSGeometry(row[17]),
         )
@@ -185,17 +189,12 @@ class ImportMetingTask(batch.BasicTask):
 
 class ImportRollaagTask(batch.BasicTask):
     name = "Import MBT_ROLLAAG"
-    meetbouten = dict()
 
     def __init__(self, path):
         self.path = path
 
     def before(self):
         database.clear_models(models.Rollaag)
-        self.meetbouten = {k: v for (k, v) in models.Meetbout.objects.values_list("bouwbloknummer", "pk")}
-
-    def after(self):
-        self.meetbouten.clear()
 
     def process(self):
         source = os.path.join(self.path, "MBT_ROLLAAG.dat")
@@ -209,15 +208,11 @@ class ImportRollaagTask(batch.BasicTask):
         row = cleanup_row(r, replace=True)
 
         pk = row[1]
-        meetbout_id = self.meetbouten.get(row[0])
-
-        if not meetbout_id:
-            log.warn("Rollaag {} references non-existing meetbout {}; skipping".format(pk, row[0]))
-            return
+        bouwblok = row[0]
 
         return models.Rollaag(
             pk=pk,
-            meetbout_id=meetbout_id,
+            bouwblok=bouwblok,
             locatie_x=parse_decimal(row[2]),
             locatie_y=parse_decimal(row[3]),
             geometrie=GEOSGeometry(row[4]),
@@ -236,10 +231,10 @@ class ImportMeetboutenJob(object):
 
     def tasks(self):
         return [
+            ImportRollaagTask(self.meetbouten),
             ImportMeetboutTask(self.meetbouten),
             ImportReferentiepuntTask(self.meetbouten),
             ImportMetingTask(self.meetbouten),
-            ImportRollaagTask(self.meetbouten),
         ]
 
 #

@@ -45,7 +45,7 @@ class SearchMeetbout(APITestCase):
 
     def test_non_matching_query(self):
         response = self.client.get(
-            '/metingen/meetbouten/search/',
+            '/meetbouten/search/',
             dict(q="qqq"))
 
         self.assertEqual(response.status_code, 200)
@@ -56,7 +56,7 @@ class SearchMeetbout(APITestCase):
 
     def test_matching_query(self):
         response = self.client.get(
-            '/metingen/meetbouten/search/',
+            '/meetbouten/search/',
             dict(q="123456"))
         self.assertEqual(response.status_code, 200)
         self.assertIn('results', response.data)
@@ -75,7 +75,7 @@ class SearchMeetbout(APITestCase):
 
     def test_query_bouwblok(self):
         response = self.client.get(
-            '/metingen/meetbouten/search/', dict(q="AB10"))
+            '/meetbouten/search/', dict(q="AB10"))
         self.assertEqual(response.status_code, 200)
         self.assertIn('results', response.data)
         self.assertIn('count', response.data)
@@ -89,7 +89,7 @@ class SearchMeetbout(APITestCase):
 
     def test_query_boutnummer(self):
         response = self.client.get(
-            "/metingen/meetbouten/search/", dict(q="1"))
+            "/meetbouten/search/", dict(q="1"))
         self.assertEqual(response.status_code, 200)
         self.assertIn('results', response.data)
         self.assertIn('count', response.data)

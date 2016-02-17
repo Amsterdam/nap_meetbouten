@@ -36,7 +36,7 @@ class MeetboutViewSet(rest.AtlasViewSet):
     queryset = models.Meetbout.objects.all()
     serializer_detail_class = serializers.MeetboutDetail
     serializer_class = serializers.Meetbout
-    filter_fields = ()
+    filter_fields = ('bouwbloknummer', 'rollaag', )
 
 
 class MetingViewSet(rest.AtlasViewSet):
@@ -54,7 +54,7 @@ class MetingViewSet(rest.AtlasViewSet):
     queryset = models.Meting.objects.all()
     serializer_detail_class = serializers.MetingDetail
     serializer_class = serializers.Meting
-    filter_fields = ()
+    filter_fields = ('meetbout', 'refereert_aan__id')
 
 
 class ReferentiepuntViewSet(rest.AtlasViewSet):
@@ -69,7 +69,7 @@ class ReferentiepuntViewSet(rest.AtlasViewSet):
     queryset = models.Referentiepunt.objects.all()
     serializer_detail_class = serializers.ReferentiepuntDetail
     serializer_class = serializers.Referentiepunt
-    filter_fields = ()
+    filter_fields = ('metingen__id', )
 
 
 class RollaagViewSet(rest.AtlasViewSet):
