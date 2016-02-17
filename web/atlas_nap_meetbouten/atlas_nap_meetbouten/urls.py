@@ -11,4 +11,5 @@ urlpatterns = [
     url(r'^jobs/(?P<pk>.*)$', b_views.JobDetailView.as_view(), name='job-detail'),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^status/', include('datapunt_generic.health.urls', namespace='health')),
+    url(r'^docs/', include('rest_framework_swagger.urls')),
 ]

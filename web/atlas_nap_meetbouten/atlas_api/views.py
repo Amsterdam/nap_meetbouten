@@ -1,5 +1,3 @@
-# Create your views here.
-
 import logging
 from collections import OrderedDict
 
@@ -79,7 +77,7 @@ def search_meetbout_query(view, client, query):
     )
 
 
-def fuzzy_match(query):
+def match_Q(query):
     fuzzy_fields = [
         "meetboutnummer",
         "bouwbloknummer",
@@ -97,12 +95,6 @@ def autocomplete_query(client, query):
     provice autocomplete suggestions
     """
 
-    match_fields = [
-        "meetboutnummer",
-        "bouwbloknummer",
-        "locatie",
-    ]
-
     completions = [
         "meetboutnummer",
         "bouwbloknummer",
@@ -113,11 +105,7 @@ def autocomplete_query(client, query):
         Search()
         .using(client)
         .index(MEETBOUTEN)
-        .query(
-            Q(
-                "multi_match",
-                query=query, type="phrase_prefix", fields=match_fields)
-            | fuzzy_match(query))
+        .query(match_Q(query))
         .highlight(*completions, pre_tags=[''], post_tags=[''])
     )
 
@@ -129,14 +117,34 @@ class SearchTestViewSet(searchviews.SearchViewSet):
 
 class SearchMeetboutViewSet(searchviews.SearchViewSet):
     """
+    Zoek-Meetbouten
+
     Given a query parameter `q`, this function returns a subset of
     all adressable objects that match the adres elastic search query.
+
     """
+
     url_name = 'search/meetbouten'
     search_query = search_meetbout_query
 
     def get_url(self, request, hit):
         return _get_url(request, hit)
+
+    def list(self, request, *args, **kwargs):
+        """
+        Show search results
+
+        ---
+        parameters:
+            - name: q
+              description: Zoek op meetboutnummertje
+              required: true
+              type: string
+              paramType: query
+        """
+
+        return super(SearchMeetboutViewSet, self).list(
+            request, *args, **kwargs)
 
 
 def get_autocomplete_response(client, query):
@@ -151,14 +159,23 @@ def get_autocomplete_response(client, query):
             matches[doc_type] = OrderedDict()
 
         h = r.meta.highlight
+
         for key in h:
             highlights = h[key]
             for match in highlights:
-                matches[doc_type][match] = 1
+                # only show exact autocompletes
+                if query not in match:
+                    continue
 
+                old = matches[doc_type].setdefault(match, 0)
+                matches[doc_type][match] = old + 1
+
+    # sort the results by type
     for doc_type in matches.keys():
-        matches[doc_type] = [
-            dict(item=m) for m in matches[doc_type].keys()][:5]
+        sorted_matches = sorted(
+            [(c, m) for m, c in matches[doc_type].items()])
+
+        matches[doc_type] = [dict(item=m) for c, m in sorted_matches[:5]]
 
     return matches
 
@@ -169,3 +186,21 @@ class TypeaheadViewSet(searchviews.TypeaheadViewSet):
     """
     def get_autocomplete_response(self, client, query):
         return get_autocomplete_response(client, query)
+
+    def list(self, request, *args, **kwargs):
+        """
+        Show search results
+
+        ---
+        parameters_strategy: merge
+
+        parameters:
+            - name: q
+              description: Autcomplete op meetboutnummertje
+              required: true
+              type: string
+              paramType: query
+        """
+
+        return super(TypeaheadViewSet, self).list(
+            request, *args, **kwargs)

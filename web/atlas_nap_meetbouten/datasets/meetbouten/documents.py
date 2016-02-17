@@ -18,7 +18,7 @@ def get_centroid(geom):
 class Meetbout(es.DocType):
     straatnaam = es.String(analyzer=analyzers.adres)
 
-    meetboutnummer = es.String()
+    meetboutnummer = es.String(analyzer=analyzers.boutnummer)
 
     status = es.String()
 
@@ -33,7 +33,7 @@ class Meetbout(es.DocType):
 
     eigenaar = es.String()
     bouwblokzijde = es.String()
-    bouwbloknummer = es.String(analyzer=analyzers.adres)
+    bouwbloknummer = es.String(analyzer=analyzers.boutnummer)
 
     nabij_adres = es.String(analyzer=analyzers.adres)
 

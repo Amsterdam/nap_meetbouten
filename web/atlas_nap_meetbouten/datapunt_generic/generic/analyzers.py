@@ -61,6 +61,14 @@ adres_split = analysis.char_filter(
 )
 
 
+boutnummer_ngram = analysis.EdgeNGramTokenizer(
+    name='boutnummer_ngram',
+    min_gram=1,
+    max_gram=8,
+    token_chars=['letter', 'digit']
+)
+
+
 postcode_ngram = analysis.NGramTokenizer(
     name='postcode_ngram',
     min_gram=2,
@@ -100,6 +108,15 @@ naam = es.analyzer(
     filter=['standard', 'lowercase', 'asciifolding', synonym_filter],
     char_filter=[naam_stripper],
 )
+
+boutnummer = es.analyzer(
+    'boutnummer',
+    # tokenizer='keyword',
+    tokenizer=boutnummer_ngram,
+    filter=['standard', 'lowercase'],
+    # char_filter=[postcode_stripper],
+)
+
 
 
 postcode = es.analyzer(

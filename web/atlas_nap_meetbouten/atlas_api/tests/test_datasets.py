@@ -27,7 +27,7 @@ class BrowseDatasetsTestCase(APITestCase):
     def test_root(self):
         response = self.client.get('/{}/'.format(self.root))
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response['Content-Type'], 'application/hal+json')
+        self.assertEqual(response['Content-Type'], 'application/json')
 
         for url in self.datasets:
             self.assertIn(url, response.data)
