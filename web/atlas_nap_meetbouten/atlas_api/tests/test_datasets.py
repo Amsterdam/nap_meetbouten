@@ -8,6 +8,7 @@ class BrowseDatasetsTestCase(APITestCase):
     """
     Verifies that browsing the API works correctly.
     """
+
     datasets = [
         'nap/peilmerk',
         'meetbouten/meetbout',
@@ -22,14 +23,6 @@ class BrowseDatasetsTestCase(APITestCase):
         factories_meetbouten.ReferentiepuntFactory.create()
         factories_meetbouten.RollaagFactory.create()
         factories_meetbouten.MetingFactory.create()
-
-    def test_root(self):
-        response = self.client.get('/{}/'.format(self.root))
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(response['Content-Type'], 'application/json')
-
-        for url in self.datasets:
-            self.assertIn(url, response.data)
 
     def test_lists(self):
         for url in self.datasets:
