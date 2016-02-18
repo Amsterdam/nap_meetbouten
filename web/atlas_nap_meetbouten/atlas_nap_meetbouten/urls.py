@@ -9,7 +9,9 @@ urlpatterns = [
     url(r'^jobs/(?P<pk>.*)$', b_views.JobDetailView.as_view(), name='job-detail'),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^status/', include('datapunt_generic.health.urls', namespace='health')),
-    url(r'^docs/', include('rest_framework_swagger.urls')),
+
     url(r'^nap/', include(atlas_api.urls.nap.urls)),
+
     url(r'^meetbouten/', include(atlas_api.urls.meetbouten.urls)),
+    url(r'^meetbouten/docs/', include('rest_framework_swagger.urls')),
 ]
