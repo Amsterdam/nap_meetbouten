@@ -197,7 +197,7 @@ NAP_MAX_DIGITS = 7  # if this is not enough, we have bigger problems
 ZAKKING_DECIMAL_PLACES = 13
 ZAKKING_MAX_DIGITS = 20
 
-swag_path = 'atlas.amsterdam.nl/docs' if not DEBUG else '127.0.0.1:8000/docs'
+swag_path = 'acc.atlas.amsterdam.nl/nap/docs' if not DEBUG else '127.0.0.1:8000/docs'
 
 SWAGGER_SETTINGS = {
     'exclude_namespaces': [],
