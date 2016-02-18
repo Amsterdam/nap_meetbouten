@@ -133,7 +133,11 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 
-STATIC_URL = '/static/'
+STATIC_URL = '/meetbouten/static/'
+
+if DEBUG:
+    STATIC_URL = '/static/'
+
 STATIC_ROOT = os.path.abspath(os.path.join(BASE_DIR, '..', 'static'))
 
 LOGGING = {
@@ -200,7 +204,7 @@ ZAKKING_MAX_DIGITS = 20
 swag_path = 'api-acc.datapunt.amsterdam.nl/meetbouten/docs'
 
 if DEBUG:
-    swag_path = '127.0.0.1:8000/meetbouten/docs'
+    swag_path = '127.0.0.1:8000/docs'
 
 SWAGGER_SETTINGS = {
     'exclude_namespaces': [],
