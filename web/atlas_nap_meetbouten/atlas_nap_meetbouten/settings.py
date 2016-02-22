@@ -52,6 +52,7 @@ if DEBUG:
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -179,7 +180,6 @@ REST_FRAMEWORK = dict(
 
 CORS_ORIGIN_REGEX_WHITELIST = (
     '^(https?://)?localhost(:\d+)?$',
-    '^(http?://)?localhost(:\d+)?$',
     '^(https?://)?.*\.datapunt.amsterdam\.nl$',
     '^(https?://)?.*\.amsterdam\.nl$',
 )
