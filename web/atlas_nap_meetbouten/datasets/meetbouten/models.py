@@ -44,7 +44,7 @@ class Meetbout(mixins.ImportStatusMixin):
     bouwblokzijde = models.CharField(max_length=10, null=True)
     eigenaar = models.CharField(max_length=50, null=True)
     beveiligd = models.BooleanField(default=False)
-    deelraad = models.CharField(max_length=50, null=True)
+    stadsdeel = models.CharField(max_length=50, null=True)
     nabij_adres = models.CharField(max_length=255, null=True)
     locatie = models.CharField(max_length=50, null=True)
     zakkingssnelheid = models.DecimalField(
@@ -56,9 +56,14 @@ class Meetbout(mixins.ImportStatusMixin):
     bouwbloknummer = models.CharField(max_length=4, null=True)
     blokeenheid = models.SmallIntegerField(null=True)
 
+    rollaag = models.ForeignKey('Rollaag', related_name="meetbouten", null=True)
+
     geometrie = geo.PointField(null=True, srid=28992)
 
     objects = geo.GeoManager()
+
+    def __str__(self):
+        return "{} ({})".format(self.nabij_adres, self.id)
 
 
 class Referentiepunt(mixins.ImportStatusMixin):
@@ -114,7 +119,7 @@ class Meting(mixins.ImportStatusMixin):
         decimal_places=settings.ZAKKING_DECIMAL_PLACES,
         null=True
     )
-    meetbout = models.ForeignKey(Meetbout)
+    meetbout = models.ForeignKey(Meetbout, related_name="metingen")
     refereert_aan = models.ManyToManyField(
         Referentiepunt,
         through='ReferentiepuntMeting',
@@ -134,7 +139,7 @@ class Meting(mixins.ImportStatusMixin):
     type_int = models.SmallIntegerField(null=True)
     dagen_vorige_meting = models.IntegerField(default=0, null=True)
     pandmsl = models.CharField(max_length=50, null=True)
-    deelraad = models.CharField(max_length=50, null=True)
+    stadsdeel = models.CharField(max_length=50, null=True)
     wvi = models.CharField(max_length=50, null=True)
 
     def __str__(self):
@@ -151,7 +156,8 @@ class ReferentiepuntMeting(models.Model):
 
 class Rollaag(mixins.ImportStatusMixin):
     id = models.IntegerField(primary_key=True)
-    meetbout = models.ForeignKey(Meetbout)  # Rollaag aan meetbout koppelen (via bouwbloknummer),
+
+    bouwblok = models.CharField(max_length=4, null=True)
     locatie_x = models.DecimalField(
             max_digits=10,
             decimal_places=2,
@@ -165,3 +171,6 @@ class Rollaag(mixins.ImportStatusMixin):
     geometrie = geo.PointField(null=True, srid=28992)
 
     objects = geo.GeoManager()
+
+    def __str__(self):
+        return "{}".format(self.id)

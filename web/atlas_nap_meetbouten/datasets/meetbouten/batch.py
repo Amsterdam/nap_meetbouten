@@ -19,16 +19,18 @@ class ImportMeetboutTask(batch.BasicTask):
     name = "Import MBT_MEETBOUT"
     meetbouten = dict()
     status_choices = dict()
+    rollagen = dict()
 
     def __init__(self, path):
         self.path = path
 
     def before(self):
         self.status_choices = dict(models.Meetbout.STATUS_CHOICES)
+        self.rollagen = dict(models.Rollaag.objects.values_list('bouwblok', 'pk'))
         database.clear_models(models.Meetbout)
 
     def after(self):
-        pass
+        self.rollagen.clear()
 
     def process(self):
         source = os.path.join(self.path, "MBT_MEETBOUT.dat")
@@ -40,7 +42,6 @@ class ImportMeetboutTask(batch.BasicTask):
 
     def process_row(self, r):
         row = cleanup_row(r, replace=True)
-
         pk = row[0]
         status = row[14]
 
@@ -48,6 +49,7 @@ class ImportMeetboutTask(batch.BasicTask):
             log.warn("Meetbout {} references non-existing status {}; skipping".format(pk, status))
             return
 
+        bouwblok = row[15]
         return models.Meetbout(
             pk=pk,
             buurt=row[1],
@@ -59,12 +61,13 @@ class ImportMeetboutTask(batch.BasicTask):
             bouwblokzijde=row[7],
             eigenaar=row[8],
             beveiligd=uva_indicatie(row[9]),
-            deelraad=row[10],
+            stadsdeel=row[10],
             nabij_adres=row[11],
             locatie=row[12],
             zakkingssnelheid=parse_decimal(row[13]),
             status=status,
-            bouwbloknummer=row[15],
+            bouwbloknummer=bouwblok,
+            rollaag_id=self.rollagen.get(bouwblok),
             blokeenheid=row[16] or 0,
             geometrie=GEOSGeometry(row[17]),
         )
@@ -133,25 +136,20 @@ class ImportMetingTask(batch.BasicTask):
             rows = csv.reader(f, delimiter='|', quotechar='$', doublequote=True)
             for row in rows:
                 self.process_row(row)
-
             models.ReferentiepuntMeting.objects.bulk_create(self.referentiepunt_relations,
                                                             batch_size=database.BATCH_SIZE)
 
     def process_row(self, r):
         row = cleanup_row(r, replace=True)
-
         pk = row[0]
         meting_type = row[2]
-
         if meting_type not in self.type_choices:
             log.warn("Meting {} references non-existing type {}; skipping".format(pk, meting_type))
             return
-
         meetbout_id = row[5]
         if meetbout_id not in self.meetbouten:
             log.warn("Meting {} references non-existing meetbout {}; skipping".format(pk, meetbout_id))
             return
-
         meting = models.Meting.objects.create(
             pk=pk,
             datum=uva_datum(row[1]),
@@ -165,10 +163,9 @@ class ImportMetingTask(batch.BasicTask):
             type_int=int(row[12]) if row[12] else None,
             dagen_vorige_meting=int(row[13]) if row[13] else None,
             pandmsl=row[14],
-            deelraad=row[15],
+            stadsdeel=row[15],
             wvi=row[16],
         )
-
         for i in range(6, 9):
             self.create_relation(meting, row[i])
 
@@ -185,17 +182,12 @@ class ImportMetingTask(batch.BasicTask):
 
 class ImportRollaagTask(batch.BasicTask):
     name = "Import MBT_ROLLAAG"
-    meetbouten = dict()
 
     def __init__(self, path):
         self.path = path
 
     def before(self):
         database.clear_models(models.Rollaag)
-        self.meetbouten = {k: v for (k, v) in models.Meetbout.objects.values_list("bouwbloknummer", "pk")}
-
-    def after(self):
-        self.meetbouten.clear()
 
     def process(self):
         source = os.path.join(self.path, "MBT_ROLLAAG.dat")
@@ -209,15 +201,11 @@ class ImportRollaagTask(batch.BasicTask):
         row = cleanup_row(r, replace=True)
 
         pk = row[1]
-        meetbout_id = self.meetbouten.get(row[0])
-
-        if not meetbout_id:
-            log.warn("Rollaag {} references non-existing meetbout {}; skipping".format(pk, row[0]))
-            return
+        bouwblok = row[0]
 
         return models.Rollaag(
             pk=pk,
-            meetbout_id=meetbout_id,
+            bouwblok=bouwblok,
             locatie_x=parse_decimal(row[2]),
             locatie_y=parse_decimal(row[3]),
             geometrie=GEOSGeometry(row[4]),
@@ -236,10 +224,10 @@ class ImportMeetboutenJob(object):
 
     def tasks(self):
         return [
+            ImportRollaagTask(self.meetbouten),
             ImportMeetboutTask(self.meetbouten),
             ImportReferentiepuntTask(self.meetbouten),
             ImportMetingTask(self.meetbouten),
-            ImportRollaagTask(self.meetbouten),
         ]
 
 #

@@ -1,4 +1,3 @@
-
 import logging
 from collections import OrderedDict
 
@@ -20,11 +19,11 @@ class QueryMetadata(metadata.SimpleMetadata):
     def determine_metadata(self, request, view):
         result = super().determine_metadata(request, view)
         result['parameters'] = dict(
-                q=dict(
-                        type="string",
-                        description="The query to search for",
-                        required=False
-                )
+            q=dict(
+                type="string",
+                description="The query to search for",
+                required=False
+            )
         )
         return result
 
@@ -96,7 +95,8 @@ def default_search_query(view, client, query):
     """
 
     return (
-        Search(client)
+        Search()
+        .using(client)
         .query(
             mulitimatch_Q(query)
         )
@@ -165,6 +165,7 @@ class SearchViewSet(viewsets.ViewSet):
             response['_links']['previous'] = None
 
     def list(self, request, *args, **kwargs):
+
         if 'q' not in request.query_params:
             return Response([])
 
@@ -226,14 +227,19 @@ class SearchViewSet(viewsets.ViewSet):
             self.normalize_bucket(field, request)
             for field in result.aggregations['by_type']['buckets']]
 
+    def get_url(self, request, hit):
+        """
+        Get a detail API url for hit
+        """
+        return _get_url()
+
     def normalize_hit(self, hit, request):
         result = OrderedDict()
-        result['_links'] = _get_url(request, hit)
+        result['_links'] = self.get_url(request, hit)
 
         result['type'] = hit.meta.doc_type
         result['dataset'] = hit.meta.index
-        # result['uri'] = _get_url(
-        #     request, hit.meta.doc_type, hit.meta.id) + "?full"
+
         result.update(hit.to_dict())
 
         return result

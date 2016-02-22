@@ -60,6 +60,9 @@ class Rollaag(MeetboutenMixin, rest.HALSerializer):
 # detail serializers
 class MeetboutDetail(MeetboutenMixin, rest.HALSerializer):
     status = serializers.CharField(source='get_status_display')
+    bouwblok = serializers.SerializerMethodField()
+    stadsdeel_link = serializers.SerializerMethodField()
+    #metingen = rest.RelatedSummaryField()
     _display = rest.DisplayField()
 
     class Meta:
@@ -78,15 +81,33 @@ class MeetboutDetail(MeetboutenMixin, rest.HALSerializer):
             'bouwblokzijde',
             'eigenaar',
             'beveiligd',
-            'deelraad',
+            'stadsdeel',
+            'stadsdeel_link',
             'nabij_adres',
             'locatie',
             'zakkingssnelheid',
             'status',
+            'bouwblok',
             'bouwbloknummer',
             'blokeenheid',
+            'rollaag',
+            'metingen',
             'geometrie',
         )
+
+    def get_bouwblok(self, obj):
+        link = "/gebieden/bouwblok/{}".format(obj.bouwbloknummer)
+        req = self.context.get('request')
+        if req:
+            link = req.build_absolute_uri(link)
+        return link
+
+    def get_stadsdeel_link(self, obj):
+        link = "/gebieden/stadsdeel/{}".format(obj.stadsdeel)
+        req = self.context.get('request')
+        if req:
+            link = req.build_absolute_uri(link)
+        return link
 
 
 class ReferentiepuntDetail(MeetboutenMixin, rest.HALSerializer):
@@ -113,6 +134,7 @@ class ReferentiepuntDetail(MeetboutenMixin, rest.HALSerializer):
 
 class MetingDetail(MeetboutenMixin, rest.HALSerializer):
     type = serializers.CharField(source='get_type_display')
+    refereert_aan = rest.RelatedSummaryField()
     _display = rest.DisplayField()
 
     class Meta:
@@ -131,10 +153,13 @@ class MetingDetail(MeetboutenMixin, rest.HALSerializer):
             'zakking_cumulatief',
             'ploeg',
             'dagen_vorige_meting',
+            'refereert_aan',
         )
 
 
 class RollaagDetail(MeetboutenMixin, rest.HALSerializer):
+    afbeelding = serializers.SerializerMethodField()
+    meetbouten = rest.RelatedSummaryField()
     _display = rest.DisplayField()
 
     class Meta:
@@ -144,8 +169,15 @@ class RollaagDetail(MeetboutenMixin, rest.HALSerializer):
             '_display',
 
             'id',
-            'meetbout',
+            'meetbouten',
             'locatie_x',
             'locatie_y',
             'geometrie',
+            'afbeelding',
         )
+
+    def get_afbeelding(self, obj):
+        if obj.bouwblok:
+            return 'http://atlas.amsterdam.nl/rollagen/{}.jpg'.format(obj.bouwblok.lower())
+
+        return None

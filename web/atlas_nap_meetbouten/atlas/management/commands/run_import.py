@@ -16,7 +16,7 @@ class Command(BaseCommand):
 
     indexes = dict(
         nap=[],
-        meetbouten=[],
+        meetbouten=[datasets.meetbouten.batch.IndexMeetboutenJob],
     )
 
     def add_arguments(self, parser):

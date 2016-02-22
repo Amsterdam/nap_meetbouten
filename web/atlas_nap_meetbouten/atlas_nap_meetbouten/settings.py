@@ -8,6 +8,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DIVA_DIR = os.path.abspath(os.path.join(BASE_DIR, './', 'diva'))
 
 SECRET_KEY = os.getenv("SECRET_KEY", "default-secret")
+
 DEBUG = False
 
 ALLOWED_HOSTS = ['*']
@@ -30,6 +31,8 @@ INSTALLED_APPS = (
     'django.contrib.gis',
     'rest_framework',
     'rest_framework_gis',
+    'rest_framework_swagger',
+
     'corsheaders',
 
     'atlas',
@@ -94,8 +97,9 @@ DATABASES = {
 
 
 ELASTIC_SEARCH_HOSTS = [
-    "%s:%s".format(os.getenv('ELASTIC_PORT_9200_TCP_ADDR', get_docker_host()),
-                   os.getenv('ELASTIC_PORT_9200_TCP_PORT', 9201))
+    "http://{}:{}".format(
+        os.getenv('ELASTIC_PORT_9200_TCP_ADDR', get_docker_host()),
+        os.getenv('ELASTIC_PORT_9200_TCP_PORT', 9201))
 ]
 
 ELASTIC_INDICES = dict(
@@ -130,6 +134,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 
 STATIC_URL = '/static/'
+
+
 STATIC_ROOT = os.path.abspath(os.path.join(BASE_DIR, '..', 'static'))
 
 LOGGING = {
@@ -163,7 +169,6 @@ REST_FRAMEWORK = dict(
     DEFAULT_PAGINATION_CLASS='drf_hal_json.pagination.HalPageNumberPagination',
     DEFAULT_PARSER_CLASSES=('drf_hal_json.parsers.JsonHalParser',),
     DEFAULT_RENDERER_CLASSES=(
-        'drf_hal_json.renderers.JsonHalRenderer',
         'rest_framework.renderers.JSONRenderer',
         'rest_framework.renderers.BrowsableAPIRenderer'
     ),
@@ -173,7 +178,8 @@ REST_FRAMEWORK = dict(
 
 CORS_ORIGIN_REGEX_WHITELIST = (
     '^(https?://)?localhost(:\d+)?$',
-    '^(https?://)?.*\.datalabamsterdam\.nl$',
+    '^(http?://)?localhost(:\d+)?$',
+    '^(https?://)?.*\.datapunt.amsterdam\.nl$',
     '^(https?://)?.*\.amsterdam\.nl$',
 )
 
@@ -192,3 +198,40 @@ NAP_MAX_DIGITS = 7  # if this is not enough, we have bigger problems
 
 ZAKKING_DECIMAL_PLACES = 13
 ZAKKING_MAX_DIGITS = 20
+
+swag_path = 'api-acc.datapunt.amsterdam.nl/meetbouten/docs'
+
+if DEBUG:
+    swag_path = '127.0.0.1:8000/meetbouten/docs'
+
+SWAGGER_SETTINGS = {
+    'exclude_namespaces': [],
+    'api_version': '0.1',
+    'api_path': '/',
+
+    'enabled_methods': [
+        'get',
+    ],
+
+    'api_key': '',
+
+    'is_authenticated': False,
+    'is_superuser': False,
+
+    'unauthenticated_user': 'django.contrib.auth.models.AnonymousUser',
+    'permission_denied_handler': None,
+    'resource_access_handler': None,
+
+    'protocol': 'https' if not DEBUG else '',
+    'base_path': swag_path,
+
+    'info': {
+        'contact': 'atlas.basisinformatie@amsterdam.nl',
+        'description': 'This is a meetbouten metingen api server. ',
+        'license': 'Not known yet. Apache 2.0',
+        'licenseUrl': 'http://www.apache.org/licenses/LICENSE-2.0.html',
+        'termsOfServiceUrl': 'https://atlas.amsterdam.nl/terms/',
+        'title': 'Meetbouten en metingen App',
+    },
+    'doc_expansion': 'none',
+}

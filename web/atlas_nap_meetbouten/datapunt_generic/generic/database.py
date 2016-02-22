@@ -1,6 +1,5 @@
 import re
 import os
-import subprocess
 
 from django.db import connection
 
@@ -13,14 +12,17 @@ def clear_models(*models):
     """
     for model in models:
         # noinspection PyProtectedMember
-        connection.cursor().execute("TRUNCATE {} CASCADE".format(model._meta.db_table))
+        connection.cursor().execute(
+            "TRUNCATE {} CASCADE".format(model._meta.db_table))
 
 
 def get_docker_host():
     """
-    Looks for the DOCKER_HOST environment variable to find the VM running docker-machine.
+    Looks for the DOCKER_HOST environment variable to find the VM
+    running docker-machine.
 
-    If the environment variable is not found, it is assumed that you're running docker on localhost.
+    If the environment variable is not found, it is assumed that
+    you're running docker on localhost.
     """
     d_host = os.getenv('DOCKER_HOST', None)
     if d_host:
