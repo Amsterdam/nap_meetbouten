@@ -19,11 +19,11 @@ class QueryMetadata(metadata.SimpleMetadata):
     def determine_metadata(self, request, view):
         result = super().determine_metadata(request, view)
         result['parameters'] = dict(
-                q=dict(
-                        type="string",
-                        description="The query to search for",
-                        required=False
-                )
+            q=dict(
+                type="string",
+                description="The query to search for",
+                required=False
+            )
         )
         return result
 
@@ -165,6 +165,7 @@ class SearchViewSet(viewsets.ViewSet):
             response['_links']['previous'] = None
 
     def list(self, request, *args, **kwargs):
+
         if 'q' not in request.query_params:
             return Response([])
 

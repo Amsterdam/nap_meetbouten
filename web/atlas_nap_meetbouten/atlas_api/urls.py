@@ -1,22 +1,30 @@
-from django.conf.urls import url, include
 from rest_framework import routers
 
-from django.conf import settings
-
-from datasets.nap.views import PeilViewSet
 from datasets.meetbouten.views import *
-
+from datasets.nap.views import PeilViewSet
 from . import views as searchviews
 
 
-class DocumentedRouter(routers.DefaultRouter):
+class NAPRouter(routers.DefaultRouter):
     """
-    NAP
     Het Normaal Amsterdams Peil (meestal afgekort tot NAP) is de referentiehoogte waaraan hoogtemetingen in Nederland
     worden gerelateerd. Het NAP-net bestaat uit ongeveer 50.000 zichtbare peilmerken en 250 ondergrondse peilmerken in
     Nederland, waarvan ongeveer 1000 in Amsterdam.
+    """
 
-    Meetbouten
+    def get_api_root_view(self):
+        view = super().get_api_root_view()
+        cls = view.cls
+
+        class NAP(cls):
+            pass
+
+        NAP.__doc__ = self.__doc__
+        return NAP.as_view()
+
+
+class MeetboutenRouter(routers.DefaultRouter):
+    """
     In Amsterdam is een systeem gerealiseerd voor het monitoren van deformatie (zakkingen). De oudere, vooroorlogse
     panden in Amsterdam zijn gebouwd op houten palen. De kwaliteit van deze fundering op houten palen verschilt sterk.
     Een slechte fundering kan zakkingen tot gevolg hebben, waardoor de kwaliteit van deze panden afneemt en
@@ -33,39 +41,22 @@ class DocumentedRouter(routers.DefaultRouter):
         view = super().get_api_root_view()
         cls = view.cls
 
-        class Datapunt(cls):
+        class Meetbouten(cls):
             pass
 
-        Datapunt.__doc__ = self.__doc__
-        return Datapunt.as_view()
+        Meetbouten.__doc__ = self.__doc__
+        return Meetbouten.as_view()
 
 
-router = DocumentedRouter()
+meetbouten = MeetboutenRouter()
 
-router.register(r'nap/peilmerk', PeilViewSet)
+meetbouten.register(r'meetbout', MeetboutViewSet)
+meetbouten.register(r'meting', MetingViewSet)
+meetbouten.register(r'referentiepunt', ReferentiepuntViewSet)
+meetbouten.register(r'rollaag', RollaagViewSet)
 
-router.register(r'meetbouten/meetbout', MeetboutViewSet)
-router.register(r'meetbouten/meting', MetingViewSet)
-router.register(r'meetbouten/referentiepunt', ReferentiepuntViewSet)
-router.register(r'meetbouten/rollaag', RollaagViewSet)
+meetbouten.register(r'typeahead', searchviews.TypeaheadViewSet, base_name='typeahead')
+meetbouten.register(r'search', searchviews.SearchMeetboutViewSet, base_name='search')
 
-
-# Search related
-
-router.register(r'meetbouten/typeahead',
-                searchviews.TypeaheadViewSet, base_name='typeahead')
-
-router.register(r'meetbouten/search',
-                searchviews.SearchMeetboutViewSet, base_name='search')
-
-
-if settings.DEBUG:
-    router.register(r'meetbouten/search/test',
-                    searchviews.SearchTestViewSet,
-                    base_name='search/test')
-
-
-urlpatterns = [
-    url(r'^auth/', include('rest_framework.urls', namespace='rest_framework')),
-    url(r'^', include(router.urls)),
-]
+nap = NAPRouter()
+nap.register(r'peilmerk', PeilViewSet)

@@ -8,6 +8,7 @@ django-extensions==1.6.1
 django-filter==0.11.0
 django-jenkins==0.18.1
 django-shotgun==0.2
+django-rest-swagger==0.3.5
 djangorestframework==3.2.3
 djangorestframework-gis==0.9.4
 drf-extensions==0.2.8
