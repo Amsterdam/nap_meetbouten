@@ -42,7 +42,6 @@ class ImportMeetboutTask(batch.BasicTask):
 
     def process_row(self, r):
         row = cleanup_row(r, replace=True)
-
         pk = row[0]
         status = row[14]
 
@@ -137,25 +136,20 @@ class ImportMetingTask(batch.BasicTask):
             rows = csv.reader(f, delimiter='|', quotechar='$', doublequote=True)
             for row in rows:
                 self.process_row(row)
-
             models.ReferentiepuntMeting.objects.bulk_create(self.referentiepunt_relations,
                                                             batch_size=database.BATCH_SIZE)
 
     def process_row(self, r):
         row = cleanup_row(r, replace=True)
-
         pk = row[0]
         meting_type = row[2]
-
         if meting_type not in self.type_choices:
             log.warn("Meting {} references non-existing type {}; skipping".format(pk, meting_type))
             return
-
         meetbout_id = row[5]
         if meetbout_id not in self.meetbouten:
             log.warn("Meting {} references non-existing meetbout {}; skipping".format(pk, meetbout_id))
             return
-
         meting = models.Meting.objects.create(
             pk=pk,
             datum=uva_datum(row[1]),
@@ -172,7 +166,6 @@ class ImportMetingTask(batch.BasicTask):
             stadsdeel=row[15],
             wvi=row[16],
         )
-
         for i in range(6, 9):
             self.create_relation(meting, row[i])
 

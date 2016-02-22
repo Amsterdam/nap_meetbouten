@@ -61,8 +61,8 @@ class Rollaag(MeetboutenMixin, rest.HALSerializer):
 class MeetboutDetail(MeetboutenMixin, rest.HALSerializer):
     status = serializers.CharField(source='get_status_display')
     bouwblok = serializers.SerializerMethodField()
-    stadsdeel = serializers.SerializerMethodField()
-    metingen = rest.RelatedSummaryField()
+    stadsdeel_link = serializers.SerializerMethodField()
+    #metingen = rest.RelatedSummaryField()
     _display = rest.DisplayField()
 
     class Meta:
@@ -82,6 +82,7 @@ class MeetboutDetail(MeetboutenMixin, rest.HALSerializer):
             'eigenaar',
             'beveiligd',
             'stadsdeel',
+            'stadsdeel_link',
             'nabij_adres',
             'locatie',
             'zakkingssnelheid',
@@ -101,7 +102,7 @@ class MeetboutDetail(MeetboutenMixin, rest.HALSerializer):
             link = req.build_absolute_uri(link)
         return link
 
-    def get_stadsdeel(self, obj):
+    def get_stadsdeel_link(self, obj):
         link = "/gebieden/stadsdeel/{}".format(obj.stadsdeel)
         req = self.context.get('request')
         if req:
