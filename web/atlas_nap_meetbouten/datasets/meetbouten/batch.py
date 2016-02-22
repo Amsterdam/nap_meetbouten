@@ -59,7 +59,7 @@ class ImportMeetboutTask(batch.BasicTask):
             bouwblokzijde=row[7],
             eigenaar=row[8],
             beveiligd=uva_indicatie(row[9]),
-            deelraad=row[10],
+            stadsdeel=row[10],
             nabij_adres=row[11],
             locatie=row[12],
             zakkingssnelheid=parse_decimal(row[13]),
@@ -165,7 +165,7 @@ class ImportMetingTask(batch.BasicTask):
             type_int=int(row[12]) if row[12] else None,
             dagen_vorige_meting=int(row[13]) if row[13] else None,
             pandmsl=row[14],
-            deelraad=row[15],
+            stadsdeel=row[15],
             wvi=row[16],
         )
 

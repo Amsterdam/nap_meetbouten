@@ -78,7 +78,7 @@ class MeetboutDetail(MeetboutenMixin, rest.HALSerializer):
             'bouwblokzijde',
             'eigenaar',
             'beveiligd',
-            'deelraad',
+            'stadsdeell',
             'nabij_adres',
             'locatie',
             'zakkingssnelheid',
