@@ -38,6 +38,7 @@ huisnummer_generate = analysis.char_filter(
         $1h 1-h
         $1i 1-i
         $1j 1-j
+        $1j 1-k
     """
 )
 
@@ -57,6 +58,14 @@ adres_split = analysis.char_filter(
         "-=>' '",   # strip '-'
         ".=>' '",   # change '.' to separator
     ]
+)
+
+
+boutnummer_ngram = analysis.EdgeNGramTokenizer(
+    name='boutnummer_ngram',
+    min_gram=1,
+    max_gram=8,
+    token_chars=['letter', 'digit']
 )
 
 
@@ -100,13 +109,22 @@ naam = es.analyzer(
     char_filter=[naam_stripper],
 )
 
+boutnummer = es.analyzer(
+    'boutnummer',
+    # tokenizer='keyword',
+    tokenizer=boutnummer_ngram,
+    filter=['standard', 'lowercase'],
+    # char_filter=[postcode_stripper],
+)
+
+
 
 postcode = es.analyzer(
     'postcode',
-    #tokenizer='keyword',
+    # tokenizer='keyword',
     tokenizer=postcode_ngram,
     filter=['standard', 'lowercase'],
-    #char_filter=[postcode_stripper],
+    # char_filter=[postcode_stripper],
 )
 
 huisnummer = es.analyzer(

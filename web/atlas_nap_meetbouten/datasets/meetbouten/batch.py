@@ -15,33 +15,30 @@ from . import models, documents
 log = logging.getLogger(__name__)
 
 
-class ImportMeetboutenTask(batch.BasicTask):
-    name = "Import Meetbouten"
+class ImportMeetboutTask(batch.BasicTask):
+    name = "Import MBT_MEETBOUT"
     meetbouten = dict()
     status_choices = dict()
+    rollagen = dict()
 
     def __init__(self, path):
         self.path = path
 
     def before(self):
         self.status_choices = dict(models.Meetbout.STATUS_CHOICES)
+        self.rollagen = dict(models.Rollaag.objects.values_list('bouwblok', 'pk'))
         database.clear_models(models.Meetbout)
 
     def after(self):
-        pass
+        self.rollagen.clear()
 
     def process(self):
         source = os.path.join(self.path, "MBT_MEETBOUT.dat")
         with open(source, encoding='cp1252') as f:
-            rows = csv.reader(
-                f, delimiter='|', quotechar='$', doublequote=True)
-            self.meetbouten = [
-                result for result in (
-                    self.process_row(row)
-                    for row in rows) if result]
+            rows = csv.reader(f, delimiter='|', quotechar='$', doublequote=True)
+            meetbouten = [result for result in (self.process_row(row) for row in rows) if result]
 
-        models.Meetbout.objects.bulk_create(
-            self.meetbouten, batch_size=database.BATCH_SIZE)
+        models.Meetbout.objects.bulk_create(meetbouten, batch_size=database.BATCH_SIZE)
 
     def process_row(self, r):
         row = cleanup_row(r, replace=True)
@@ -53,6 +50,7 @@ class ImportMeetboutenTask(batch.BasicTask):
             log.warn("Meetbout {} references non-existing status {}; skipping".format(pk, status))
             return
 
+        bouwblok = row[15]
         return models.Meetbout(
             pk=pk,
             buurt=row[1],
@@ -69,14 +67,15 @@ class ImportMeetboutenTask(batch.BasicTask):
             locatie=row[12],
             zakkingssnelheid=parse_decimal(row[13]),
             status=status,
-            bouwbloknummer=row[15],
+            bouwbloknummer=bouwblok,
+            rollaag_id=self.rollagen.get(bouwblok),
             blokeenheid=row[16] or 0,
             geometrie=GEOSGeometry(row[17]),
         )
 
 
-class ImportReferentiepuntenTask(batch.BasicTask):
-    name = "Import Referentiepunten"
+class ImportReferentiepuntTask(batch.BasicTask):
+    name = "Import MBT_REFERENTIEPUNT"
     referentiepunten = dict()
 
     def __init__(self, path):
@@ -91,14 +90,10 @@ class ImportReferentiepuntenTask(batch.BasicTask):
     def process(self):
         source = os.path.join(self.path, "MBT_REFERENTIEPUNT.dat")
         with open(source, encoding='cp1252') as f:
-            rows = csv.reader(
-                f, delimiter='|', quotechar='$', doublequote=True)
-            self.referentiepunten = [
-                result for result in (
-                    self.process_row(row) for row in rows) if result]
+            rows = csv.reader(f, delimiter='|', quotechar='$', doublequote=True)
+            referentiepunten = [result for result in (self.process_row(row) for row in rows) if result]
 
-        models.Referentiepunt.objects.bulk_create(
-            self.referentiepunten, batch_size=database.BATCH_SIZE)
+        models.Referentiepunt.objects.bulk_create(referentiepunten, batch_size=database.BATCH_SIZE)
 
     def process_row(self, r):
         row = cleanup_row(r, replace=True)
@@ -116,6 +111,114 @@ class ImportReferentiepuntenTask(batch.BasicTask):
         )
 
 
+class ImportMetingTask(batch.BasicTask):
+    name = "Import MBT_METING"
+    type_choices = dict()
+    meetbouten = set()
+    referentiepunten = set()
+    referentiepunt_relations = list()
+
+    def __init__(self, path):
+        self.path = path
+
+    def before(self):
+        database.clear_models(models.Meting)
+        self.type_choices = dict(models.Meting.TYPE_CHOICES)
+        self.referentiepunten = frozenset(models.Referentiepunt.objects.values_list("pk", flat=True))
+        self.meetbouten = frozenset(models.Meetbout.objects.values_list("pk", flat=True))
+
+    def after(self):
+        self.referentiepunten = None
+        self.meetbouten = None
+
+    def process(self):
+        source = os.path.join(self.path, "MBT_METING.dat")
+        with open(source, encoding='cp1252') as f:
+            rows = csv.reader(f, delimiter='|', quotechar='$', doublequote=True)
+            for row in rows:
+                self.process_row(row)
+
+            models.ReferentiepuntMeting.objects.bulk_create(self.referentiepunt_relations,
+                                                            batch_size=database.BATCH_SIZE)
+
+    def process_row(self, r):
+        row = cleanup_row(r, replace=True)
+
+        pk = row[0]
+        meting_type = row[2]
+
+        if meting_type not in self.type_choices:
+            log.warn("Meting {} references non-existing type {}; skipping".format(pk, meting_type))
+            return
+
+        meetbout_id = row[5]
+        if meetbout_id not in self.meetbouten:
+            log.warn("Meting {} references non-existing meetbout {}; skipping".format(pk, meetbout_id))
+            return
+
+        meting = models.Meting.objects.create(
+            pk=pk,
+            datum=uva_datum(row[1]),
+            type=meting_type,
+            hoogte_nap=parse_decimal(row[3]),
+            zakking=parse_decimal(row[4]),
+            meetbout_id=meetbout_id,
+            zakkingssnelheid=parse_decimal(row[9]),
+            zakking_cumulatief=parse_decimal(row[10]),
+            ploeg=row[11],
+            type_int=int(row[12]) if row[12] else None,
+            dagen_vorige_meting=int(row[13]) if row[13] else None,
+            pandmsl=row[14],
+            deelraad=row[15],
+            wvi=row[16],
+        )
+
+        for i in range(6, 9):
+            self.create_relation(meting, row[i])
+
+        return meting
+
+    def create_relation(self, meting, ref):
+        if ref in self.referentiepunten:
+            rm = models.ReferentiepuntMeting(
+                referentiepunt_id=ref,
+                meting=meting
+            )
+            self.referentiepunt_relations.append(rm)
+
+
+class ImportRollaagTask(batch.BasicTask):
+    name = "Import MBT_ROLLAAG"
+
+    def __init__(self, path):
+        self.path = path
+
+    def before(self):
+        database.clear_models(models.Rollaag)
+
+    def process(self):
+        source = os.path.join(self.path, "MBT_ROLLAAG.dat")
+        with open(source, encoding='cp1252') as f:
+            rows = csv.reader(f, delimiter='|', quotechar='$', doublequote=True)
+            rollagen = [result for result in (self.process_row(row) for row in rows) if result]
+
+            models.Rollaag.objects.bulk_create(rollagen, batch_size=database.BATCH_SIZE)
+
+    def process_row(self, r):
+        row = cleanup_row(r, replace=True)
+
+        pk = row[1]
+        bouwblok = row[0]
+
+        return models.Rollaag(
+            pk=pk,
+            bouwblok=bouwblok,
+            locatie_x=parse_decimal(row[2]),
+            locatie_y=parse_decimal(row[3]),
+            geometrie=GEOSGeometry(row[4]),
+        )
+
+
 class ImportMeetboutenJob(object):
     name = "Import meetbouten"
 
@@ -128,10 +231,11 @@ class ImportMeetboutenJob(object):
 
     def tasks(self):
         return [
-            ImportMeetboutenTask(self.meetbouten),
-            ImportReferentiepuntenTask(self.meetbouten),
+            ImportRollaagTask(self.meetbouten),
+            ImportMeetboutTask(self.meetbouten),
+            ImportReferentiepuntTask(self.meetbouten),
+            ImportMetingTask(self.meetbouten),
         ]
-
 
 #
 # Elastic jobs

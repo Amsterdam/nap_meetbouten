@@ -1,5 +1,6 @@
 import re
 import os
+
 from django.db import connection
 
 BATCH_SIZE = 50000
@@ -11,19 +12,17 @@ def clear_models(*models):
     """
     for model in models:
         # noinspection PyProtectedMember
-        connection.cursor().execute("TRUNCATE {} CASCADE".format(model._meta.db_table))
+        connection.cursor().execute(
+            "TRUNCATE {} CASCADE".format(model._meta.db_table))
 
 
 def get_docker_host():
-    # TODO:
     """
-    integrate this (postactivate virtualenv) bash code here?
+    Looks for the DOCKER_HOST environment variable to find the VM
+    running docker-machine.
 
-    DB_DOCKER_NAME='kartoza/postgis'
-    CONTAINER=$(docker ps | grep $DB_DOCKER_NAME | awk '{ print $1 }')
-    DOCKER_HOST=$(docker inspect $CONTAINER | grep IPAddress | awk '{ print $2 }' | tr -d ',"' | tr -d 'null')
-
-    export
+    If the environment variable is not found, it is assumed that
+    you're running docker on localhost.
     """
     d_host = os.getenv('DOCKER_HOST', None)
     if d_host:

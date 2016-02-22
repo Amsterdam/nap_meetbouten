@@ -5,24 +5,24 @@ database:
   environment:
     POSTGRES_PASSWORD: insecure
 
+elasticsearch:
+  image: admin.datapunt.amsterdam.nl:5000/atlas/elasticsearch
+  command: elasticsearch -Des.node.name="Atlas"
+  ports:
+    - "9201:9200"
+    - "9301:9300"
+
 web:
   build: ./web
   ports:
     - "8100:8000"
   links:
     - database:database
+    - elasticsearch:elastic
   volumes:
     - $PWD/reports:/app/reports
   environment:
     SECRET_KEY: hoi
     DB_NAME: postgres
     DB_PASSWORD: insecure
-
-elasticsearch:
-  build: docker-compose/elasticsearch
-  command: elasticsearch -Des.node.name="Atlas"
-  ports:
-    - "9200:9200"
-    - "9300:9300"
-
 

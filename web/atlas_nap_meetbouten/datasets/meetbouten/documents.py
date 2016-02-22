@@ -18,6 +18,8 @@ def get_centroid(geom):
 class Meetbout(es.DocType):
     straatnaam = es.String(analyzer=analyzers.adres)
 
+    meetboutnummer = es.String(analyzer=analyzers.boutnummer)
+
     status = es.String()
 
     locatie = es.String(analyzer=analyzers.adres)
@@ -31,7 +33,7 @@ class Meetbout(es.DocType):
 
     eigenaar = es.String()
     bouwblokzijde = es.String()
-    bouwbloknummer = es.String(analyzer=analyzers.adres)
+    bouwbloknummer = es.String(analyzer=analyzers.boutnummer)
 
     nabij_adres = es.String(analyzer=analyzers.adres)
 
@@ -43,7 +45,19 @@ class Meetbout(es.DocType):
 
 def from_meetbout(m: models.Meetbout):
     doc = Meetbout(_id=m.id)
-    # add fields..
+    doc.meetboutnummer = m.id
+
+    doc.status = m.status
+    doc.locate = m.locatie
+
+    doc.locatie_x = m.locatie_x
+    doc.locatie_y = m.locatie_y
+    doc.hoogte_nap = m.hoogte_nap
+    doc.zakkingssnelheid = m.zakkingssnelheid
+
+    doc.eigenaar = m.eigenaar
+
+    doc.bouwbloknummer = m.bouwbloknummer
 
     doc.centroid = get_centroid(m.geometrie)
 

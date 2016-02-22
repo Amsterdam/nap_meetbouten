@@ -11,12 +11,12 @@ class Command(BaseCommand):
 
     imports = dict(
         nap=[datasets.nap.batch.ImportNapJob],
-        meetbouten=[],
+        meetbouten=[datasets.meetbouten.batch.ImportMeetboutenJob],
     )
 
     indexes = dict(
         nap=[],
-        meetbouten=[],
+        meetbouten=[datasets.meetbouten.batch.IndexMeetboutenJob],
     )
 
     def add_arguments(self, parser):
