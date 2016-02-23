@@ -51,7 +51,7 @@ class MetingViewSet(rest.AtlasViewSet):
     """
 
     metadata_class = ExpansionMetadata
-    queryset = models.Meting.objects.all()
+    queryset = models.Meting.objects.order_by('datum', 'id')
     serializer_detail_class = serializers.MetingDetail
     serializer_class = serializers.Meting
     filter_fields = ('meetbout', 'refereert_aan__id')

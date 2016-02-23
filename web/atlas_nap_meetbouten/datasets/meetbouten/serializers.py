@@ -30,6 +30,11 @@ class Meting(MeetboutenMixin, rest.HALSerializer):
             '_links',
             '_display',
             'id',
+            'datum',
+            'zakking',
+            'hoogte_nap',
+            'zakkingssnelheid',
+            'zakking_cumulatief',
         )
 
 
