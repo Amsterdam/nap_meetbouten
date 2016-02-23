@@ -19,8 +19,8 @@ def delete_site(apps, *args, **kwargs):
 
 class Migration(migrations.Migration):
     dependencies = [
-        ('geo_views', '0003_nap_views'),
         ('sites', '0001_initial'),
+        ('geo_views', '0003_nap_views'),
     ]
 
     operations = [
