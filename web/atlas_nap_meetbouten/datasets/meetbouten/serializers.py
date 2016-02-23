@@ -62,7 +62,7 @@ class MeetboutDetail(MeetboutenMixin, rest.HALSerializer):
     status = serializers.CharField(source='get_status_display')
     bouwblok = serializers.SerializerMethodField()
     stadsdeel_link = serializers.SerializerMethodField()
-    #metingen = rest.RelatedSummaryField()
+    metingen = serializers.SerializerMethodField()
     _display = rest.DisplayField()
 
     class Meta:
@@ -104,6 +104,13 @@ class MeetboutDetail(MeetboutenMixin, rest.HALSerializer):
 
     def get_stadsdeel_link(self, obj):
         link = "/gebieden/stadsdeel/{}".format(obj.stadsdeel)
+        req = self.context.get('request')
+        if req:
+            link = req.build_absolute_uri(link)
+        return link
+
+    def get_metingen(self, obj):
+        link = "/meetbouten/meting/?meetbout_id={}".format(obj.id)
         req = self.context.get('request')
         if req:
             link = req.build_absolute_uri(link)
