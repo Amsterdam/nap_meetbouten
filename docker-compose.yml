@@ -6,13 +6,8 @@ database:
     POSTGRES_PASSWORD: insecure
 
 elasticsearch:
-<<<<<<< Updated upstream
   image: admin.datapunt.amsterdam.nl:5000/atlas/elasticsearch:latest
-  command: elasticsearch -Des.node.name="Atlas"
-=======
-  image: admin.datapunt.amsterdam.nl:5000/atlas/elasticsearch
-  command: elasticsearch -Des.network.host=0.0.0.0 
->>>>>>> Stashed changes
+  command: elasticsearch -Des.network.host=0.0.0.0
   ports:
     - "9201:9200"
     - "9301:9300"
