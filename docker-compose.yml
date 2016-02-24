@@ -6,7 +6,7 @@ database:
     POSTGRES_PASSWORD: insecure
 
 elasticsearch:
-  image: admin.datapunt.amsterdam.nl:5000/atlas/elasticsearch
+  image: admin.datapunt.amsterdam.nl:5000/atlas/elasticsearch:latest
   command: elasticsearch -Des.node.name="Atlas"
   ports:
     - "9201:9200"
