@@ -44,7 +44,7 @@ class Meetbout(mixins.ImportStatusMixin):
     bouwblokzijde = models.CharField(max_length=10, null=True)
     eigenaar = models.CharField(max_length=50, null=True)
     beveiligd = models.BooleanField(default=False)
-    deelraad = models.CharField(max_length=50, null=True)
+    stadsdeel = models.CharField(max_length=50, null=True)
     nabij_adres = models.CharField(max_length=255, null=True)
     locatie = models.CharField(max_length=50, null=True)
     zakkingssnelheid = models.DecimalField(
@@ -139,7 +139,7 @@ class Meting(mixins.ImportStatusMixin):
     type_int = models.SmallIntegerField(null=True)
     dagen_vorige_meting = models.IntegerField(default=0, null=True)
     pandmsl = models.CharField(max_length=50, null=True)
-    deelraad = models.CharField(max_length=50, null=True)
+    stadsdeel = models.CharField(max_length=50, null=True)
     wvi = models.CharField(max_length=50, null=True)
 
     def __str__(self):

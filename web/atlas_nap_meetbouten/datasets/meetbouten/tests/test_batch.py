@@ -1,5 +1,3 @@
-from unittest import skip
-
 from . import factories
 
 from datapunt_generic.batch.test import TaskTestCase

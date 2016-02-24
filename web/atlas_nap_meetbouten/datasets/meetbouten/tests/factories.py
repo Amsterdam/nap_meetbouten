@@ -2,7 +2,6 @@ import factory
 from factory import fuzzy
 
 from .. import models
-from datasets.nap.tests.factories import PeilmerkFactory
 
 
 class RollaagFactory(factory.DjangoModelFactory):
