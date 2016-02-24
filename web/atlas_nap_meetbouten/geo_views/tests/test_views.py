@@ -18,6 +18,7 @@ class ViewsTest(TestCase):
         l = nap_factories.PeilmerkFactory.create()
         row = self.get_row('geo_nap_peilmerk')
         self.assertEqual(row['id'], l.id)
+        self.assertIn(l.id, row['display'])
         self.assertIn("geometrie", row)
         self.assertEqual(row['uri'],
                          'http://update.me/nap/peilmerk/{}/'.format(l.id))
@@ -26,6 +27,7 @@ class ViewsTest(TestCase):
         mb = meetbouten_factories.MeetboutFactory.create()
         row = self.get_row('geo_meetbouten_meetbout')
         self.assertEqual(row['id'], mb.id)
+        self.assertIn(mb.id, row['display'])
         self.assertIn("geometrie", row)
         self.assertEqual(row['uri'],
                          'http://update.me/meetbouten/meetbout/{}/'.format(mb.id))
@@ -34,6 +36,7 @@ class ViewsTest(TestCase):
         rp = meetbouten_factories.ReferentiepuntFactory.create()
         row = self.get_row('geo_meetbouten_referentiepunt')
         self.assertEqual(row['id'], rp.id)
+        self.assertIn(rp.id, row['display'])
         self.assertIn("geometrie", row)
         self.assertEqual(row['uri'],
                          'http://update.me/meetbouten/referentiepunt/{}/'.format(rp.id))
