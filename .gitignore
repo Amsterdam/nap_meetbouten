@@ -5,3 +5,4 @@ reports
 *.iml
 *_dev_settings.py
 web/static/*
+.env
