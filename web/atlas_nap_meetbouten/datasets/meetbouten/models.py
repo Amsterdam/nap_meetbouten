@@ -43,7 +43,7 @@ class Meetbout(mixins.ImportStatusMixin):
     datum = models.DateField(null=True)
     bouwblokzijde = models.CharField(max_length=10, null=True)
     eigenaar = models.CharField(max_length=50, null=True)
-    beveiligd = models.BooleanField(default=False)
+    beveiligd = models.NullBooleanField(default=None)
     stadsdeel = models.CharField(max_length=50, null=True)
     nabij_adres = models.CharField(max_length=255, null=True)
     locatie = models.CharField(max_length=50, null=True)
