@@ -13,5 +13,8 @@ python manage.py collectstatic --noinput
 # migrate database tables
 yes yes | python manage.py migrate --noinput
 
+# materialize views and create indices
+python manage.py materialize_views
+
 # run uwsgi
 exec uwsgi --ini /app/uwsgi.ini
