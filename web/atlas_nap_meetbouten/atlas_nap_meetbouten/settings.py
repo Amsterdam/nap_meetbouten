@@ -234,5 +234,5 @@ SWAGGER_SETTINGS = {
         'termsOfServiceUrl': 'https://atlas.amsterdam.nl/terms/',
         'title': 'Meetbouten en metingen App',
     },
-    'doc_expansion': 'none',
+    'doc_expansion': 'list',
 }

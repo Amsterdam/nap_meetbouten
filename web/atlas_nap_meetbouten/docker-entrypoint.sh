@@ -1,9 +1,11 @@
 #!/usr/bin/env bash
 
-set -u
-set -e
+set -u   # crash on missing env variables
+set -e   # stop on any error
 
 cd /app
+
+source docker-wait.sh
 
 # collect static files
 python manage.py collectstatic --noinput
