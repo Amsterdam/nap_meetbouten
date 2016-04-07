@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-set -u
-set -e
+set -u   # crash on missing env variables
+set -e   # stop on any error
 
 cd /app
 
@@ -12,6 +12,9 @@ python manage.py collectstatic --noinput
 
 # migrate database tables
 yes yes | python manage.py migrate --noinput
+
+# materialize views and create indices
+python manage.py materialize_views
 
 # run uwsgi
 exec uwsgi --ini /app/uwsgi.ini
