@@ -36,6 +36,7 @@ db-backup:
     bash -c "echo db:5432:atlas_nap:atlas_nap:insecure > ~/.pgpass \
             && chmod 600 ~/.pgpass \
             && pg_dump --clean \
+                        -Fc
                         -t nap* \
                         -t meetbout* \
                         -t geo*  \
@@ -43,7 +44,7 @@ db-backup:
                         -T auth*    \
                         -U atlas_nap \
                         -h db -p 5432 \
-                        atlas_nap | gzip > /tmp/backups/database.sql.gz"
+                        atlas_nap > /tmp/backups/database.dump"
 
 el-backup:
   image: admin.datapunt.amsterdam.nl:5000/atlas/elasticsearch
