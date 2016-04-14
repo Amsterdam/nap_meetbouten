@@ -9,15 +9,13 @@ function dc {
 	docker-compose -f ${DIR}/docker-compose.yml $*
 }
 
+trap 'dc down' EXIT
+
+rm -rf ${DIR}/backups
 mkdir -p ${DIR}/backups
 
 dc build
-dc up -d database elasticsearch
-
 dc run --rm importer
-dc run --rm db-backup > ${DIR}/backups/database.sql
+dc run --rm db-backup
 dc run --rm el-backup
 
-docker cp $(docker-compose ps -q elasticsearch):/tmp/backups ${DIR}/backups/elastic
-
-#dc down
