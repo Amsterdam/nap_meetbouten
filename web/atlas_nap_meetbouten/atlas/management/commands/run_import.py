@@ -1,4 +1,4 @@
-from django.core.management import BaseCommand
+from django.core.management import BaseCommand, call_command
 
 import datasets.nap.batch
 import datasets.meetbouten.batch
@@ -57,3 +57,5 @@ class Command(BaseCommand):
             if options['run-index']:
                 for job_class in self.indexes[ds]:
                     batch.execute(job_class())
+
+        call_command('create_geo_tables')
