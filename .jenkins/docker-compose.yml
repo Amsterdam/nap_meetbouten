@@ -2,7 +2,7 @@ database:
   image: admin.datapunt.amsterdam.nl:5000/atlas/postgres
   environment:
     POSTGRES_PASSWORD: insecure
-    POSTGRES_USER: atlas_nap
+    POSTGRES_USER: nap
 
 elasticsearch:
   image: admin.datapunt.amsterdam.nl:5000/atlas/elasticsearch
@@ -19,7 +19,7 @@ importer:
   volumes:
     - /mnt/data/diva_import:/app/diva
   environment:
-    DB_NAME: atlas_nap
+    DB_NAME: nap
     DB_PASSWORD: insecure
   command: >
     bash -c "/app/docker-wait.sh \
@@ -33,7 +33,7 @@ db-backup:
   volumes:
     - ./backups:/tmp/backups
   command: >
-    bash -c "echo db:5432:atlas_nap:atlas_nap:insecure > ~/.pgpass \
+    bash -c "echo db:5432:atlas_nap:nap:insecure > ~/.pgpass \
             && chmod 600 ~/.pgpass \
             && pg_dump --clean \
                         -Fc \
