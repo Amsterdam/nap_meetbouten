@@ -9,7 +9,7 @@ dc() {
 	docker-compose -f ${DIR}/docker-compose.yml $*
 }
 
-trap 'dc down' EXIT
+trap 'dc kill ; dc rm -f' EXIT
 
 rm -rf ${DIR}/backups
 mkdir -p ${DIR}/backups
