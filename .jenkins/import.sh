@@ -5,7 +5,7 @@ set -u
 
 DIR="$(dirname $0)"
 
-function dc {
+dc() {
 	docker-compose -f ${DIR}/docker-compose.yml $*
 }
 
