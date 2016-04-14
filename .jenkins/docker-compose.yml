@@ -33,7 +33,7 @@ db-backup:
   volumes:
     - ./backups:/tmp/backups
   command: >
-    bash -c "echo db:5432:atlas_nap:nap:insecure > ~/.pgpass \
+    bash -c "echo db:5432:nap:nap:insecure > ~/.pgpass \
             && chmod 600 ~/.pgpass \
             && pg_dump --clean \
                         -Fc \
@@ -42,9 +42,9 @@ db-backup:
                         -t geo*  \
                         -T django*  \
                         -T auth*    \
-                        -U atlas_nap \
+                        -U nap \
                         -h db -p 5432 \
-                        atlas_nap > /tmp/backups/database.dump"
+                        nap > /tmp/backups/database.dump"
 
 el-backup:
   image: admin.datapunt.amsterdam.nl:5000/atlas/elasticsearch
