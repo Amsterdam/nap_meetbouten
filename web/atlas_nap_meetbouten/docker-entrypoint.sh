@@ -13,5 +13,8 @@ python manage.py collectstatic --noinput
 # migrate database tables
 yes yes | python manage.py migrate --noinput
 
+# create geotables and indices
+python manage.py create_geo_tables
+
 # run uwsgi
 exec uwsgi --ini /app/uwsgi.ini
