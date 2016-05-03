@@ -61,16 +61,18 @@ adres_split = analysis.char_filter(
 )
 
 
-boutnummer_ngram = analysis.EdgeNGramTokenizer(
-    name='boutnummer_ngram',
+boutnummer_ngram = analysis.tokenizer(
+    'boutnummer_ngram',
+    'edgeNGram',
     min_gram=1,
     max_gram=8,
     token_chars=['letter', 'digit']
 )
 
 
-postcode_ngram = analysis.NGramTokenizer(
-    name='postcode_ngram',
+postcode_ngram = analysis.tokenizer(
+    'postcode_ngram',
+    'edgeNGram',
     min_gram=2,
     max_gram=4,
     token_chars=['letter', 'digit']
