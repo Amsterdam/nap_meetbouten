@@ -53,8 +53,8 @@ class ImportMeetboutTask(batch.BasicTask):
         return models.Meetbout(
             pk=pk,
             buurt=row[1],
-            locatie_x=parse_decimal(row[2]),
-            locatie_y=parse_decimal(row[3]),
+            coordinaat_x=parse_decimal(row[2]),
+            coordinaat_y=parse_decimal(row[3]),
             hoogte_nap=parse_decimal(row[4]),
             zakking_cumulatief=parse_decimal(row[5]),
             datum=uva_datum(row[6]),

@@ -65,10 +65,13 @@ class Rollaag(MeetboutenMixin, rest.HALSerializer):
 # detail serializers
 class MeetboutDetail(MeetboutenMixin, rest.HALSerializer):
     status = serializers.CharField(source='get_status_display')
-    bouwblok = serializers.SerializerMethodField()
+    bouwblok_link = serializers.SerializerMethodField()
     stadsdeel_link = serializers.SerializerMethodField()
     metingen = rest.RelatedSummaryField()
     _display = rest.DisplayField()
+
+    meetboutidentificatie = serializers.CharField(source='id')
+    bouwblok = serializers.CharField(source='bouwbloknummer')
 
     class Meta:
         model = models.Meetbout
@@ -76,10 +79,11 @@ class MeetboutDetail(MeetboutenMixin, rest.HALSerializer):
             '_links',
             '_display',
 
-            'id',
+            'meetboutidentificatie',
+
             'buurt',
-            'locatie_x',
-            'locatie_y',
+            'x_coordinaat',
+            'y_coordinaat',
             'hoogte_nap',
             'zakking_cumulatief',
             'datum',
@@ -88,19 +92,19 @@ class MeetboutDetail(MeetboutenMixin, rest.HALSerializer):
             'beveiligd',
             'stadsdeel',
             'stadsdeel_link',
-            'nabij_adres',
+            'adres',
             'locatie',
             'zakkingssnelheid',
             'status',
             'bouwblok',
-            'bouwbloknummer',
+            'bouwblok_link',
             'blokeenheid',
             'rollaag',
             'metingen',
             'geometrie',
         )
 
-    def get_bouwblok(self, obj):
+    def get_bouwblok_link(self, obj):
         link = "/gebieden/bouwblok/{}".format(obj.bouwbloknummer)
         req = self.context.get('request')
         if req:
@@ -119,16 +123,21 @@ class ReferentiepuntDetail(MeetboutenMixin, rest.HALSerializer):
     metingen = rest.RelatedSummaryField()
     _display = rest.DisplayField()
 
+    referentieidentificatie = serializers.CharField(source='id')
+
     class Meta:
         model = models.Referentiepunt
         fields = (
             '_links',
             '_display',
 
-            'id',
+            'referentieidentificatie',
+
             'locatie',
-            'locatie_x',
-            'locatie_y',
+
+            'x_coordinaat',
+            'y_coordinaat',
+
             'hoogte_nap',
             'datum',
             'locatie',
@@ -142,13 +151,19 @@ class MetingDetail(MeetboutenMixin, rest.HALSerializer):
     refereert_aan = rest.RelatedSummaryField()
     _display = rest.DisplayField()
 
+    meetingidentificatie = serializers.CharField(source='id')
+
     class Meta:
         model = models.Meting
         fields = (
             '_links',
             '_display',
 
-            'id',
+            'meetingidentificatie',
+
+            'x_coordinaat',
+            'y_coordinaat',
+
             'datum',
             'type',
             'hoogte_nap',
@@ -167,22 +182,28 @@ class RollaagDetail(MeetboutenMixin, rest.HALSerializer):
     meetbouten = rest.RelatedSummaryField()
     _display = rest.DisplayField()
 
+    rollaagidentificatie = serializers.CharField(source='id')
+
     class Meta:
         model = models.Rollaag
         fields = (
             '_links',
             '_display',
 
-            'id',
+            'rollaagidentificatie',
+
             'meetbouten',
-            'locatie_x',
-            'locatie_y',
+
+            'x_coordinaat',
+            'y_coordinaat',
+
             'geometrie',
             'afbeelding',
         )
 
     def get_afbeelding(self, obj):
         if obj.bouwblok:
-            return 'http://atlas.amsterdam.nl/rollagen/{}.jpg'.format(obj.bouwblok.lower())
+            return 'http://atlas.amsterdam.nl/rollagen/{}.jpg'.format(
+                obj.bouwblok.lower())
 
         return None

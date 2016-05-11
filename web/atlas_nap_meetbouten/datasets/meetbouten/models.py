@@ -20,12 +20,12 @@ class Meetbout(mixins.ImportStatusMixin):
 
     buurt = models.CharField(max_length=50, null=True)
 
-    locatie_x = models.DecimalField(
+    x_coordinaat = models.DecimalField(
             max_digits=10,
             decimal_places=2,
             null=True
     )
-    locatie_y = models.DecimalField(
+    y_coordinaat = models.DecimalField(
             max_digits=10,
             decimal_places=2,
             null=True
@@ -45,7 +45,7 @@ class Meetbout(mixins.ImportStatusMixin):
     eigenaar = models.CharField(max_length=50, null=True)
     beveiligd = models.NullBooleanField(default=None)
     stadsdeel = models.CharField(max_length=50, null=True)
-    nabij_adres = models.CharField(max_length=255, null=True)
+    adres = models.CharField(max_length=255, null=True)
     locatie = models.CharField(max_length=50, null=True)
     zakkingssnelheid = models.DecimalField(
             max_digits=settings.ZAKKING_MAX_DIGITS,
@@ -56,24 +56,25 @@ class Meetbout(mixins.ImportStatusMixin):
     bouwbloknummer = models.CharField(max_length=4, null=True)
     blokeenheid = models.SmallIntegerField(null=True)
 
-    rollaag = models.ForeignKey('Rollaag', related_name="meetbouten", null=True)
+    rollaag = models.ForeignKey(
+        'Rollaag', related_name="meetbouten", null=True)
 
     geometrie = geo.PointField(null=True, srid=28992)
 
     objects = geo.GeoManager()
 
     def __str__(self):
-        return "{} ({})".format(self.nabij_adres, self.id)
+        return "{} ({})".format(self.adres, self.id)
 
 
 class Referentiepunt(mixins.ImportStatusMixin):
     id = models.CharField(max_length=10, primary_key=True)
-    locatie_x = models.DecimalField(
+    x_coordinaat = models.DecimalField(
             max_digits=10,
             decimal_places=2,
             null=True
     )
-    locatie_y = models.DecimalField(
+    y_coordinaat = models.DecimalField(
             max_digits=10,
             decimal_places=2,
             null=True
@@ -158,16 +159,19 @@ class Rollaag(mixins.ImportStatusMixin):
     id = models.IntegerField(primary_key=True)
 
     bouwblok = models.CharField(max_length=4, null=True)
-    locatie_x = models.DecimalField(
+
+    x_coordinaat = models.DecimalField(
             max_digits=10,
             decimal_places=2,
             null=True
     )
-    locatie_y = models.DecimalField(
+
+    y_coordinaat = models.DecimalField(
             max_digits=10,
             decimal_places=2,
             null=True
     )
+
     geometrie = geo.PointField(null=True, srid=28992)
 
     objects = geo.GeoManager()
