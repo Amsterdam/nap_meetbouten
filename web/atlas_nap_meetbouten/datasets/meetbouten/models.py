@@ -121,6 +121,7 @@ class Meting(mixins.ImportStatusMixin):
         null=True
     )
     meetbout = models.ForeignKey(Meetbout, related_name="metingen")
+
     refereert_aan = models.ManyToManyField(
         Referentiepunt,
         through='ReferentiepuntMeting',

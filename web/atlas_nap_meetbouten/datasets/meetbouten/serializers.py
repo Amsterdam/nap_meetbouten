@@ -161,9 +161,6 @@ class MetingDetail(MeetboutenMixin, rest.HALSerializer):
 
             'meetingidentificatie',
 
-            'x_coordinaat',
-            'y_coordinaat',
-
             'datum',
             'type',
             'hoogte_nap',

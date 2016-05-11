@@ -26,7 +26,8 @@ class ImportMeetboutTask(batch.BasicTask):
 
     def before(self):
         self.status_choices = dict(models.Meetbout.STATUS_CHOICES)
-        self.rollagen = dict(models.Rollaag.objects.values_list('bouwblok', 'pk'))
+        self.rollagen = dict(
+            models.Rollaag.objects.values_list('bouwblok', 'pk'))
         database.clear_models(models.Meetbout)
 
     def after(self):
@@ -35,10 +36,14 @@ class ImportMeetboutTask(batch.BasicTask):
     def process(self):
         source = os.path.join(self.path, "MBT_MEETBOUT.dat")
         with open(source, encoding='cp1252') as f:
-            rows = csv.reader(f, delimiter='|', quotechar='$', doublequote=True)
-            meetbouten = [result for result in (self.process_row(row) for row in rows) if result]
+            rows = csv.reader(
+                f, delimiter='|', quotechar='$', doublequote=True)
+            meetbouten = [
+                result for result in (
+                    self.process_row(row) for row in rows) if result]
 
-        models.Meetbout.objects.bulk_create(meetbouten, batch_size=database.BATCH_SIZE)
+        models.Meetbout.objects.bulk_create(
+            meetbouten, batch_size=database.BATCH_SIZE)
 
     def process_row(self, r):
         row = cleanup_row(r, replace=True)
@@ -53,8 +58,8 @@ class ImportMeetboutTask(batch.BasicTask):
         return models.Meetbout(
             pk=pk,
             buurt=row[1],
-            coordinaat_x=parse_decimal(row[2]),
-            coordinaat_y=parse_decimal(row[3]),
+            x_coordinaat=parse_decimal(row[2]),
+            y_coordinaat=parse_decimal(row[3]),
             hoogte_nap=parse_decimal(row[4]),
             zakking_cumulatief=parse_decimal(row[5]),
             datum=uva_datum(row[6]),
@@ -62,7 +67,7 @@ class ImportMeetboutTask(batch.BasicTask):
             eigenaar=row[8],
             beveiligd=uva_indicatie(row[9]),
             stadsdeel=row[10],
-            nabij_adres=row[11],
+            adres=row[11],
             locatie=row[12],
             zakkingssnelheid=parse_decimal(row[13]),
             status=status,
@@ -89,10 +94,14 @@ class ImportReferentiepuntTask(batch.BasicTask):
     def process(self):
         source = os.path.join(self.path, "MBT_REFERENTIEPUNT.dat")
         with open(source, encoding='cp1252') as f:
-            rows = csv.reader(f, delimiter='|', quotechar='$', doublequote=True)
-            referentiepunten = [result for result in (self.process_row(row) for row in rows) if result]
+            rows = csv.reader(
+                f, delimiter='|', quotechar='$', doublequote=True)
+            referentiepunten = [
+                result for result in (
+                    self.process_row(row) for row in rows) if result]
 
-        models.Referentiepunt.objects.bulk_create(referentiepunten, batch_size=database.BATCH_SIZE)
+        models.Referentiepunt.objects.bulk_create(
+            referentiepunten, batch_size=database.BATCH_SIZE)
 
     def process_row(self, r):
         row = cleanup_row(r, replace=True)
@@ -101,8 +110,8 @@ class ImportReferentiepuntTask(batch.BasicTask):
 
         return models.Referentiepunt(
             pk=pk,
-            locatie_x=parse_decimal(row[1]),
-            locatie_y=parse_decimal(row[2]),
+            x_coordinaat=parse_decimal(row[1]),
+            y_coordinaat=parse_decimal(row[2]),
             hoogte_nap=parse_decimal(row[3]),
             datum=uva_datum(row[4]),
             locatie=row[5],
@@ -123,8 +132,10 @@ class ImportMetingTask(batch.BasicTask):
     def before(self):
         database.clear_models(models.Meting)
         self.type_choices = dict(models.Meting.TYPE_CHOICES)
-        self.referentiepunten = frozenset(models.Referentiepunt.objects.values_list("pk", flat=True))
-        self.meetbouten = frozenset(models.Meetbout.objects.values_list("pk", flat=True))
+        self.referentiepunten = frozenset(
+            models.Referentiepunt.objects.values_list("pk", flat=True))
+        self.meetbouten = frozenset(
+            models.Meetbout.objects.values_list("pk", flat=True))
 
     def after(self):
         self.referentiepunten = None
@@ -133,11 +144,14 @@ class ImportMetingTask(batch.BasicTask):
     def process(self):
         source = os.path.join(self.path, "MBT_METING.dat")
         with open(source, encoding='cp1252') as f:
-            rows = csv.reader(f, delimiter='|', quotechar='$', doublequote=True)
+            rows = csv.reader(
+                f, delimiter='|', quotechar='$', doublequote=True)
+
             for row in rows:
                 self.process_row(row)
-            models.ReferentiepuntMeting.objects.bulk_create(self.referentiepunt_relations,
-                                                            batch_size=database.BATCH_SIZE)
+            models.ReferentiepuntMeting.objects.bulk_create(
+                self.referentiepunt_relations,
+                batch_size=database.BATCH_SIZE)
 
     def process_row(self, r):
         row = cleanup_row(r, replace=True)
@@ -192,10 +206,14 @@ class ImportRollaagTask(batch.BasicTask):
     def process(self):
         source = os.path.join(self.path, "MBT_ROLLAAG.dat")
         with open(source, encoding='cp1252') as f:
-            rows = csv.reader(f, delimiter='|', quotechar='$', doublequote=True)
-            rollagen = [result for result in (self.process_row(row) for row in rows) if result]
+            rows = csv.reader(
+                f, delimiter='|', quotechar='$', doublequote=True)
+            rollagen = [
+                result for result in (
+                    self.process_row(row) for row in rows) if result]
 
-            models.Rollaag.objects.bulk_create(rollagen, batch_size=database.BATCH_SIZE)
+            models.Rollaag.objects.bulk_create(
+                rollagen, batch_size=database.BATCH_SIZE)
 
     def process_row(self, r):
         row = cleanup_row(r, replace=True)
@@ -206,8 +224,8 @@ class ImportRollaagTask(batch.BasicTask):
         return models.Rollaag(
             pk=pk,
             bouwblok=bouwblok,
-            locatie_x=parse_decimal(row[2]),
-            locatie_y=parse_decimal(row[3]),
+            x_coordinaat=parse_decimal(row[2]),
+            y_coordinaat=parse_decimal(row[3]),
             geometrie=GEOSGeometry(row[4]),
         )
 
