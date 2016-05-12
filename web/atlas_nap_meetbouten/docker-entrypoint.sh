@@ -18,4 +18,3 @@ python manage.py create_geo_tables
 
 # run uwsgi
 exec uwsgi --ini /app/uwsgi.ini
-
