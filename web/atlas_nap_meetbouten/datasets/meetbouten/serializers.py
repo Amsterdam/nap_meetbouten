@@ -151,7 +151,10 @@ class MetingDetail(MeetboutenMixin, rest.HALSerializer):
     refereert_aan = rest.RelatedSummaryField()
     _display = rest.DisplayField()
 
-    meetingidentificatie = serializers.CharField(source='id')
+    metingidentificatie = serializers.CharField(source='id')
+    aantal_dagen = serializers.CharField(source='dagen_vorige_meting')
+    refereert_aan = serializers.CharField(source='referentiepunt')
+    onderneming = serializers.CharField(source='ploeg')
 
     class Meta:
         model = models.Meting
@@ -159,7 +162,7 @@ class MetingDetail(MeetboutenMixin, rest.HALSerializer):
             '_links',
             '_display',
 
-            'meetingidentificatie',
+            'metingidentificatie',
 
             'datum',
             'type',
@@ -168,7 +171,7 @@ class MetingDetail(MeetboutenMixin, rest.HALSerializer):
             'meetbout',
             'zakkingssnelheid',
             'zakking_cumulatief',
-            'ploeg',
+            'onderneming',
             'dagen_vorige_meting',
             'refereert_aan',
         )
