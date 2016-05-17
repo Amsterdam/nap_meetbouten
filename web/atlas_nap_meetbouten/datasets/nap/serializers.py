@@ -24,7 +24,7 @@ class PeilmerkDetail(NapMixin, rest.HALSerializer):
     merk = serializers.CharField(source='get_merk_display')
     _display = rest.DisplayField()
 
-    peilmerkidentificatie = serializers.CharField(source=id)
+    peilmerkidentificatie = serializers.CharField(source='id')
     hoogte_nap = serializers.CharField(source='hoogte')
     x_muurvlak = serializers.CharField(source='muurvlak_x')
     y_muurvlak = serializers.CharField(source='muurvlak_y')
@@ -34,7 +34,7 @@ class PeilmerkDetail(NapMixin, rest.HALSerializer):
         fields = (
             '_links',
             '_display',
-            'id',
+            'peilmerkidentificatie',
             'hoogte_nap',
             'jaar',
             'merk',
