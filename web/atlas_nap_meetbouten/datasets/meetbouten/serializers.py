@@ -123,7 +123,7 @@ class ReferentiepuntDetail(MeetboutenMixin, rest.HALSerializer):
     metingen = rest.RelatedSummaryField()
     _display = rest.DisplayField()
 
-    referentieidentificatie = serializers.CharField(source='id')
+    referentiepuntidentificatie = serializers.CharField(source='id')
 
     class Meta:
         model = models.Referentiepunt
@@ -131,7 +131,7 @@ class ReferentiepuntDetail(MeetboutenMixin, rest.HALSerializer):
             '_links',
             '_display',
 
-            'referentieidentificatie',
+            'referentiepuntidentificatie',
 
             'locatie',
 
