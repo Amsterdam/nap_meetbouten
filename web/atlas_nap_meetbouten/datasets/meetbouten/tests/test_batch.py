@@ -20,7 +20,7 @@ class ImportMeetboutenTest(TaskTestCase):
         self.assertEqual(len(imported), 100)
 
         meetbout = models.Meetbout.objects.get(pk='11081251')
-        self.assertEqual(meetbout.nabij_adres, 'Wenslauerstraat 48')
+        self.assertEqual(meetbout.adres, 'Wenslauerstraat 48')
         self.assertEqual(meetbout.rollaag, self.laag_ad24)
 
 

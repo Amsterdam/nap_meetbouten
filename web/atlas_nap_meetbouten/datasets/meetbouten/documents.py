@@ -24,18 +24,20 @@ class Meetbout(es.DocType):
 
     locatie = es.String(analyzer=analyzers.adres)
 
-    locatie_x = es.Float()
-    locatie_y = es.Float()
+    x_coordinaat = es.Float()
+    y_coordinaat = es.Float()
+
     hoogte_nap = es.Float()
     zakkingssnelheid = es.Float()
 
     beveiligd = es.Boolean()
 
     eigenaar = es.String()
+
     bouwblokzijde = es.String()
     bouwbloknummer = es.String(analyzer=analyzers.boutnummer)
 
-    nabij_adres = es.String(analyzer=analyzers.adres)
+    adres = es.String(analyzer=analyzers.adres)
 
     centroid = es.GeoPoint()
 
@@ -50,8 +52,9 @@ def from_meetbout(m: models.Meetbout):
     doc.status = m.status
     doc.locate = m.locatie
 
-    doc.locatie_x = m.locatie_x
-    doc.locatie_y = m.locatie_y
+    doc.x_coordinaat = m.x_coordinaat
+    doc.y_coordinaat = m.y_coordinaat
+
     doc.hoogte_nap = m.hoogte_nap
     doc.zakkingssnelheid = m.zakkingssnelheid
 
