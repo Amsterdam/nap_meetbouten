@@ -18,5 +18,3 @@ dc build
 dc run --rm importer
 dc run --rm db-backup
 dc run --rm el-backup
-
-chown -R jenkins:jenkins ${DIR}/backups
