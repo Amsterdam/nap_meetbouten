@@ -50,6 +50,8 @@ el-backup:
   image: admin.datapunt.amsterdam.nl:5000/atlas/elasticsearch
   links:
     - elasticsearch:el
+  volumes:
+    - ./backups/elasticsearch:/tmp/backups
   user: root
   command: >
     bash -c "curl -X PUT http://el:9200/_snapshot/backup -d '{ \"type\": \"fs\", \"settings\": { \"location\": \"/tmp/backups\" }}' \
