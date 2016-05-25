@@ -50,8 +50,12 @@ el-backup:
   image: admin.datapunt.amsterdam.nl:5000/atlas/elasticsearch
   links:
     - elasticsearch:el
+  volumes:
+    - ./backups/elasticsearch:/tmp/backups
+  user: root
   command: >
     bash -c "curl -X PUT http://el:9200/_snapshot/backup -d '{ \"type\": \"fs\", \"settings\": { \"location\": \"/tmp/backups\" }}' \
-            && curl -X PUT http://el:9200/_snapshot/backup/meetbouten?wait_for_completion=true -d '{ \"indices\": \"meetbouten\" }' "
+            && curl -X PUT http://el:9200/_snapshot/backup/meetbouten?wait_for_completion=true -d '{ \"indices\": \"meetbouten\" }' \
+            && chmod -R a+w /tmp/backups"
 
 
