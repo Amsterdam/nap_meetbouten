@@ -33,5 +33,5 @@ To see the various options for partial imports, execute:
 
 To import the latest database from acceptance:
 
-	docker exec $(docker-compose ps -q database) update-nap.sh 
-	 
+	docker exec -it $(docker-compose ps -q database) update-nap.sh
+
