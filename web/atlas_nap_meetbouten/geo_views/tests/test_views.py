@@ -5,7 +5,11 @@ from django.test import TestCase
 from datasets.nap.tests import factories as nap_factories
 from datasets.meetbouten.tests import factories as meetbouten_factories
 
+from django.conf import settings
+
 point = Point(0.0, 1.1)
+
+URL = settings.DATAPUNT_API_URL
 
 
 class ViewsTest(TestCase):
@@ -28,8 +32,9 @@ class ViewsTest(TestCase):
         self.assertEqual(row['id'], l.id)
         self.assertIn(l.id, row['display'])
         self.assertIn("geometrie", row)
-        self.assertEqual(row['uri'],
-                         'http://update.me/nap/peilmerk/{}/'.format(l.id))
+        self.assertEqual(
+            row['uri'],
+            '{}nap/peilmerk/{}/'.format(URL, l.id))
 
     def test_meetbouten_meetbout_no_geo(self):
         meetbouten_factories.MeetboutFactory.create()
@@ -43,7 +48,7 @@ class ViewsTest(TestCase):
         self.assertIn(mb.id, row['display'])
         self.assertIn("geometrie", row)
         self.assertEqual(row['uri'],
-                         'http://update.me/meetbouten/meetbout/{}/'.format(mb.id))
+                         '{}meetbouten/meetbout/{}/'.format(URL, mb.id))
 
     def test_meetbouten_referentiepunt_no_geo(self):
         meetbouten_factories.ReferentiepuntFactory.create()
@@ -57,4 +62,4 @@ class ViewsTest(TestCase):
         self.assertIn(rp.id, row['display'])
         self.assertIn("geometrie", row)
         self.assertEqual(row['uri'],
-                         'http://update.me/meetbouten/referentiepunt/{}/'.format(rp.id))
+                         '{}meetbouten/referentiepunt/{}/'.format(URL, rp.id))
