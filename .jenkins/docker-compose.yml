@@ -20,6 +20,7 @@ importer:
     - /mnt/data/diva_import:/app/diva
   environment:
     DB_NAME: nap
+    DB_USER: nap
     DB_PASSWORD: insecure
   command: >
     bash -c "/app/docker-wait.sh \

@@ -6,8 +6,6 @@ import elasticsearch
 import elasticsearch_dsl as es
 from elasticsearch_dsl.connections import connections
 
-from tqdm import tqdm
-
 log = logging.getLogger(__name__)
 
 
@@ -100,7 +98,7 @@ class ImportIndexTask(object):
 
             helpers.bulk(
                 client, (self.convert(obj).to_dict(include_meta=True)
-                         for obj in tqdm(qs)),
+                         for obj in qs),
                 raise_on_error=True,
                 refresh=True
             )

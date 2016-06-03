@@ -3,6 +3,8 @@ database:
   ports:
     - "5401:5432"
   environment:
+    POSTGRES_DB: nap
+    POSTGRES_USER: nap
     POSTGRES_PASSWORD: insecure
 
 elasticsearch:
@@ -23,6 +25,7 @@ web:
     - $PWD/reports:/app/reports
   environment:
     SECRET_KEY: hoi
-    DB_NAME: postgres
+    DB_NAME: nap
+    DB_USER: nap
     DB_PASSWORD: insecure
 

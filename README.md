@@ -13,13 +13,13 @@ Developing
 
 Use `docker-compose` to start a local database.
 
-	(sudo) docker-compose start
+	(sudo) docker-compose start -d
 
 or
 
-	docker-compose up
+	docker-compose up -d
 
-The API should now be available on http://localhost:8000/
+The API should now be available on http://localhost:8100/nap
 
 To run an import, execute:
 
