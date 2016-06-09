@@ -35,3 +35,7 @@ To import the latest database from acceptance:
 
 	docker exec $(docker-compose ps -q database) update-nap.sh 
 	 
+To import the latest elastic index from acceptance:
+
+	docker exec $(docker-compose ps -q elasticsearch) update-meetbouten.sh 
+	 
