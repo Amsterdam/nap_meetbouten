@@ -20,6 +20,12 @@ class Meetbout(es.DocType):
 
     meetboutnummer = es.String(analyzer=analyzers.boutnummer)
 
+    _display = es.String(index='not_analyzed')
+
+    subtype = es.String(index='not_analyzed')
+
+    order = es.Integer()
+
     status = es.String()
 
     locatie = es.String(analyzer=analyzers.adres)
@@ -47,7 +53,12 @@ class Meetbout(es.DocType):
 
 def from_meetbout(m: models.Meetbout):
     doc = Meetbout(_id=m.id)
+
     doc.meetboutnummer = m.id
+
+    doc.subtype = 'meetbout'
+
+    doc._display = m.id
 
     doc.status = m.status
     doc.locate = m.locatie
@@ -63,5 +74,7 @@ def from_meetbout(m: models.Meetbout):
     doc.bouwbloknummer = m.bouwbloknummer
 
     doc.centroid = get_centroid(m.geometrie)
+
+    doc.order = 100
 
     return doc
