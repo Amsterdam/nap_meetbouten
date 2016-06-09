@@ -13,6 +13,9 @@ DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
+DATAPUNT_API_URL = os.getenv(
+    # note the ending /
+    'DATAPUNT_API_URL', 'https://api.datapunt.amsterdam.nl/')
 
 # Application definition
 
@@ -90,7 +93,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.contrib.gis.db.backends.postgis',
         'NAME': os.getenv('DB_NAME', 'nap'),
-        'USER': os.getenv('DB_NAME', 'postgres'),
+        'USER': os.getenv('DB_USER', 'nap'),
         'PASSWORD': os.getenv('DB_PASSWORD', 'insecure'),
         'HOST': os.getenv('DATABASE_PORT_5432_TCP_ADDR', get_docker_host()),
         'PORT': os.getenv('DATABASE_PORT_5432_TCP_PORT', '5401'),

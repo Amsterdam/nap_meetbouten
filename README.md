@@ -13,13 +13,13 @@ Developing
 
 Use `docker-compose` to start a local database.
 
-	(sudo) docker-compose start
+	(sudo) docker-compose start -d
 
 or
 
-	docker-compose up
+	docker-compose up -d
 
-The API should now be available on http://localhost:8000/
+The API should now be available on http://localhost:8100/nap
 
 To run an import, execute:
 
@@ -33,9 +33,9 @@ To see the various options for partial imports, execute:
 
 To import the latest database from acceptance:
 
-	docker exec $(docker-compose ps -q database) update-nap.sh 
+	docker exec -it $(docker-compose ps -q database) update-nap.sh
 	 
 To import the latest elastic index from acceptance:
 
-	docker exec $(docker-compose ps -q elasticsearch) update-meetbouten.sh 
+	docker exec -it $(docker-compose ps -q elasticsearch) update-meetbouten.sh 
 	 
