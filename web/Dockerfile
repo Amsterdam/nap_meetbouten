@@ -23,5 +23,6 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 USER datapunt
 COPY atlas_nap_meetbouten /app/
-CMD /app/docker-entrypoint.sh
+RUN python manage.py collectstatic --noinput
+CMD ["/app/docker-entrypoint.sh"]
 
