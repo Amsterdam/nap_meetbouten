@@ -51,7 +51,7 @@ node {
 }
 
 node {
-    stage("Deploy to ACC", concurrency: 1,) {
+    stage(name: "Deploy to ACC", concurrency: 1,) {
         tryStep "deployment", {
             build job: 'Subtask_Openstack_Playbook',
                     parameters: [
@@ -82,7 +82,7 @@ node {
 }
 
 node {
-    stage("Deploy to PROD", concurrency: 1,) {
+    stage(name: "Deploy to PROD", concurrency: 1,) {
         tryStep "deployment", {
             build job: 'Subtask_Openstack_Playbook',
                     parameters: [
