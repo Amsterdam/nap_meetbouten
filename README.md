@@ -33,9 +33,9 @@ To see the various options for partial imports, execute:
 
 To import the latest database from acceptance:
 
-	docker exec -it $(docker-compose ps -q database) update-nap.sh
+	docker-compose exec database update-nap.sh
 	 
 To import the latest elastic index from acceptance:
 
-	docker exec -it $(docker-compose ps -q elasticsearch) update-meetbouten.sh 
+	docker-compose exec elasticsearch update-meetbouten.sh 
 	 
