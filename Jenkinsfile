@@ -66,7 +66,8 @@ node {
 
 stage('Waiting for approval') {
     input "Deploy to Production?"
-    milestone
+//    nog geen milestone available
+//    milestone
 }
 
 
