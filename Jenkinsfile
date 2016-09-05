@@ -51,7 +51,7 @@ node {
 }
 
 node {
-    stage(name: "Deploy to ACC", concurrency: 1,) {
+    stage(name: "Deploy to ACC") {
         tryStep "deployment", {
             build job: 'Subtask_Openstack_Playbook',
                     parameters: [
@@ -66,6 +66,7 @@ node {
 
 stage('Waiting for approval') {
     input "Deploy to Production?"
+    milestone
 }
 
 
@@ -82,7 +83,7 @@ node {
 }
 
 node {
-    stage(name: "Deploy to PROD", concurrency: 1,) {
+    stage(name: "Deploy to PROD") {
         tryStep "deployment", {
             build job: 'Subtask_Openstack_Playbook',
                     parameters: [
