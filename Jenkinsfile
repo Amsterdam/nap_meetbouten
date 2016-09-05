@@ -19,19 +19,19 @@ def tryStep(String message, Closure block, Closure tearDown = null) {
 
 node {
 
-    stage "Checkout" {
+    stage("Checkout") {
         checkout scm
     }
 
 
-    stage "Build base image" {
+    stage("Build base image") {
         tryStep "build", {
             sh "docker-compose build"
         }
     }
 
 
-    stage 'Test' {
+    stage('Test') {
         tryStep "test", {
             sh "docker-compose run --rm -u root web ./docker-test.sh"
         }, {
@@ -41,7 +41,7 @@ node {
         }
     }
 
-    stage "Build develop image" {
+    stage("Build develop image") {
         tryStep "build", {
             def image = docker.build("admin.datapunt.amsterdam.nl:5000/datapunt/nap:${env.BUILD_NUMBER}", "web")
             image.push()
@@ -51,7 +51,7 @@ node {
 }
 
 node {
-    stage name: "Deploy to ACC", concurrency: 1, {
+    stage("Deploy to ACC", concurrency: 1,) {
         tryStep "deployment", {
             build job: 'Subtask_Openstack_Playbook',
                     parameters: [
@@ -64,13 +64,13 @@ node {
 }
 
 
-stage name: 'Waiting for approval' {
+stage('Waiting for approval') {
     input "Deploy to Production?"
 }
 
 
 node {
-    stage 'Push production image' {
+    stage('Push production image') {
         tryStep "image tagging", {
             def image = docker.image("admin.datapunt.amsterdam.nl:5000/datapunt/nap:${env.BUILD_NUMBER}")
             image.pull()
@@ -82,7 +82,7 @@ node {
 }
 
 node {
-    stage name: "Deploy to PROD", concurrency: 1, {
+    stage("Deploy to PROD", concurrency: 1,) {
         tryStep "deployment", {
             build job: 'Subtask_Openstack_Playbook',
                     parameters: [
