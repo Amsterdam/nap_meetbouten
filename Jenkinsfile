@@ -23,14 +23,21 @@ node {
         checkout scm
     }
 
-    stage('Test') {
-    tryStep "test", {
-        sh "docker-compose -p nap -f .jenkins/docker-compose.yml build"
-        sh "docker-compose -p nap -f .jenkins/docker-compose.yml run --rm -u root web python manage.py jenkins"
-    }, {
-        step([$class: "JUnitResultArchiver", testResults: "reports/junit.xml"])
 
-            sh "docker-compose -p nap -f .jenkins/docker-compose.yml down"
+    stage("Build base image") {
+        tryStep "build", {
+            sh "docker-compose build"
+        }
+    }
+
+
+    stage('Test') {
+        tryStep "test", {
+            sh "docker-compose run --rm -u root web ./docker-test.sh"
+        }, {
+            step([$class: "JUnitResultArchiver", testResults: "reports/junit.xml"])
+
+            sh "docker-compose down"
         }
     }
 
