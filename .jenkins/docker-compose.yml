@@ -27,6 +27,18 @@ importer:
             && python manage.py migrate \
             && python manage.py run_import"
 
+tests:
+  build: ../web
+  links:
+    - database:database
+    - elasticsearch:elastic
+  environment:
+    DB_NAME: nap
+    DB_USER: nap
+    DB_PASSWORD: insecure
+  command: >
+    bash -c "./docker-test.sh"
+
 db-backup:
   image: admin.datapunt.amsterdam.nl:5000/atlas/postgres
   links:
