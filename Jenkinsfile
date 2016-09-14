@@ -36,7 +36,7 @@ node {
         }, {
             step([$class: "JUnitResultArchiver", testResults: "reports/junit.xml"])
 
-            sh "docker-compose down"
+            sh "docker-compose -p nap -f .jenkins/docker-compose.yml down"
         }
     }
 
