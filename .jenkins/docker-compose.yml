@@ -32,6 +32,8 @@ tests:
   links:
     - database:database
     - elasticsearch:elastic
+  volumes:
+    - ../reports:/app/reports
   environment:
     DB_NAME: nap
     DB_USER: nap
