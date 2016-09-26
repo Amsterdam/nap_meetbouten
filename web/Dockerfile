@@ -22,6 +22,6 @@ COPY requirements.txt /app/
 RUN pip install --no-cache-dir -r requirements.txt
 
 USER datapunt
-COPY atlas_nap_meetbouten /app/
+COPY nap_meetbouten /app/
 CMD /app/docker-entrypoint.sh
 
