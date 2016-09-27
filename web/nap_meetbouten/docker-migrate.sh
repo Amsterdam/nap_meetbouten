@@ -5,5 +5,4 @@ set -e   # stop on any error
 
 source docker-wait.sh
 yes yes | python manage.py migrate --noinput
-python manage.py create_geo_tables
 
