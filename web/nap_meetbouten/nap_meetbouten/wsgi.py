@@ -2,6 +2,6 @@ import os
 
 from django.core.wsgi import get_wsgi_application
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "atlas_nap_meetbouten.settings")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "nap_meetbouten.settings")
 
 application = get_wsgi_application()
