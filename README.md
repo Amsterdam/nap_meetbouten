@@ -23,19 +23,19 @@ The API should now be available on http://localhost:8100/nap
 
 To run an import, execute:
 
-	./atlas_nap_meetbouten/manage.py run_import
+	./nap_meetbouten/manage.py run_import
 
 
 To see the various options for partial imports, execute:
 
-	./atlas_nap_meetbouten/manage.py run_import --help
+	./nap_meetbouten/manage.py run_import --help
 
 
 To import the latest database from acceptance:
 
-	docker-compose exec database update-nap.sh
-	 
+	docker-compose exec -it nap_meetbouten_database_1 update-nap.sh
+
 To import the latest elastic index from acceptance:
 
-	docker-compose exec elasticsearch update-meetbouten.sh 
-	 
+	docker-compose exec -it nap_meetbouten_elasticsearch_1 update-meetbouten.sh
+
