@@ -29,22 +29,21 @@ INSTALLED_APPS = (
     'django.contrib.humanize',
     'django.contrib.sites',
 
-    'django_jenkins',
-    'django_extensions',
+    # 'django_jenkins',
+    #'django_extensions',
 
     'django.contrib.gis',
     'rest_framework',
     'rest_framework_gis',
     'rest_framework_swagger',
 
-    'corsheaders',
-
-    'atlas',
+    # 'atlas',
     'geo_views',
     'atlas_api',
     'datasets.nap',
     'datasets.meetbouten',
 
+    # legacy stuff? still used?
     'datapunt_generic.batch',
     'datapunt_generic.generic',
     'datapunt_generic.health',
@@ -55,7 +54,6 @@ if DEBUG:
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -65,7 +63,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.security.SecurityMiddleware',
 )
 
-ROOT_URLCONF = 'atlas_nap_meetbouten.urls'
+ROOT_URLCONF = 'nap_meetbouten.urls'
 
 TEMPLATES = [
     {
@@ -83,7 +81,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'atlas_nap_meetbouten.wsgi.application'
+WSGI_APPLICATION = 'nap_meetbouten.wsgi.application'
 
 
 # Database
@@ -171,8 +169,8 @@ REST_FRAMEWORK = dict(
         'rest_framework.authentication.BasicAuthentication',
         'rest_framework.authentication.SessionAuthentication',
     ),
-    DEFAULT_PAGINATION_CLASS='drf_hal_json.pagination.HalPageNumberPagination',
-    DEFAULT_PARSER_CLASSES=('drf_hal_json.parsers.JsonHalParser',),
+    # DEFAULT_PAGINATION_CLASS='drf_hal_json.pagination.HalPageNumberPagination',
+    # DEFAULT_PARSER_CLASSES=('drf_hal_json.parsers.JsonHalParser',),
     DEFAULT_RENDERER_CLASSES=(
         'rest_framework.renderers.JSONRenderer',
         'rest_framework.renderers.BrowsableAPIRenderer'
@@ -181,14 +179,6 @@ REST_FRAMEWORK = dict(
     COERCE_DECIMAL_TO_STRING=False,
 )
 
-
-CORS_ORIGIN_ALLOW_ALL = True # if True, the whitelist will not be used and all origins will be accepted
-
-CORS_ORIGIN_REGEX_WHITELIST = (
-    '^(https?://)?localhost(:\d+)?$',
-    '^(https?://)?.*\.datapunt.amsterdam\.nl$',
-    '^(https?://)?.*\.amsterdam\.nl$',
-)
 
 # Security
 

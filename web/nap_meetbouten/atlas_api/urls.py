@@ -12,8 +12,8 @@ class NAPRouter(routers.DefaultRouter):
     Nederland, waarvan ongeveer 1000 in Amsterdam.
     """
 
-    def get_api_root_view(self):
-        view = super().get_api_root_view()
+    def get_api_root_view(self, **kwargs):
+        view = super().get_api_root_view(**kwargs)
         cls = view.cls
 
         class NAP(cls):
@@ -37,8 +37,8 @@ class MeetboutenRouter(routers.DefaultRouter):
     bestuurscommissies en de afdeling Basisinformatie.
     """
 
-    def get_api_root_view(self):
-        view = super().get_api_root_view()
+    def get_api_root_view(self, **kwargs):
+        view = super().get_api_root_view(**kwargs)
         cls = view.cls
 
         class Meetbouten(cls):
