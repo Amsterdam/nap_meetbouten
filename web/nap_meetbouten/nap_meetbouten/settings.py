@@ -29,19 +29,16 @@ INSTALLED_APPS = (
     'django.contrib.humanize',
     'django.contrib.sites',
 
-    # 'django_jenkins',
-    #'django_extensions',
-
     'django.contrib.gis',
     'rest_framework',
     'rest_framework_gis',
     'rest_framework_swagger',
 
-    # 'atlas',
     'geo_views',
     'atlas_api',
     'datasets.nap',
     'datasets.meetbouten',
+    'nap_commands',
 
     # legacy stuff? still used?
     'datapunt_generic.batch',
