@@ -1,11 +1,11 @@
 database:
-  image: admin.datapunt.amsterdam.nl:5000/atlas/postgres
+  image: build.datapunt.amsterdam.nl:5000/atlas/postgres
   environment:
     POSTGRES_PASSWORD: insecure
     POSTGRES_USER: nap
 
 elasticsearch:
-  image: admin.datapunt.amsterdam.nl:5000/atlas/elasticsearch
+  image: build.datapunt.amsterdam.nl:5000/atlas/elasticsearch
   volumes:
     - ./backups/elasticsearch:/tmp/backups
   user: root
@@ -40,7 +40,7 @@ tests:
     bash -c "./docker-test.sh"
 
 db-backup:
-  image: admin.datapunt.amsterdam.nl:5000/atlas/postgres
+  image: build.datapunt.amsterdam.nl:5000/atlas/postgres
   links:
     - database:db
   volumes:
@@ -60,7 +60,7 @@ db-backup:
                         nap > /tmp/backups/database.dump"
 
 el-backup:
-  image: admin.datapunt.amsterdam.nl:5000/atlas/elasticsearch
+  image: build.datapunt.amsterdam.nl:5000/atlas/elasticsearch
   links:
     - elasticsearch:el
   volumes:
