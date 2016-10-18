@@ -200,7 +200,6 @@ if DEBUG:
 
 SWAGGER_SETTINGS = {
     'exclude_namespaces': [],
-    'api_version': '0.1',
     'api_path': '/',
 
     'enabled_methods': [
