@@ -1,4 +1,5 @@
 from django.core.management import BaseCommand
+from objectstore.objectstore import fetch_importfiles
 
 import datasets.nap.batch
 import datasets.meetbouten.batch
@@ -51,6 +52,7 @@ class Command(BaseCommand):
 
         for ds in sets:
             if options['run-import']:
+                fetch_importfiles()
                 for job_class in self.imports[ds]:
                     batch.execute(job_class())
 
