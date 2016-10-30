@@ -8,9 +8,7 @@ from elasticsearch_dsl import Search, Q
 from datapunt_generic.generic import searchviews
 from datapunt_generic.generic import rest
 
-
 log = logging.getLogger('search')
-
 
 _details = {
     'meetbout': 'meetbout-detail',
@@ -41,7 +39,7 @@ def mulitimatch_meetbout_Q(query):
         # type="most_fields",
         # type="phrase",
         type="phrase_prefix",
-        slop=12,     # match "stephan preeker" with "stephan jacob preeker"
+        slop=12,  # match "stephan preeker" with "stephan jacob preeker"
         max_expansions=12,
         fields=[
             "meetboutnummer",
@@ -68,12 +66,12 @@ def search_meetbout_query(view, client, query):
     """
     return (
         Search()
-        .using(client)
-        .index(MEETBOUTEN)
-        .query(
+            .using(client)
+            .index(MEETBOUTEN)
+            .query(
             mulitimatch_meetbout_Q(query)
         )
-        .sort(*add_sorting())
+            .sort(*add_sorting())
     )
 
 
@@ -103,10 +101,10 @@ def autocomplete_query(client, query):
 
     return (
         Search()
-        .using(client)
-        .index(MEETBOUTEN)
-        .query(match_Q(query))
-        .highlight(*completions, pre_tags=[''], post_tags=[''])
+            .using(client)
+            .index(MEETBOUTEN)
+            .query(match_Q(query))
+            .highlight(*completions, pre_tags=[''], post_tags=[''])
     )
 
 
@@ -184,6 +182,7 @@ class TypeaheadViewSet(searchviews.TypeaheadViewSet):
     """
     Autocomplete boutnummers
     """
+
     def get_autocomplete_response(self, client, query):
         return get_autocomplete_response(client, query)
 

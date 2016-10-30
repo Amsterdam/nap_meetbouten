@@ -6,7 +6,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ('meetbouten', '0004_meetbout_rollaag'),
     ]

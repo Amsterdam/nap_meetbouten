@@ -15,7 +15,7 @@ def cleanup_row(csv_row, replace=False):
 
         # the double quotes setting with $ is not working like I would like it to
         if val[-2:] == '$$':
-            val = val[0:len(val)-2]
+            val = val[0:len(val) - 2]
 
         if val == '$':
             val = ''

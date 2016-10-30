@@ -13,7 +13,6 @@ from rest_framework.decorators import api_view, renderer_classes
 from rest_framework_swagger.renderers import OpenAPIRenderer
 from rest_framework_swagger.renderers import SwaggerUIRenderer
 
-
 api_schema = coreapi.Document(
     title='test coreapi',
     content={
@@ -23,17 +22,17 @@ api_schema = coreapi.Document(
             'list': Link(
                 url='/meetbouten/meetbout/', action='get',
                 fields=[
-                        Field('page', location='query'),
-                        Field('page_size', location='query'),
-                        Field('bouwbloknummer', location='query'),
-                        Field('rollaag', location='query')
+                    Field('page', location='query'),
+                    Field('page_size', location='query'),
+                    Field('bouwbloknummer', location='query'),
+                    Field('rollaag', location='query')
                 ]),
             'retrieve': Link(
                 url='/meetbouten/meetbout/{pk}/', action='get',
                 fields=[
                     Field('pk', required=True, location='path')
                 ])
-            },
+        },
         'meetbouten': {'read': Link(url='/meetbouten/', action='get')},
         'meting': {
             'list': Link(
@@ -66,7 +65,7 @@ api_schema = coreapi.Document(
                 url='/nap/peilmerk/{pk}/',
                 action='get', fields=[
                     Field('pk', required=True, location='path')]
-                )},
+            )},
 
         'referentiepunt': {
 
@@ -84,32 +83,32 @@ api_schema = coreapi.Document(
                 action='get',
                 fields=[
                     Field('pk', required=True, location='path')]
-                )},
+            )},
 
-            'rollaag': {
-                'list': Link(
-                    url='/meetbouten/rollaag/',
-                    action='get',
-                    fields=[
-                        Field('page', location='query'),
-                        Field('page_size', location='query')]),
-                'retrieve': Link(
-                        url='/meetbouten/rollaag/{pk}/',
-                        action='get',
-                        fields=[
-                            Field('pk', required=True, location='path')]
-                        )
-                },
+        'rollaag': {
+            'list': Link(
+                url='/meetbouten/rollaag/',
+                action='get',
+                fields=[
+                    Field('page', location='query'),
+                    Field('page_size', location='query')]),
+            'retrieve': Link(
+                url='/meetbouten/rollaag/{pk}/',
+                action='get',
+                fields=[
+                    Field('pk', required=True, location='path')]
+            )
+        },
 
-            'search': {
-                'list': Link(
-                    url='/meetbouten/search/',
-                    action='get')},
+        'search': {
+            'list': Link(
+                url='/meetbouten/search/',
+                action='get')},
 
-            'typeahead': {
-                'list':
+        'typeahead': {
+            'list':
                 Link(url='/meetbouten/typeahead/', action='get')}
-        })
+    })
 
 
 @api_view()

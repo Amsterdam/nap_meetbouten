@@ -6,7 +6,6 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ('meetbouten', '0007_auto_20160321_1032'),
     ]

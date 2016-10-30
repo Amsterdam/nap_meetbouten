@@ -60,7 +60,6 @@ class ImportMetingTest(TaskTestCase):
 
 
 class ImportRollaagTest(TaskTestCase):
-
     def task(self):
         return batch.ImportRollaagTask(NAP)
 

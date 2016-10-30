@@ -23,7 +23,8 @@ class Command(BaseCommand):
         parser.add_argument('dataset',
                             nargs='*',
                             default=self.ordered,
-                            help="Dataset to import, choose from {}".format(', '.join(self.imports.keys())))
+                            help="Dataset to import, choose from {}".format(
+                                ', '.join(self.imports.keys())))
 
         parser.add_argument('--no-import',
                             action='store_false',
@@ -45,7 +46,7 @@ class Command(BaseCommand):
                 self.stderr.write("Unkown dataset: {}".format(ds))
                 return
 
-        sets = [ds for ds in self.ordered if ds in dataset]     # enforce order
+        sets = [ds for ds in self.ordered if ds in dataset]  # enforce order
 
         self.stdout.write("Importing {}".format(", ".join(sets)))
 

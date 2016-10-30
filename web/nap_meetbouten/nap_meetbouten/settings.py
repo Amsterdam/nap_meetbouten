@@ -47,7 +47,7 @@ INSTALLED_APPS = (
 )
 
 if DEBUG:
-    INSTALLED_APPS += ('debug_toolbar', )
+    INSTALLED_APPS += ('debug_toolbar',)
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -80,7 +80,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'nap_meetbouten.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/1.8/ref/settings/#databases
 
@@ -94,7 +93,6 @@ DATABASES = {
         'PORT': os.getenv('DATABASE_PORT_5432_TCP_PORT', '5401'),
     }
 }
-
 
 ELASTIC_SEARCH_HOSTS = [
     "http://{}:{}".format(
@@ -115,7 +113,6 @@ BATCH_SETTINGS = dict(
     batch_size=100000
 )
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/1.8/topics/i18n/
 
@@ -129,12 +126,10 @@ USE_L10N = True
 
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 
 STATIC_URL = '/static/'
-
 
 STATIC_ROOT = os.path.abspath(os.path.join(BASE_DIR, '..', 'static'))
 
@@ -175,7 +170,6 @@ REST_FRAMEWORK = dict(
     DEFAULT_FILTER_BACKENDS=('rest_framework.filters.DjangoFilterBackend',),
     COERCE_DECIMAL_TO_STRING=False,
 )
-
 
 # Security
 

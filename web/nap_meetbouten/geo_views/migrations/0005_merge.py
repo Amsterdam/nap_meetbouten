@@ -6,7 +6,6 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ('geo_views', '0004_meetbouten_views'),
         ('geo_views', '0004_site_name'),

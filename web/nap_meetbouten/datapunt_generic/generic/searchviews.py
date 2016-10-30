@@ -11,7 +11,6 @@ from elasticsearch import Elasticsearch
 from elasticsearch_dsl import Search, Q
 from elasticsearch.exceptions import TransportError
 
-
 log = logging.getLogger('search')
 
 
@@ -96,8 +95,8 @@ def default_search_query(view, client, query):
 
     return (
         Search()
-        .using(client)
-        .query(
+            .using(client)
+            .query(
             mulitimatch_Q(query)
         )
     )

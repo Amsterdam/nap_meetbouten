@@ -8,11 +8,11 @@ class ExpansionMetadata(metadata.SimpleMetadata):
     def determine_metadata(self, request, view):
         result = super().determine_metadata(request, view)
         result['parameters'] = dict(
-                full=dict(
-                        type="string",
-                        description="If present, related entities are inlined",
-                        required=False
-                )
+            full=dict(
+                type="string",
+                description="If present, related entities are inlined",
+                required=False
+            )
         )
         return result
 
