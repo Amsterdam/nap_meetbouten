@@ -37,5 +37,4 @@ To import the latest database from acceptance:
 	
 To import the latest elastic index from acceptance:
 
-	docker-compose exec -it nap_meetbouten_elasticsearch_1 update-meetbouten.sh
-
+	docker-compose exec -it nap_meetbouten_elasticsearch_1 update-el.sh meetbouten meetbouten
