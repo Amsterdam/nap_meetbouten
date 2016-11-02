@@ -39,6 +39,7 @@ INSTALLED_APPS = (
     'datasets.nap',
     'datasets.meetbouten',
     'nap_commands',
+    'django_extensions',
 
     # legacy stuff? still used?
     'datapunt_generic.batch',
