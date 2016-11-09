@@ -1,8 +1,11 @@
 import os
 import mimetypes
 from django.test import TestCase
+from django.conf import settings
 
-from ..objectstore  import ObjectStore
+from unittest import skipIf
+
+from ..objectstore import ObjectStore
 
 
 class TestObjectstore(TestCase):
@@ -10,20 +13,37 @@ class TestObjectstore(TestCase):
     def setUp(self):
         self.objectstore = ObjectStore('NAP')
 
+    @skipIf(settings.NO_INTEGRATION_TESTS, 'blablabla')
     def test_objects(self):
 
         # clean up
         stored_objects = self.objectstore._get_full_container_list([])
+
+        # remove old cruft if any
         for ob in stored_objects:
             if ob['name'].startswith('naptest/'):
                 self.objectstore.delete_from_objectstore(ob['name'])
 
         res = self.objectstore._get_full_container_list([])
-        self.assertEqual(len(res), 3)
 
+        # check if we have a test folder on the object store
+        test_folder_found = False
+
+        for ob in res:
+            if ob['name'].startswith('naptest'):
+                test_folder_found = True
+                break
+
+        self.assertTrue(test_folder_found)
+
+        # check local test files
         objects = ['diva/nap/{}'.format(filename) for filename in os.listdir('diva/nap')]
+
         self.assertEqual(len(objects), 1)
 
+        ob_name = 'file_name_we_put_remote'
+
+        # put local test files in remote folder
         for ob in objects:
             ob_name = ob.split('/')[-1]
             content = open(ob, 'rb').read()
@@ -33,4 +53,13 @@ class TestObjectstore(TestCase):
             self.objectstore.put_to_objectstore('naptest/{}'.format(ob_name), content, content_type)
 
         res = self.objectstore._get_full_container_list([])
-        self.assertEqual(len(res), 3)
+
+        # check if we have a test folder on the object store
+        test_file_found = False
+
+        for ob in res:
+            if ob_name in ob['name']:
+                test_file_found = True
+                break
+
+        self.assertTrue(test_file_found)

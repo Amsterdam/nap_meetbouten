@@ -11,6 +11,8 @@ SECRET_KEY = os.getenv("SECRET_KEY", "default-secret")
 
 DEBUG = False
 
+NO_INTEGRATION_TESTS = True
+
 ALLOWED_HOSTS = ['*']
 
 DATAPUNT_API_URL = os.getenv(

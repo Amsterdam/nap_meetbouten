@@ -62,10 +62,6 @@ class SearchMeetbout(APITestCase):
         self.assertIn('results', response.data)
         self.assertIn('count', response.data)
 
-        print(response.data)
-
-        log.debug(response)
-
         self.assertEqual(response.data['count'], 1)
 
         first = response.data['results'][0]
