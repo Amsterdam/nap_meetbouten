@@ -87,6 +87,7 @@ node {
                             [$class: 'StringParameterValue', name: 'PLAYBOOK', value: 'deploy-nap.yml'],
                                 [$class: 'StringParameterValue', name: 'BRANCH', value: 'master'],
                     ]
+            }
         }
     }
 }
