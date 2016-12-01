@@ -178,7 +178,7 @@ def get_autocomplete_response(client, query):
     meetbouten = matches.get('meetbout', [])
     content = [
         {
-            '_display': '{v}'.format(v=hit.item),
+            '_display': '{v}'.format(v=hit['item']),
             'uri': 'meetbouten/meetbout/{v}'.format(v=hit['item'])
         } for hit in meetbouten
     ]
