@@ -53,8 +53,10 @@ class TypeaheadViewSet(viewsets.ViewSet):
         if 'q' not in request.query_params:
             return Response([])
 
-        query = request.query_params['q']
-        query = query.lower()
+        query = request.query_params['q'].strip()
+
+        if len(query) < 5 or not query.isdigit():
+            return Response([])
 
         response = self.get_autocomplete_response(self.client, query)
         return Response(response)

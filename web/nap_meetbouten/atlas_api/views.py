@@ -181,7 +181,7 @@ def get_autocomplete_response(client, query):
             '_display': '{v}'.format(v=hit['item']),
             'uri': 'meetbouten/meetbout/{v}'.format(v=hit['item'])
         } for hit in meetbouten
-    ]
+        ]
 
     return [{
         'label': 'Meetbouten',
