@@ -27,7 +27,7 @@ class QueryMetadata(metadata.SimpleMetadata):
         return result
 
 
-class TypeaheadViewSet(viewsets.ViewSet):
+class TypeaheadViewSetTypeaheadViewSet(viewsets.ViewSet):
     """
     Given a query parameter `q`, this function returns a
     subset of all objects
@@ -41,7 +41,7 @@ class TypeaheadViewSet(viewsets.ViewSet):
     """
 
     def get_autocomplete_response(self, client, query):
-        return {}
+        return []
 
     metadata_class = QueryMetadata
 

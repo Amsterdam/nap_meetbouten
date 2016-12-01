@@ -108,7 +108,7 @@ TESTING = len(sys.argv) > 1 and sys.argv[1] == 'test'
 
 if TESTING:
     for k, v in ELASTIC_INDICES.items():
-        ELASTIC_INDICES[k] = ELASTIC_INDICES[k] + 'test'
+        ELASTIC_INDICES[k] += 'test'
 
 BATCH_SETTINGS = dict(
     batch_size=100000

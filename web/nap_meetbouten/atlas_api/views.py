@@ -175,7 +175,18 @@ def get_autocomplete_response(client, query):
 
         matches[doc_type] = [dict(item=m) for c, m in sorted_matches[:5]]
 
-    return matches
+    meetbouten = matches.get('meetbout', [])
+    content = [
+        {
+            '_display': '{v}'.format(v=hit.item),
+            'uri': 'meetbouten/meetbout/{v}'.format(v=hit['item'])
+        } for hit in meetbouten
+    ]
+
+    return [{
+        'label': 'Meetbouten',
+        'content': content
+    }]
 
 
 class TypeaheadViewSet(searchviews.TypeaheadViewSet):
