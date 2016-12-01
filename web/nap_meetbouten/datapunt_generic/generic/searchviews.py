@@ -27,7 +27,7 @@ class QueryMetadata(metadata.SimpleMetadata):
         return result
 
 
-class TypeaheadViewSetTypeaheadViewSet(viewsets.ViewSet):
+class TypeaheadViewSet(viewsets.ViewSet):
     """
     Given a query parameter `q`, this function returns a
     subset of all objects
