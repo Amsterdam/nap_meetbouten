@@ -19,7 +19,7 @@ class ExpansionMetadata(metadata.SimpleMetadata):
 
 class PeilViewSet(rest.AtlasViewSet):
     """
-    Peilmerken. Het Normaal Amsterdams Peil (meestal afgekort tot NAP) is de referentiehoogte waaraan hoogtemetingen in Nederland
+    Peilmerken. Het Amsterdams Peil (meestal afgekort tot NAP) is de referentiehoogte waaraan hoogtemetingen in Nederland
     worden gerelateerd. Het NAP-net bestaat uit ongeveer 50.000 zichtbare peilmerken en 250 ondergrondse peilmerken in
     Nederland, waarvan ongeveer 1000 in Amsterdam.
     """

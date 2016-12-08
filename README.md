@@ -33,7 +33,7 @@ To see the various options for partial imports, execute:
 
 To import the latest database from acceptance:
 
-	docker-compose exec database update-db.sh nap
+	docker-compose exec -it nap_meetbouten_database_1 update-db.sh nap
 	
 To import the latest elastic index from acceptance:
 
