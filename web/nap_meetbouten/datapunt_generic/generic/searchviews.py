@@ -87,7 +87,7 @@ def mulitimatch_Q(query):
     )
 
 
-def default_search_query(view, client, query):
+def default_search_query(client, query: str):
     """
     Execute search.
 

@@ -70,10 +70,23 @@ def search_meetbout_query(view, client, query):
             .index(MEETBOUTEN)
             .query(
             mulitimatch_meetbout_Q(query)
-        )
-            .sort(*add_sorting())
+        ).sort(*add_sorting())
     )
 
+
+def meetbout_prefix_Q(query: str):
+    """
+    Typeahead query only completing on meetboutnummer
+    """
+    return Q(
+        query={
+            "prefix": {
+                "meetboutnummer": str,
+            }
+        },
+        sort_fields=["_display"],
+        indexes=['meetbouten'],
+    )
 
 def match_Q(query):
     fuzzy_fields = [
@@ -106,6 +119,25 @@ def autocomplete_query(client, query):
             .query(match_Q(query))
             .highlight(*completions, pre_tags=[''], post_tags=[''])
     )
+
+
+def old_autocomplete_query(client, query):
+    """
+    replicated the current behavior in atlas where we only autocompleet meetboutnummers and not on underlying data.
+    :return: Ordered set of responses (on meetboutnummer) closest to the requested query
+    """
+
+    completions = ["meetboutnummer"]
+
+    return (
+        Search()
+        .using(client)
+        .index(MEETBOUTEN)
+        .query(meetbout_prefix_Q(query))
+        .highlight(*completions, pre_tags=[''], post_tags=[''])
+    )
+
+    pass
 
 
 class SearchTestViewSet(searchviews.SearchViewSet):
@@ -146,7 +178,7 @@ class SearchMeetboutViewSet(searchviews.SearchViewSet):
 
 
 def get_autocomplete_response(client, query):
-    result = autocomplete_query(client, query)[0:20].execute()
+    result = old_autocomplete_query(client, query)[0:20].execute()
     matches = OrderedDict()
 
     # group_by doc_type
