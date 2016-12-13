@@ -118,7 +118,7 @@ def old_autocomplete_query(client, query: int):
         .index(MEETBOUTEN)
         .query({
             "prefix": {
-                "meetboutnummer": query,
+                "_display": query,
             }
         })
         .sort('_display')
@@ -163,7 +163,6 @@ class SearchMeetboutViewSet(searchviews.SearchViewSet):
 
 
 def get_autocomplete_response(client, query):
-    print(old_autocomplete_query(client, query).to_dict())
     result = old_autocomplete_query(client, query)[0:20].execute()
     content = [{
             '_display': '{v}'.format(v=hit['_display']),
