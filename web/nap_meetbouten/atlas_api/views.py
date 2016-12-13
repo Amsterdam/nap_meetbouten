@@ -78,15 +78,12 @@ def meetbout_prefix_Q(query: str):
     """
     Typeahead query only completing on meetboutnummer
     """
-    return Q(
-        query={
-            "prefix": {
-                "meetboutnummer": str,
-            }
-        },
-        sort_fields=["_display"],
-        indexes=['meetbouten'],
-    )
+    fuzzy_fields = ["meetboutnummer",]
+
+    return Q("multi_match",
+             query=query, fuzziness="auto",
+             max_expansions=50,
+             prefix_length=2, fields=fuzzy_fields)
 
 def match_Q(query):
     fuzzy_fields = [
@@ -127,7 +124,7 @@ def old_autocomplete_query(client, query):
     :return: Ordered set of responses (on meetboutnummer) closest to the requested query
     """
 
-    completions = ["meetboutnummer"]
+    completions = ["meetboutnummer",]
 
     return (
         Search()
