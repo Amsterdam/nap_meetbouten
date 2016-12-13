@@ -91,4 +91,6 @@ class ObjectStore():
 
 if __name__ == "__main__":
     # Download files from objectstore
+    log.info("Start downloading files from objectstore")
     fetch_importfiles()
+    log.info("Finished downloading files from objectstore")
