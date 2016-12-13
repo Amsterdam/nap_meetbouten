@@ -27,3 +27,6 @@ COPY nap_meetbouten /app/
 RUN python manage.py collectstatic --noinput
 
 CMD ["/app/docker-run.sh"]
+
+ARG OS_PASSWORD_BAG
+ENV OS_PASSWORD_BAG=$OS_PASSWORD_BAG
