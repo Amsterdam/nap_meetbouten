@@ -21,7 +21,7 @@ importer:
     DB_NAME: nap
     DB_USER: nap
     DB_PASSWORD: insecure
-    OS_PASSWORD: insecure
+    OS_PASSWORD:
   command: >
     bash -c "/app/docker-wait.sh \
             && python manage.py migrate \
