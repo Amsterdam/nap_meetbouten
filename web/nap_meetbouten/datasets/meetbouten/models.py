@@ -4,6 +4,7 @@ from django.contrib.gis.db import models as geo
 
 from datapunt_generic.generic import mixins
 
+
 # from datasets.nap.models import Peilmerk
 
 
@@ -21,24 +22,24 @@ class Meetbout(mixins.ImportStatusMixin):
     buurt = models.CharField(max_length=50, null=True)
 
     x_coordinaat = models.DecimalField(
-            max_digits=10,
-            decimal_places=2,
-            null=True
+        max_digits=10,
+        decimal_places=2,
+        null=True
     )
     y_coordinaat = models.DecimalField(
-            max_digits=10,
-            decimal_places=2,
-            null=True
+        max_digits=10,
+        decimal_places=2,
+        null=True
     )
     hoogte_nap = models.DecimalField(
-            max_digits=settings.NAP_MAX_DIGITS,
-            decimal_places=settings.NAP_DECIMAL_PLACES,
-            null=True
+        max_digits=settings.NAP_MAX_DIGITS,
+        decimal_places=settings.NAP_DECIMAL_PLACES,
+        null=True
     )
     zakking_cumulatief = models.DecimalField(
-            max_digits=settings.ZAKKING_MAX_DIGITS,
-            decimal_places=settings.ZAKKING_DECIMAL_PLACES,
-            null=True
+        max_digits=settings.ZAKKING_MAX_DIGITS,
+        decimal_places=settings.ZAKKING_DECIMAL_PLACES,
+        null=True
     )
     datum = models.DateField(null=True)
     bouwblokzijde = models.CharField(max_length=10, null=True)
@@ -48,9 +49,9 @@ class Meetbout(mixins.ImportStatusMixin):
     adres = models.CharField(max_length=255, null=True)
     locatie = models.CharField(max_length=50, null=True)
     zakkingssnelheid = models.DecimalField(
-            max_digits=settings.ZAKKING_MAX_DIGITS,
-            decimal_places=settings.ZAKKING_DECIMAL_PLACES,
-            null=True
+        max_digits=settings.ZAKKING_MAX_DIGITS,
+        decimal_places=settings.ZAKKING_DECIMAL_PLACES,
+        null=True
     )
     status = models.CharField(max_length=1, choices=STATUS_CHOICES, null=True)
     bouwbloknummer = models.CharField(max_length=4, null=True)
@@ -70,19 +71,19 @@ class Meetbout(mixins.ImportStatusMixin):
 class Referentiepunt(mixins.ImportStatusMixin):
     id = models.CharField(max_length=10, primary_key=True)
     x_coordinaat = models.DecimalField(
-            max_digits=10,
-            decimal_places=2,
-            null=True
+        max_digits=10,
+        decimal_places=2,
+        null=True
     )
     y_coordinaat = models.DecimalField(
-            max_digits=10,
-            decimal_places=2,
-            null=True
+        max_digits=10,
+        decimal_places=2,
+        null=True
     )
     hoogte_nap = models.DecimalField(
-            max_digits=settings.NAP_MAX_DIGITS,
-            decimal_places=settings.NAP_DECIMAL_PLACES,
-            null=True
+        max_digits=settings.NAP_MAX_DIGITS,
+        decimal_places=settings.NAP_DECIMAL_PLACES,
+        null=True
     )
     datum = models.DateField(null=True)
     locatie = models.CharField(max_length=255, null=True)
@@ -162,15 +163,15 @@ class Rollaag(mixins.ImportStatusMixin):
     bouwblok = models.CharField(max_length=4, null=True)
 
     x_coordinaat = models.DecimalField(
-            max_digits=10,
-            decimal_places=2,
-            null=True
+        max_digits=10,
+        decimal_places=2,
+        null=True
     )
 
     y_coordinaat = models.DecimalField(
-            max_digits=10,
-            decimal_places=2,
-            null=True
+        max_digits=10,
+        decimal_places=2,
+        null=True
     )
 
     geometrie = geo.PointField(null=True, srid=28992)

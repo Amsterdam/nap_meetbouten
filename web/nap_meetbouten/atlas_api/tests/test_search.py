@@ -79,9 +79,9 @@ class SearchMeetbout(APITestCase):
         self.assertEqual(response.data['count'], 2)
 
         self.assertEqual(
-                response.data['results'][0]['bouwbloknummer'], "AB10")
+            response.data['results'][0]['bouwbloknummer'], "AB10")
         self.assertEqual(
-                response.data['results'][1]['bouwbloknummer'], "AB10")
+            response.data['results'][1]['bouwbloknummer'], "AB10")
 
     def test_query_boutnummer(self):
         response = self.client.get(

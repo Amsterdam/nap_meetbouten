@@ -33,9 +33,12 @@ class ImportNapTask(batch.BasicTask):
         source = os.path.join(self.path, "NAP_PEILMERK.dat")
         with open(source, encoding='cp1252') as f:
             rows = csv.reader(f, delimiter='|', quotechar='$', doublequote=True)
-            self.peilmerken = [result for result in (self.process_row(row) for row in rows) if result]
+            self.peilmerken = [result for result in
+                               (self.process_row(row) for row in rows) if
+                               result]
 
-        Peilmerk.objects.bulk_create(self.peilmerken, batch_size=database.BATCH_SIZE)
+        Peilmerk.objects.bulk_create(self.peilmerken,
+                                     batch_size=database.BATCH_SIZE)
 
     def process_row(self, r):
         row = cleanup_row(r, replace=True)
@@ -44,7 +47,9 @@ class ImportNapTask(batch.BasicTask):
         merk = int(row[3])
 
         if merk not in self.merk_choices:
-            log.warn("Peilmerk {} references non-existing merk {}; skipping".format(pk, merk))
+            log.warn(
+                "Peilmerk {} references non-existing merk {}; skipping".format(
+                    pk, merk))
             return
 
         # PEILMERKNR,HOOGTE,JAAR,MERK,OMSCHRIJVING,WINDRICHTING,X_MUURVLAK,Y_MUURVLAK,RWSNR,GEOMETRIE

@@ -2,7 +2,6 @@ from django.test import TransactionTestCase
 
 
 class TaskTestCase(TransactionTestCase):
-
     def setUp(self):
         for r in self.requires():
             r.execute()

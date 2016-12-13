@@ -1,6 +1,7 @@
 from collections import OrderedDict
 
-from rest_framework import renderers, serializers, pagination, response, viewsets, filters, reverse
+from rest_framework import renderers, serializers, pagination, response, \
+    viewsets, filters, reverse
 from rest_framework.reverse import reverse
 from rest_framework.utils.urls import replace_query_param
 from rest_framework_extensions.mixins import DetailSerializerMixin
@@ -53,12 +54,14 @@ class HALPagination(pagination.PageNumberPagination):
             self_link = self_link[:-4]
 
         if self.page.has_next():
-            next_link = replace_query_param(self_link, self.page_query_param, self.page.next_page_number())
+            next_link = replace_query_param(self_link, self.page_query_param,
+                                            self.page.next_page_number())
         else:
             next_link = None
 
         if self.page.has_previous():
-            prev_link = replace_query_param(self_link, self.page_query_param, self.page.previous_page_number())
+            prev_link = replace_query_param(self_link, self.page_query_param,
+                                            self.page.previous_page_number())
         else:
             prev_link = None
 
@@ -80,7 +83,6 @@ class AtlasViewSet(DetailSerializerMixin, viewsets.ReadOnlyModelViewSet):
 
 
 class RelatedSummaryField(serializers.Field):
-
     def to_representation(self, value):
         count = value.count()
         model_name = value.model.__name__
@@ -97,7 +99,6 @@ class RelatedSummaryField(serializers.Field):
 
 
 class DisplayField(serializers.Field):
-
     def __init__(self, *args, **kwargs):
         kwargs['source'] = '*'
         kwargs['read_only'] = True

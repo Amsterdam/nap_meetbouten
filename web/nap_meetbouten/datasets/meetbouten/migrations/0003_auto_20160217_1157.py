@@ -7,7 +7,6 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ('meetbouten', '0002_auto_20160202_1023'),
     ]
@@ -20,6 +19,8 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='meting',
             name='meetbout',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='metingen', to='meetbouten.Meetbout'),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE,
+                                    related_name='metingen',
+                                    to='meetbouten.Meetbout'),
         ),
     ]

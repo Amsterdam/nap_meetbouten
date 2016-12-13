@@ -11,24 +11,23 @@ from datapunt_generic.batch import batch
 
 
 class Command(BaseCommand):
-
     ordered = ['nap', 'meetbouten']
 
     indexes = dict(
         meetbouten=[datasets.meetbouten.batch.IndexMeetboutenJob],
-        #nap=[datasets.nap.batch.IndexNapJob],
+        # nap=[datasets.nap.batch.IndexNapJob],
         nap=[]
     )
 
     backup_indexes = dict(
         meetbouten=[datasets.meetbouten.batch.BackupMeetboutenJob],
-        #nap=[datasets.nap.batch.BackupNapJob],
+        # nap=[datasets.nap.batch.BackupNapJob],
         nap=[]
     )
 
     restore_indexes = dict(
         meetbouten=[datasets.meetbouten.batch.RestoreMeetboutenJob],
-        #nap=[datasets.nap.batch.RestoreNapJob],
+        # nap=[datasets.nap.batch.RestoreNapJob],
         nap=[]
     )
 
@@ -69,7 +68,7 @@ class Command(BaseCommand):
                 self.stderr.write("Unkown dataset: {}".format(ds))
                 return
 
-        sets = [ds for ds in self.ordered if ds in dataset]     # enforce order
+        sets = [ds for ds in self.ordered if ds in dataset]  # enforce order
 
         self.stdout.write("Working on {}".format(", ".join(sets)))
 

@@ -22,14 +22,17 @@ class Peilmerk(mixins.ImportStatusMixin):
 
     MERK_CHOICES = (
         (MERK_0, "ronde bout met opschrift NAP (0)"),
-        (MERK_1, "ronde bout (aan de bovenzijde) zonder opschrift of met opschrift anders dan NAP (1)"),
+        (MERK_1,
+         "ronde bout (aan de bovenzijde) zonder opschrift of met opschrift anders dan NAP (1)"),
         (MERK_2, "kleine ronde bout (2)"),
         (MERK_3, "knopbout (3)"),
         (MERK_4, "vierkante bout met of zonder groeven (4)"),
         (MERK_5, "kleine ronde kruisbout (5)"),
-        (MERK_7, "bijzondere merktekens, bijvoorbeeld zeskantige bout, stalen pen, enz. (7)"),
+        (MERK_7,
+         "bijzondere merktekens, bijvoorbeeld zeskantige bout, stalen pen, enz. (7)"),
         (MERK_13, "kopbout (13)"),
-        (MERK_14, "inbusbout (cilinderschroef met binnen zeskant) in slaganker M6 (14)"),
+        (MERK_14,
+         "inbusbout (cilinderschroef met binnen zeskant) in slaganker M6 (14)"),
         (MERK_15, "koperen hakkelbout (15)"),
         (MERK_16, "koperen bout (16)"),
         (MERK_17, "RVS-bout (17)"),
@@ -52,4 +55,3 @@ class Peilmerk(mixins.ImportStatusMixin):
 
     def __str__(self):
         return "{} {}".format(self.id, self.omschrijving)
-

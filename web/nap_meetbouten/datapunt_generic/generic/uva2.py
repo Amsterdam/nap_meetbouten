@@ -49,7 +49,8 @@ def _context_reader(source, skip=3, quotechar=None, quoting=csv.QUOTE_NONE):
         raise ValueError("File not found: {}".format(source))
 
     with open(source, encoding='cp1252') as f:
-        rows = csv.reader(f, delimiter=';', quotechar=quotechar, quoting=quoting)
+        rows = csv.reader(f, delimiter=';', quotechar=quotechar,
+                          quoting=quoting)
         for i in range(skip):
             next(rows)
 
@@ -63,9 +64,11 @@ def resolve_file(path, code, extension='UVA2'):
         raise ValueError("No code specified")
 
     prefix = code + '_'
-    matches = [os.path.join(path, f) for f in os.listdir(path) if f.startswith(prefix) and f.endswith(extension)]
+    matches = [os.path.join(path, f) for f in os.listdir(path) if
+               f.startswith(prefix) and f.endswith(extension)]
     if not matches:
-        raise ValueError("Could not find file starting with {} in {}".format(prefix, path))
+        raise ValueError(
+            "Could not find file starting with {} in {}".format(prefix, path))
     matches_with_mtime = [(os.path.getmtime(f), f) for f in matches]
     match = sorted(matches_with_mtime)[-1]
     return match[1]
@@ -127,7 +130,8 @@ def process_csv(path, file_code, process_row_callback):
     source = resolve_file(path, file_code, extension='csv')
     cb = logging_callback(source, process_row_callback)
 
-    with _context_reader(source, skip=0, quotechar='"', quoting=csv.QUOTE_MINIMAL) as rows:
+    with _context_reader(source, skip=0, quotechar='"',
+                         quoting=csv.QUOTE_MINIMAL) as rows:
         return [result for result in (cb(r) for r in rows) if result]
 
 

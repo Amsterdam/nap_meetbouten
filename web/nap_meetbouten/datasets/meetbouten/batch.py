@@ -51,7 +51,9 @@ class ImportMeetboutTask(batch.BasicTask):
         status = row[14]
 
         if status not in self.status_choices:
-            log.warn("Meetbout {} references non-existing status {}; skipping".format(pk, status))
+            log.warn(
+                "Meetbout {} references non-existing status {}; skipping".format(
+                    pk, status))
             return
 
         bouwblok = row[15]
@@ -158,11 +160,15 @@ class ImportMetingTask(batch.BasicTask):
         pk = row[0]
         meting_type = row[2]
         if meting_type not in self.type_choices:
-            log.warn("Meting {} references non-existing type {}; skipping".format(pk, meting_type))
+            log.warn(
+                "Meting {} references non-existing type {}; skipping".format(pk,
+                                                                             meting_type))
             return
         meetbout_id = row[5]
         if meetbout_id not in self.meetbouten:
-            log.warn("Meting {} references non-existing meetbout {}; skipping".format(pk, meetbout_id))
+            log.warn(
+                "Meting {} references non-existing meetbout {}; skipping".format(
+                    pk, meetbout_id))
             return
         meting = models.Meting.objects.create(
             pk=pk,
@@ -248,6 +254,7 @@ class ImportMeetboutenJob(object):
             ImportMetingTask(self.meetbouten),
         ]
 
+
 #
 # Elastic jobs
 #
@@ -316,7 +323,6 @@ class BackupMeetboutenJob(object):
 
 
 class RestoreMeetboutenJob(object):
-
     name = "Restore Backup elastic-index Meetbouten"
 
     def tasks(self):

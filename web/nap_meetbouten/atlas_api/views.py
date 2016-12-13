@@ -5,12 +5,10 @@ from django.conf import settings
 
 from elasticsearch_dsl import Search, Q
 
-from datapunt_generic.generic import searchviews
 from datapunt_generic.generic import rest
-
+from datapunt_generic.generic import searchviews
 
 log = logging.getLogger('search')
-
 
 _details = {
     'meetbout': 'meetbout-detail',
@@ -41,7 +39,7 @@ def mulitimatch_meetbout_Q(query):
         # type="most_fields",
         # type="phrase",
         type="phrase_prefix",
-        slop=12,     # match "stephan preeker" with "stephan jacob preeker"
+        slop=12,  # match "stephan preeker" with "stephan jacob preeker"
         max_expansions=12,
         fields=[
             "meetboutnummer",
@@ -68,12 +66,11 @@ def search_meetbout_query(view, client, query):
     """
     return (
         Search()
-        .using(client)
-        .index(MEETBOUTEN)
-        .query(
+            .using(client)
+            .index(MEETBOUTEN)
+            .query(
             mulitimatch_meetbout_Q(query)
-        )
-        .sort(*add_sorting())
+        ).sort(*add_sorting())
     )
 
 
@@ -103,10 +100,28 @@ def autocomplete_query(client, query):
 
     return (
         Search()
+            .using(client)
+            .index(MEETBOUTEN)
+            .query(match_Q(query))
+            .highlight(*completions, pre_tags=[''], post_tags=[''])
+    )
+
+
+def old_autocomplete_query(client, query: int):
+    """
+    replicated the current behavior in atlas where we only autocompleet meetboutnummers and not on underlying data.
+    :return: Ordered set of responses (on meetboutnummer) closest to the requested query
+    """
+    return (
+        Search()
         .using(client)
         .index(MEETBOUTEN)
-        .query(match_Q(query))
-        .highlight(*completions, pre_tags=[''], post_tags=[''])
+        .query({
+            "prefix": {
+                "_display": query,
+            }
+        })
+        .sort('_display')
     )
 
 
@@ -148,43 +163,24 @@ class SearchMeetboutViewSet(searchviews.SearchViewSet):
 
 
 def get_autocomplete_response(client, query):
-    result = autocomplete_query(client, query)[0:20].execute()
-    matches = OrderedDict()
+    result = old_autocomplete_query(client, query)[0:20].execute()
+    content = [{
+            '_display': '{v}'.format(v=hit['_display']),
+            'uri': 'meetbouten/meetbout/{v}'.format(v=hit['meetboutnummer'])
+        } for hit in result.hits]
 
-    # group_by doc_type
-    for r in result:
-        doc_type = r.meta.doc_type.replace('_', ' ')
-
-        if doc_type not in matches:
-            matches[doc_type] = OrderedDict()
-
-        h = r.meta.highlight
-
-        for key in h:
-            highlights = h[key]
-            for match in highlights:
-                # only show exact autocompletes
-                if query not in match:
-                    continue
-
-                old = matches[doc_type].setdefault(match, 0)
-                matches[doc_type][match] = old + 1
-
-    # sort the results by type
-    for doc_type in matches.keys():
-        sorted_matches = sorted(
-            [(c, m) for m, c in matches[doc_type].items()])
-
-        matches[doc_type] = [dict(item=m) for c, m in sorted_matches[:5]]
-
-    return matches
+    return [{
+        'label': 'Meetbouten',
+        'content': content
+    }]
 
 
 class TypeaheadViewSet(searchviews.TypeaheadViewSet):
     """
     Autocomplete boutnummers
     """
-    def get_autocomplete_response(self, client, query):
+
+    def get_autocomplete_response(self, client, query: int):
         return get_autocomplete_response(client, query)
 
     def list(self, request, *args, **kwargs):

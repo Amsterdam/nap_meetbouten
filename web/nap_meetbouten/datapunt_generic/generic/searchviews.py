@@ -11,7 +11,6 @@ from elasticsearch import Elasticsearch
 from elasticsearch_dsl import Search, Q
 from elasticsearch.exceptions import TransportError
 
-
 log = logging.getLogger('search')
 
 
@@ -42,7 +41,7 @@ class TypeaheadViewSet(viewsets.ViewSet):
     """
 
     def get_autocomplete_response(self, client, query):
-        return {}
+        return []
 
     metadata_class = QueryMetadata
 
@@ -54,10 +53,12 @@ class TypeaheadViewSet(viewsets.ViewSet):
         if 'q' not in request.query_params:
             return Response([])
 
-        query = request.query_params['q']
-        query = query.lower()
+        query = request.query_params['q'].strip()
 
-        response = self.get_autocomplete_response(self.client, query)
+        if len(query) < 5 or not query.isdigit():
+            return Response([])
+
+        response = self.get_autocomplete_response(self.client, int(query))
         return Response(response)
 
 
@@ -86,7 +87,7 @@ def mulitimatch_Q(query):
     )
 
 
-def default_search_query(view, client, query):
+def default_search_query(client, query: str):
     """
     Execute search.
 
@@ -96,8 +97,8 @@ def default_search_query(view, client, query):
 
     return (
         Search()
-        .using(client)
-        .query(
+            .using(client)
+            .query(
             mulitimatch_Q(query)
         )
     )
