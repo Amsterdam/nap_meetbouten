@@ -3,7 +3,7 @@ import mimetypes
 from django.test import TestCase
 from django.conf import settings
 
-from unittest import skipIf
+from unittest import skip
 
 from ..objectstore import ObjectStore
 
@@ -13,7 +13,7 @@ class TestObjectstore(TestCase):
     def setUp(self):
         self.objectstore = ObjectStore('NAP')
 
-    @skipIf(settings.NO_INTEGRATION_TESTS, 'blablabla')
+    @skip('blablabla')
     def test_objects(self):
 
         # clean up
