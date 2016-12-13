@@ -22,6 +22,18 @@ DATAPUNT_API_URL = os.getenv(
 # Application definition
 
 INSTALLED_APPS = (
+    'geo_views',
+    'atlas_api',
+    'datasets.nap',
+    'datasets.meetbouten',
+    'nap_commands',
+
+    # legacy stuff? still used?
+    'datapunt_generic.batch',
+    'datapunt_generic.generic',
+    'datapunt_generic.health',
+
+    'django_extensions',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -35,18 +47,6 @@ INSTALLED_APPS = (
     'rest_framework',
     'rest_framework_gis',
     'rest_framework_swagger',
-
-    'geo_views',
-    'atlas_api',
-    'datasets.nap',
-    'datasets.meetbouten',
-    'nap_commands',
-    'django_extensions',
-
-    # legacy stuff? still used?
-    'datapunt_generic.batch',
-    'datapunt_generic.generic',
-    'datapunt_generic.health',
 )
 
 if DEBUG:
