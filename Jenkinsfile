@@ -25,7 +25,7 @@ node {
 
     stage('Test') {
         tryStep "test", {
-            sh "docker-compose -p nap -f .jenkins/docker-compose.yml build"
+            sh "docker-compose -p nap -f .jenkins/docker-compose.yml down"
 
             withCredentials([[$class: 'StringBinding', credentialsId: 'OS_PASSWORD_BAG', variable: 'OS_PASSWORD_BAG']]) {
             sh "docker-compose -p nap -f .jenkins/docker-compose.yml build && " +
