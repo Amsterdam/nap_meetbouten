@@ -1,7 +1,7 @@
 import logging
 import os
+
 from swiftclient.client import Connection
-from django.conf import settings
 
 log = logging.getLogger(__name__)
 
@@ -9,8 +9,22 @@ logging.getLogger("requests").setLevel(logging.WARNING)
 logging.getLogger("urllib3").setLevel(logging.WARNING)
 logging.getLogger("swiftclient").setLevel(logging.WARNING)
 
-data_dir = settings.DIVA_DIR
-bag_connection = Connection(**settings.OBJECTSTORE)
+assert os.getenv('OS_PASSWORD')
+
+os_connect = {
+    'auth_version': '2.0',
+    'authurl': 'https://identity.stack.cloudvps.com/v2.0',
+    'user': 'bag_brk',
+    'key': os.getenv('OS_PASSWORD', 'insecure'),
+    'tenant_name': 'BGE000081_BAG',
+    'os_options': {
+        'tenant_id': '4f2f4b6342444c84b3580584587cfd18',
+        'region_name': 'NL',
+        'endpoint_type': 'internalURL'
+    }
+}
+
+DIVA_DIR = 'diva/'
 
 
 def fetch_importfiles():
@@ -18,72 +32,63 @@ def fetch_importfiles():
     Fetches all files mentioned in prefixes and writes them to `data_dir`/prefixes[1]
     :return:
     """
-    store = ObjectStore('NAP')
-    prefixes = [('nap', {'prefix': [], 'dir_name': 'nap'}),
-                ('meetbouten', {'prefix': [], 'dir_name': 'meetbouten'})]
+    store = ObjectStore()
 
-    for s, f in prefixes:
-        os.makedirs(os.path.join(data_dir, f['dir_name']), exist_ok=True)
-        numfiles = len(f['prefix'])
-        if numfiles > 0:
-            # get the latest modified files, by reverse sorting then on `last_modified` and take the number of
-            # unique prefixes.
-            container_list = sorted(store._get_full_container_list([], prefix='{}/'.format(s)),
-                                    key=lambda l: l['last_modified'], reverse=True)[:numfiles]
-        else:
-            container_list = store._get_full_container_list([], prefix='{}/'.format(s))
+    for container in store.get_containers():
+        container_name = container['name']
+        if container_name == 'Diva':
+            for file_object in store._get_full_container_list(container_name, []):
+                path = file_object['name'].split('/')
+                if path[0] in ['nap', 'meetbouten']:
+                    dir = os.path.join(DIVA_DIR, '/'.join(path[:-1]))
+                    fname = os.path.join(DIVA_DIR, '/'.join(path))
 
-        for ob in container_list:
-            fname = os.path.join(data_dir, f['dir_name'], ob['name'].split('/')[-1])
-            newfile = open(fname, 'wb')
-            newfile.write(store.get_store_object(ob['name']))
-            newfile.close()
+                    # create the directory inclusive nonexisting path
+                    os.makedirs(dir, exist_ok=True)
+
+                    # Create the file with content if it is not a directory in object store
+                    if file_object['content_type'] != 'application/directory':
+                        newfile = open(fname, 'wb')
+                        newfile.write(store.get_store_object(container, file_object))
+                        newfile.close()
 
 
 class ObjectStore():
     RESP_LIMIT = 10000  # serverside limit of the response
 
-    def __init__(self, container):
-        self.conn = Connection(**settings.OBJECTSTORE)
-        self.container = container
+    def __init__(self):
+        self.conn = Connection(**os_connect)
 
-    def get_store_object(self, name):
+    def get_containers(self):
+        _, containers = self.conn.get_account()
+        return containers
+
+    def get_store_object(self, container, file_object):
         """
         Returns the object store
-        :param object_meta_data:
+        :param container:
+        :param file_object
         :return:
         """
-        return self.conn.get_object(self.container, name)[1]
+        return self.conn.get_object(container['name'], file_object['name'])[1]
 
-    def get_store_objects(self, path):
-        return self._get_full_container_list([], prefix=path)
-
-    def _get_full_container_list(self, seed, **kwargs):
+    def _get_full_container_list(self, container, seed, **kwargs):
         kwargs['limit'] = self.RESP_LIMIT
         if len(seed):
             kwargs['marker'] = seed[-1]['name']
 
-        _, page = self.conn.get_container(self.container, **kwargs)
+        _, page = self.conn.get_container(container, **kwargs)
         seed.extend(page)
         return seed if len(page) < self.RESP_LIMIT else \
-            self._get_full_container_list(seed, **kwargs)
+            self._get_full_container_list(container, seed, **kwargs)
 
-    def folders(self, path):
-        objects_from_store = self._get_full_container_list(
-            [], delimiter='/', prefix=path
-        )
-        return [store_object['subdir'] for store_object in objects_from_store if 'subdir' in store_object]
+    def put_to_objectstore(self, container, object_name, object_content, content_type):
+        return self.conn.put_object(container, object_name, contents=object_content, content_type=content_type)
 
-    def files(self, path, file_id):
-        file_list = self._get_full_container_list(
-            [], delimiter='/', prefix=path + file_id)
+    def delete_from_objectstore(self, container, object_name):
+        return self.conn.delete_object(container, object_name)
 
-        for file_object in file_list:
-            file_object['container'] = self.container
-        return file_list
 
-    def put_to_objectstore(self, object_name, object_content, content_type):
-        return self.conn.put_object(self.container, object_name, contents=object_content, content_type=content_type)
-
-    def delete_from_objectstore(self, object_name):
-        return self.conn.delete_object(self.container, object_name)
+if __name__ == "__main__":
+    # Download files from objectstore
+    fetch_importfiles()

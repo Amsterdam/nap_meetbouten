@@ -16,15 +16,16 @@ importer:
   links:
     - database:database
     - elasticsearch:elastic
-  volumes:
-    - /mnt/data/diva_import:/app/diva
+  user: root
   environment:
     DB_NAME: nap
     DB_USER: nap
     DB_PASSWORD: insecure
+    OS_PASSWORD: insecure
   command: >
     bash -c "/app/docker-wait.sh \
             && python manage.py migrate \
+            && python objectstore/objectstore.py \
             && python manage.py run_import"
 
 tests:

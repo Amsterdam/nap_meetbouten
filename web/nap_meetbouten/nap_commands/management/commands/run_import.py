@@ -53,7 +53,6 @@ class Command(BaseCommand):
 
         for ds in sets:
             if options['run-import']:
-                fetch_importfiles()
                 for job_class in self.imports[ds]:
                     batch.execute(job_class())
 
