@@ -2,6 +2,8 @@ FROM python:3.5
 MAINTAINER datapunt.ois@amsterdam.nl
 
 ENV PYTHONUNBUFFERED 1
+ARG OS_PASSWORD_BAG
+ENV OS_PASSWORD_BAG=$OS_PASSWORD_BAG
 
 EXPOSE 8000
 
@@ -28,5 +30,3 @@ RUN python manage.py collectstatic --noinput
 
 CMD ["/app/docker-run.sh"]
 
-ARG OS_PASSWORD_BAG
-ENV OS_PASSWORD_BAG=$OS_PASSWORD_BAG
