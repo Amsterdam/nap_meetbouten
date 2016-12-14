@@ -37,7 +37,7 @@ tests:
     DB_NAME: nap
     DB_USER: nap
     DB_PASSWORD: insecure
-    OS_PASSWORD_BAG: insecure
+    OS_PASSWORD_BAG:
   command: >
     bash -c "./docker-test.sh"
 
