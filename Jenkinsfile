@@ -29,7 +29,7 @@ node {
 
             withCredentials([[$class: 'StringBinding', credentialsId: 'BAG_OBJECTSTORE_PASSWORD', variable: 'OS_PASSWORD_BAG']]) {
             sh "docker-compose -p nap -f .jenkins/docker-compose.yml build && " +
-            sh "docker-compose -p nap -f .jenkins/docker-compose.yml run -u root --rm tests"
+                    "docker-compose -p nap -f .jenkins/docker-compose.yml run -u root --rm tests"
         }
         }, {
             sh "docker-compose -p nap -f .jenkins/docker-compose.yml down"
