@@ -21,7 +21,7 @@ importer:
     DB_NAME: nap
     DB_USER: nap
     DB_PASSWORD: insecure
-    OS_PASSWORD_BAG:
+    BAG_OBJECTSTORE_PASSWORD:
   command: >
     bash -c "/app/docker-wait.sh \
             && python objectstore/objectstore.py \
@@ -37,7 +37,7 @@ tests:
     DB_NAME: nap
     DB_USER: nap
     DB_PASSWORD: insecure
-    OS_PASSWORD_BAG:
+    BAG_OBJECTSTORE_PASSWORD:
   command: >
     bash -c "./docker-test.sh"
 
