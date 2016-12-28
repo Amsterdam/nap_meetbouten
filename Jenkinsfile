@@ -35,6 +35,7 @@ node {
         }
     }
 
+
     stage("Build develop image") {
         tryStep "build", {
             def image = docker.build("build.datapunt.amsterdam.nl:5000/datapunt/nap:${env.BUILD_NUMBER}", "web")
@@ -44,7 +45,7 @@ node {
     }
 }
 
-String BRANCH = "${env.BRANCH_NAME}".toString()
+String BRANCH = "${env.BRANCH_NAME}"
 
 if (BRANCH == "master") {
 
