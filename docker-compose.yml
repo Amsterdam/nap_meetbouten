@@ -28,5 +28,5 @@ web:
     DB_NAME: nap
     DB_USER: nap
     DB_PASSWORD: insecure
+    BAG_OBJECTSTORE_PASSWORD: insecure
   read_only: True
-
