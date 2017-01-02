@@ -1,6 +1,6 @@
 from . import factories
 
-from datapunt_generic.batch.test import TaskTestCase
+from datapunt_generic.batch.tests.tasktestcase import TaskTestCase
 from .. import batch, models
 
 NAP = 'diva/meetbouten'
