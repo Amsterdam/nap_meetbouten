@@ -9,13 +9,13 @@ logging.getLogger("requests").setLevel(logging.WARNING)
 logging.getLogger("urllib3").setLevel(logging.WARNING)
 logging.getLogger("swiftclient").setLevel(logging.WARNING)
 
-assert os.getenv('OS_PASSWORD_BAG')
+assert os.getenv('BAG_OBJECTSTORE_PASSWORD')
 
 os_connect = {
     'auth_version': '2.0',
     'authurl': 'https://identity.stack.cloudvps.com/v2.0',
     'user': 'bag_brk',
-    'key': os.getenv('OS_PASSWORD_BAG', 'insecure'),
+    'key': os.getenv('BAG_OBJECTSTORE_PASSWORD', 'insecure'),
     'tenant_name': 'BGE000081_BAG',
     'os_options': {
         'tenant_id': '4f2f4b6342444c84b3580584587cfd18',

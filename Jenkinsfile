@@ -23,9 +23,10 @@ node {
         checkout scm
     }
 
+
     stage('Test') {
         tryStep "test", {
-            withCredentials([[$class: 'StringBinding', credentialsId: 'BAG_OBJECTSTORE_PASSWORD', variable: 'OS_PASSWORD_BAG']]) {
+            withCredentials([[$class: 'StringBinding', credentialsId: 'BAG_OBJECTSTORE_PASSWORD', variable: 'BAG_OBJECTSTORE_PASSWORD']]) {
             sh "docker-compose -p nap -f .jenkins/docker-compose.yml build && " +
                     "docker-compose -p nap -f .jenkins/docker-compose.yml run -u root --rm tests"
         }
@@ -33,6 +34,7 @@ node {
             sh "docker-compose -p nap -f .jenkins/docker-compose.yml down"
         }
     }
+
 
     stage("Build develop image") {
         tryStep "build", {
@@ -43,7 +45,7 @@ node {
     }
 }
 
-String BRANCH = "${env.BRANCH_NAME}".toString()
+String BRANCH = "${env.BRANCH_NAME}"
 
 if (BRANCH == "master") {
 
