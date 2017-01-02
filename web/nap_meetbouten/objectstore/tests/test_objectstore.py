@@ -1,7 +1,6 @@
 import os
 import mimetypes
 from django.test import TestCase
-from django.conf import settings
 
 from unittest import skip
 
@@ -10,11 +9,9 @@ from ..objectstore import ObjectStore
 
 class TestObjectstore(TestCase):
 
-    def setUp(self):
-        self.objectstore = ObjectStore('NAP')
-
-    @skip('blablabla')
+    @skip('integration test only')
     def test_objects(self):
+        self.objectstore = ObjectStore('NAP')
 
         # clean up
         stored_objects = self.objectstore._get_full_container_list([])

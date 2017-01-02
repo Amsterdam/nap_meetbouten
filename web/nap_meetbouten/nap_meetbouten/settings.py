@@ -9,7 +9,7 @@ DIVA_DIR = os.path.abspath(os.path.join(BASE_DIR, './', 'diva'))
 
 SECRET_KEY = os.getenv("SECRET_KEY", "default-secret")
 
-DEBUG = False
+DEBUG = SECRET_KEY == 'default-secret'
 
 NO_INTEGRATION_TESTS = True
 
@@ -49,9 +49,6 @@ INSTALLED_APPS = (
     'rest_framework_swagger',
 )
 
-if DEBUG:
-    INSTALLED_APPS += ('debug_toolbar',)
-
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -62,6 +59,10 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
 )
+
+if DEBUG:
+    INSTALLED_APPS += ('debug_toolbar', )
+    MIDDLEWARE_CLASSES += ('debug_toolbar.middleware.DebugToolbarMiddleware', )
 
 ROOT_URLCONF = 'nap_meetbouten.urls'
 

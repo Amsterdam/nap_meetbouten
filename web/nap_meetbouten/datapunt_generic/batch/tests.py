@@ -1,6 +1,5 @@
 from django.test import TestCase, SimpleTestCase
 from django.utils import timezone
-from unittest import skip
 
 from . import models
 from . import batch
@@ -17,7 +16,7 @@ class FailingTask(object):
     name = "failing"
 
     def execute(self):
-        raise Exception("Oops")
+        raise Exception()
 
 
 class FailedJob(object):
@@ -50,19 +49,18 @@ class JobTest(TestCase):
         self.assertIsNotNone(e.date_finished)
         self.assertEqual(e.status, models.JobExecution.STATUS_FINISHED)
 
-    @skip('skip for now')
     def test_failed_job_results_in_failed_execution(self):
         e = batch.execute(FailedJob())
 
         self.assertIsNotNone(e.date_finished)
         self.assertEqual(e.status, models.JobExecution.STATUS_FAILED)
 
-    @skip('skip for now')
     def test_task_can_be_function(self):
         done = False
-
+        
         def update_done():
-            pass
+            nonlocal done
+            done = True
 
         e = batch.execute(SimpleJob("simple", update_done))
         self.assertEqual(e.status, models.JobExecution.STATUS_FINISHED)
