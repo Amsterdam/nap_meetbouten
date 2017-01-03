@@ -22,18 +22,28 @@ log = logging.getLogger(__name__)
 
 
 def health(request):
-    # check database
-    try:
-        with connection.cursor() as cursor:
-            cursor.execute("select 1")
-            assert cursor.fetchone()
-    except:
-        log.exception("Database connectivity failed")
-        return HttpResponse("Database connectivity failed",
-                            content_type="text/plain", status=500)
+    msg = "Health OK"
+    statuscode = 200
 
-    return HttpResponse("Connectivity OK", content_type='text/plain',
-                        status=200)
+    if settings.DEBUG:
+        # Check debug mode
+        msg = "Debug mode not allowed in production"
+        statuscode = 500
+    else:
+        # check database
+        try:
+            with connection.cursor() as cursor:
+                cursor.execute("select 1")
+                assert cursor.fetchone()
+        except Exception as e:
+            msg = "Database connectivity failed: {}".format(e.msg)
+            statuscode = 500
+
+    # Do we need to explicitly log this at all?
+    if statuscode != 200:
+        log.exception(msg)
+
+    return HttpResponse(msg, content_type='text/plain', status=statuscode)
 
 
 def check_data(request):
