@@ -1,21 +1,22 @@
+import csv
+import datetime
 import logging
 import os
-import csv
 
 from django.conf import settings
 from django.contrib.gis.geos import GEOSGeometry
 
 from datapunt_generic.batch import batch
-from datapunt_generic.generic import database
+from datapunt_generic.generic import csv as dp_csv, database, metadata
 
-from datapunt_generic.generic.csv import cleanup_row, parse_decimal
 from .models import Peilmerk
 
 log = logging.getLogger(__name__)
 
 
-class ImportNapTask(batch.BasicTask):
+class ImportNapTask(batch.BasicTask, metadata.UpdateDatasetMixin):
     name = "Import NAP"
+    dataset_id = "NAP"
     peilmerken = dict()
     merk_choices = dict()
 
@@ -27,10 +28,11 @@ class ImportNapTask(batch.BasicTask):
         database.clear_models(Peilmerk)
 
     def after(self):
-        pass
+        self.update_metadata_date(self.mdate)
 
     def process(self):
         source = os.path.join(self.path, "NAP_PEILMERK.dat")
+        self.mdate = datetime.date.fromtimestamp(os.path.getmtime(source))
         with open(source, encoding='cp1252') as f:
             rows = csv.reader(f, delimiter='|', quotechar='$', doublequote=True)
             self.peilmerken = [result for result in
@@ -41,7 +43,7 @@ class ImportNapTask(batch.BasicTask):
                                      batch_size=database.BATCH_SIZE)
 
     def process_row(self, r):
-        row = cleanup_row(r, replace=True)
+        row = dp_csv.cleanup_row(r, replace=True)
 
         pk = row[0]
         merk = int(row[3])
@@ -55,7 +57,7 @@ class ImportNapTask(batch.BasicTask):
         # PEILMERKNR,HOOGTE,JAAR,MERK,OMSCHRIJVING,WINDRICHTING,X_MUURVLAK,Y_MUURVLAK,RWSNR,GEOMETRIE
         return Peilmerk(
             pk=pk,
-            hoogte=parse_decimal(row[1]),
+            hoogte=dp_csv.parse_decimal(row[1]),
             jaar=int(row[2]),
             merk=int(row[3]),
             omschrijving=row[4],

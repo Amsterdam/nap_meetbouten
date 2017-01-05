@@ -1,22 +1,23 @@
+import csv
+import datetime
 import logging
 import os
-import csv
 
 from django.conf import settings
 from django.contrib.gis.geos import GEOSGeometry
 
 from datapunt_generic.batch import batch
-from datapunt_generic.generic import database, index
-
-from datapunt_generic.generic.csv import cleanup_row, parse_decimal
-from datapunt_generic.generic.uva2 import uva_indicatie, uva_datum
+from datapunt_generic.generic import (
+    csv as dp_csv, database, index, metadata, uva2
+)
 from . import models, documents
 
 log = logging.getLogger(__name__)
 
 
-class ImportMeetboutTask(batch.BasicTask):
+class ImportMeetboutTask(batch.BasicTask, metadata.UpdateDatasetMixin):
     name = "Import MBT_MEETBOUT"
+    dataset_id = "meetbouten"
     meetbouten = dict()
     status_choices = dict()
     rollagen = dict()
@@ -32,9 +33,11 @@ class ImportMeetboutTask(batch.BasicTask):
 
     def after(self):
         self.rollagen.clear()
+        self.update_metadata_date(self.mdate)
 
     def process(self):
         source = os.path.join(self.path, "MBT_MEETBOUT.dat")
+        self.mdate = datetime.date.fromtimestamp(os.path.getmtime(source))
         with open(source, encoding='cp1252') as f:
             rows = csv.reader(
                 f, delimiter='|', quotechar='$', doublequote=True)
@@ -46,7 +49,7 @@ class ImportMeetboutTask(batch.BasicTask):
             meetbouten, batch_size=database.BATCH_SIZE)
 
     def process_row(self, r):
-        row = cleanup_row(r, replace=True)
+        row = dp_csv.cleanup_row(r, replace=True)
         pk = row[0]
         status = row[14]
 
@@ -60,18 +63,18 @@ class ImportMeetboutTask(batch.BasicTask):
         return models.Meetbout(
             pk=pk,
             buurt=row[1],
-            x_coordinaat=parse_decimal(row[2]),
-            y_coordinaat=parse_decimal(row[3]),
-            hoogte_nap=parse_decimal(row[4]),
-            zakking_cumulatief=parse_decimal(row[5]),
-            datum=uva_datum(row[6]),
+            x_coordinaat=dp_csv.parse_decimal(row[2]),
+            y_coordinaat=dp_csv.parse_decimal(row[3]),
+            hoogte_nap=dp_csv.parse_decimal(row[4]),
+            zakking_cumulatief=dp_csv.parse_decimal(row[5]),
+            datum=uva2.uva_datum(row[6]),
             bouwblokzijde=row[7],
             eigenaar=row[8],
-            beveiligd=uva_indicatie(row[9]),
+            beveiligd=uva2.uva_indicatie(row[9]),
             stadsdeel=row[10],
             adres=row[11],
             locatie=row[12],
-            zakkingssnelheid=parse_decimal(row[13]),
+            zakkingssnelheid=dp_csv.parse_decimal(row[13]),
             status=status,
             bouwbloknummer=bouwblok,
             rollaag_id=self.rollagen.get(bouwblok),
@@ -106,16 +109,16 @@ class ImportReferentiepuntTask(batch.BasicTask):
             referentiepunten, batch_size=database.BATCH_SIZE)
 
     def process_row(self, r):
-        row = cleanup_row(r, replace=True)
+        row = dp_csv.cleanup_row(r, replace=True)
 
         pk = row[0]
 
         return models.Referentiepunt(
             pk=pk,
-            x_coordinaat=parse_decimal(row[1]),
-            y_coordinaat=parse_decimal(row[2]),
-            hoogte_nap=parse_decimal(row[3]),
-            datum=uva_datum(row[4]),
+            x_coordinaat=dp_csv.parse_decimal(row[1]),
+            y_coordinaat=dp_csv.parse_decimal(row[2]),
+            hoogte_nap=dp_csv.parse_decimal(row[3]),
+            datum=uva2.uva_datum(row[4]),
             locatie=row[5],
             geometrie=GEOSGeometry(row[6]),
         )
@@ -156,7 +159,7 @@ class ImportMetingTask(batch.BasicTask):
                 batch_size=database.BATCH_SIZE)
 
     def process_row(self, r):
-        row = cleanup_row(r, replace=True)
+        row = dp_csv.cleanup_row(r, replace=True)
         pk = row[0]
         meting_type = row[2]
         if meting_type not in self.type_choices:
@@ -172,13 +175,13 @@ class ImportMetingTask(batch.BasicTask):
             return
         meting = models.Meting.objects.create(
             pk=pk,
-            datum=uva_datum(row[1]),
+            datum=uva2.uva_datum(row[1]),
             type=meting_type,
-            hoogte_nap=parse_decimal(row[3]),
-            zakking=parse_decimal(row[4]),
+            hoogte_nap=dp_csv.parse_decimal(row[3]),
+            zakking=dp_csv.parse_decimal(row[4]),
             meetbout_id=meetbout_id,
-            zakkingssnelheid=parse_decimal(row[9]),
-            zakking_cumulatief=parse_decimal(row[10]),
+            zakkingssnelheid=dp_csv.parse_decimal(row[9]),
+            zakking_cumulatief=dp_csv.parse_decimal(row[10]),
             ploeg=row[11],
             type_int=int(row[12]) if row[12] else None,
             dagen_vorige_meting=int(row[13]) if row[13] else None,
@@ -222,7 +225,7 @@ class ImportRollaagTask(batch.BasicTask):
                 rollagen, batch_size=database.BATCH_SIZE)
 
     def process_row(self, r):
-        row = cleanup_row(r, replace=True)
+        row = dp_csv.cleanup_row(r, replace=True)
 
         pk = row[1]
         bouwblok = row[0]
@@ -230,8 +233,8 @@ class ImportRollaagTask(batch.BasicTask):
         return models.Rollaag(
             pk=pk,
             bouwblok=bouwblok,
-            x_coordinaat=parse_decimal(row[2]),
-            y_coordinaat=parse_decimal(row[3]),
+            x_coordinaat=dp_csv.parse_decimal(row[2]),
+            y_coordinaat=dp_csv.parse_decimal(row[3]),
             geometrie=GEOSGeometry(row[4]),
         )
 
