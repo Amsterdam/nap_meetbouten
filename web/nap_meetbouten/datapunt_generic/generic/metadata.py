@@ -2,7 +2,7 @@ import datetime
 import requests
 import os
 
-METADATA_URL = os.getenv('METADATA_URL', '')
+METADATA_URL = os.getenv('METADATA_URL')
 
 
 class UpdateDatasetMixin(object):
@@ -21,8 +21,8 @@ class UpdateDatasetMixin(object):
     dataset_id = None
 
     def update_metadata_date(self, date):
-        if not date or not METADATA_URL:
-            return
+        assert METADATA_URL, "METADATA_URL must be set in your environment if you want to update this dataset's ({}) metadata".format(self.dataset_id)
+        assert date, "Must provide a date if you want to update this dataset's ({}) metadata".format(self.dataset_id)
 
         data = {
             'id': self.dataset_id.lower(),
