@@ -18,6 +18,9 @@ web:
   build: ./web
   ports:
     - "8100:8000"
+  links:
+    - database:database
+    - elasticsearch:elastic
   volumes:
     - $PWD/reports:/app/reports
   environment:
