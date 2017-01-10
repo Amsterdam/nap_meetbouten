@@ -30,6 +30,9 @@ services:
 
   tests:
     build: ../web
+    links:
+      - elasticsearch
+      - database
     environment:
       DB_NAME: nap
       DB_USER: nap
