@@ -2,10 +2,12 @@
 import os
 import sys
 
-from datapunt_generic.generic.database import get_docker_host
+from datapunt_generic.generic.database import get_docker_host, in_docker
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DIVA_DIR = os.path.abspath(os.path.join(BASE_DIR, './', 'diva'))
+
+IN_DOCKER = in_docker()
 
 SECRET_KEY = os.getenv("SECRET_KEY", "default-secret")
 
@@ -87,21 +89,33 @@ WSGI_APPLICATION = 'nap_meetbouten.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.8/ref/settings/#databases
 
-DATABASES = {
-    'default': {
+DATABASE_OPTIONS = {
+    'docker': {
         'ENGINE': 'django.contrib.gis.db.backends.postgis',
         'NAME': os.getenv('DB_NAME', 'nap'),
         'USER': os.getenv('DB_USER', 'nap'),
         'PASSWORD': os.getenv('DB_PASSWORD', 'insecure'),
-        'HOST': os.getenv('DATABASE_PORT_5432_TCP_ADDR', get_docker_host()),
-        'PORT': os.getenv('DATABASE_PORT_5432_TCP_PORT', '5401'),
+        'HOST': 'database',
+        'PORT': '5432',
+    },
+    'local': {
+        'ENGINE': 'django.contrib.gis.db.backends.postgis',
+        'NAME': os.getenv('DB_NAME', 'nap'),
+        'USER': os.getenv('DB_USER', 'nap'),
+        'PASSWORD': os.getenv('DB_PASSWORD', 'insecure'),
+        'HOST': get_docker_host(),
+        'PORT': '5401',
     }
 }
 
+
+DATABASES = {
+    'default': DATABASE_OPTIONS['docker'] if IN_DOCKER else DATABASE_OPTIONS['local']
+}
+
 ELASTIC_SEARCH_HOSTS = [
-    "http://{}:{}".format(
-        os.getenv('ELASTIC_PORT_9200_TCP_ADDR', get_docker_host()),
-        os.getenv('ELASTIC_PORT_9200_TCP_PORT', 9201))
+    "http://elasticsearch:9200",
+    "http://{}:9201".format(get_docker_host, '9200')
 ]
 
 ELASTIC_INDICES = dict(

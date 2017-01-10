@@ -31,3 +31,15 @@ def get_docker_host():
 
         return re.match(r'tcp://(.*?):\d+', d_host).group(1)
     return 'localhost'
+
+
+def in_docker():
+    """
+    Checks pid 1 cgroup settings to check with reasonable certainty we're in a
+    docker env.
+    :return: true when running in a docker container, false otherwise
+    """
+    try:
+        return ':/docker/' in open('/proc/1/cgroup', 'r').read()
+    except:
+        return False

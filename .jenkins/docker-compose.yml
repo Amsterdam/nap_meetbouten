@@ -1,4 +1,4 @@
-version: '2'
+version: '2.1'
 services:
   database:
     image: build.datapunt.amsterdam.nl:5000/atlas/postgres
@@ -15,9 +15,6 @@ services:
 
   importer:
     image: build.datapunt.amsterdam.nl:5000/datapunt/nap:${ENVIRONMENT}
-    links:
-      - database:database
-      - elasticsearch:elastic
     user: root
     environment:
       DB_NAME: nap
@@ -33,9 +30,6 @@ services:
 
   tests:
     build: ../web
-    links:
-      - database:database
-      - elasticsearch:elastic
     environment:
       DB_NAME: nap
       DB_USER: nap
@@ -46,12 +40,10 @@ services:
 
   db-backup:
     image: build.datapunt.amsterdam.nl:5000/atlas/postgres
-    links:
-      - database:db
     volumes:
       - ./backups:/tmp/backups
     command: >
-      bash -c "echo db:5432:nap:nap:insecure > ~/.pgpass \
+      bash -c "echo database:5432:nap:nap:insecure > ~/.pgpass \
               && chmod 600 ~/.pgpass \
               && pg_dump --clean \
                           -Fc \
@@ -61,17 +53,15 @@ services:
                           -T django*  \
                           -T auth*    \
                           -U nap \
-                          -h db -p 5432 \
+                          -h database -p 5432 \
                           nap > /tmp/backups/database.dump"
 
   el-backup:
     image: build.datapunt.amsterdam.nl:5000/atlas/elasticsearch
-    links:
-      - elasticsearch:el
     volumes:
       - ./backups/elasticsearch:/tmp/backups
     user: root
     command: >
-      bash -c "curl -X PUT http://el:9200/_snapshot/backup -d '{ \"type\": \"fs\", \"settings\": { \"location\": \"/tmp/backups\" }}' \
-              && curl -X PUT http://el:9200/_snapshot/backup/meetbouten?wait_for_completion=true -d '{ \"indices\": \"meetbouten\" }' \
+      bash -c "curl -X PUT http://elasticsearch:9200/_snapshot/backup -d '{ \"type\": \"fs\", \"settings\": { \"location\": \"/tmp/backups\" }}' \
+              && curl -X PUT http://elasticsearch:9200/_snapshot/backup/meetbouten?wait_for_completion=true -d '{ \"indices\": \"meetbouten\" }' \
               && chmod -R a+w /tmp/backups"
