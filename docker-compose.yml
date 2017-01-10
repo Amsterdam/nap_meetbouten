@@ -1,31 +1,29 @@
-version: '2.1'
-services:
-  database:
-    image: build.datapunt.amsterdam.nl:5000/atlas/postgres
-    ports:
-      - "5401:5432"
-    environment:
-      POSTGRES_DB: nap
-      POSTGRES_USER: nap
-      POSTGRES_PASSWORD: insecure
+database:
+  image: build.datapunt.amsterdam.nl:5000/atlas/postgres
+  ports:
+    - "5401:5432"
+  environment:
+    POSTGRES_DB: nap
+    POSTGRES_USER: nap
+    POSTGRES_PASSWORD: insecure
 
-  elasticsearch:
-    image: build.datapunt.amsterdam.nl:5000/atlas/elasticsearch:latest
-    command: elasticsearch -Des.network.host=0.0.0.0
-    ports:
-      - "9201:9200"
-      - "9301:9300"
+elasticsearch:
+  image: build.datapunt.amsterdam.nl:5000/atlas/elasticsearch:latest
+  command: elasticsearch -Des.network.host=0.0.0.0
+  ports:
+    - "9201:9200"
+    - "9301:9300"
 
-  web:
-    build: ./web
-    ports:
-      - "8100:8000"
-    volumes:
-      - $PWD/reports:/app/reports
-    environment:
-      SECRET_KEY: hoi
-      DB_NAME: nap
-      DB_USER: nap
-      DB_PASSWORD: insecure
-      BAG_OBJECTSTORE_PASSWORD: insecure
-    read_only: True
+web:
+  build: ./web
+  ports:
+    - "8100:8000"
+  volumes:
+    - $PWD/reports:/app/reports
+  environment:
+    SECRET_KEY: hoi
+    DB_NAME: nap
+    DB_USER: nap
+    DB_PASSWORD: insecure
+    BAG_OBJECTSTORE_PASSWORD: insecure
+  read_only: True
