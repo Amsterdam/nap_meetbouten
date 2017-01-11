@@ -14,7 +14,7 @@ from .models import Peilmerk
 log = logging.getLogger(__name__)
 
 
-class ImportNapTask(batch.BasicTask, metadata.UpdateDatasetMixin):
+class ImportNapTask(batch.BasicTask):
     name = "Import NAP"
     dataset_id = "NAP"
     peilmerken = dict()
@@ -28,7 +28,8 @@ class ImportNapTask(batch.BasicTask, metadata.UpdateDatasetMixin):
         database.clear_models(Peilmerk)
 
     def after(self):
-        self.update_metadata_date(self.mdate)
+        metadata.upload(self.dataset_id, self.mdate.year,
+                        self.mdate.month, self.mdate.day)
 
     def process(self):
         source = os.path.join(self.path, "NAP_PEILMERK.dat")

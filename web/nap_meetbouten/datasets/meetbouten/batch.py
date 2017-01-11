@@ -15,7 +15,7 @@ from . import models, documents
 log = logging.getLogger(__name__)
 
 
-class ImportMeetboutTask(batch.BasicTask, metadata.UpdateDatasetMixin):
+class ImportMeetboutTask(batch.BasicTask):
     name = "Import MBT_MEETBOUT"
     dataset_id = "meetbouten"
     meetbouten = dict()
@@ -33,7 +33,8 @@ class ImportMeetboutTask(batch.BasicTask, metadata.UpdateDatasetMixin):
 
     def after(self):
         self.rollagen.clear()
-        self.update_metadata_date(self.mdate)
+        metadata.upload(self.dataset_id, self.mdate.year,
+                        self.mdate.month, self.mdate.day)
 
     def process(self):
         source = os.path.join(self.path, "MBT_MEETBOUT.dat")

@@ -1,38 +1,43 @@
 import datetime
+import logging
 import requests
 import os
 
+# TODO: shouldn't rely on an env variable here
 METADATA_URL = os.getenv('METADATA_URL')
 
+log = logging.getLogger(__name__)
 
-class UpdateDatasetMixin(object):
-    """
-    Mixin to update metadata API from import scripts. (Copied from BAG)
 
-    It will call the api-acc or api domain based on hostname.
+def upload(dataset_id, year, month, day):
+    # TODO: should fail if this method is called without having a URL
+    if METADATA_URL is None or len(METADATA_URL) == 0:
+        log.warn("METADATA_URL is not set, won't upload dataset modification "
+                 "date. This should only happen suring tests!")
+        return
 
-    usage:
+    metadata_url = METADATA_URL
+    if metadata_url[-1] != '/':
+        metadata_url += '/'
 
-    - set dataset_id to correct dataset
-    - call self.update_metadata_date
+    try:
+        dsid = dataset_id.lower()
+    except AttributeError as e:
+        log.critical("dataset_id cannot be lowercased. Is it a string?")
+        raise e
 
-    These calls will return a Response object, or None when no date was passed.
-    """
-    dataset_id = None
+    uri = '{}{}/'.format(metadata_url, dsid)
 
-    def update_metadata_date(self, date):
-        if not METADATA_URL:
-            return
+    try:
+        moddate = '{}-{}-{}'.format(year, month, day)
+        datetime.datetime.strptime(moddate, '%Y-%m-%d')
+    except ValueError as e:
+        log.critical("Could not parse date. Did you provide a valid year, "
+                     "month and day?")
+        raise e
 
-        data = {
-            'id': self.dataset_id.lower(),
-            'data_modified_date': '%d-%d-%d' % (
-                date.year, date.month, date.day),
-            'last_import_date': datetime.date.today(),
-        }
-
-        uri = '%s%s/' % (METADATA_URL, self.dataset_id.lower())
-
-        res = requests.put(uri, data)
-
-        return res
+    return requests.put(uri, {
+        'id': dsid,
+        'data_modified_date': moddate,
+        'last_import_date': datetime.date.today(),
+    })
