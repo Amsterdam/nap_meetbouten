@@ -140,10 +140,11 @@ DATABASES = {
     'default': DATABASE_OPTIONS[get_database_key()]
 }
 
-ELASTIC_SEARCH_HOSTS = [
-    "http://elasticsearch:9200",
-    "http://{}:9201".format(get_docker_host, '9200')
-]
+ELASTIC_SEARCH_HOSTS = ["http://elasticsearch:9200", "http://{}:9201".format(get_docker_host, '9200')]
+if os.getenv('ENVIRONMENT') == 'production':
+    ELASTIC_SEARCH_HOSTS = ["el01.service.consul", "el02.service.consul", "el03.service.consul",]
+elif os.getenv('ENVIRONMENT') == 'ACCEPTANCE':
+    ELASTIC_SEARCH_HOSTS = ["el01-acc.service.consul", "el02-acc.service.consul", "el03-acc.service.consul",]
 
 ELASTIC_INDICES = dict(
     MEETBOUTEN='meetbouten', NAP='nap')
