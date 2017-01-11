@@ -138,6 +138,8 @@ DATABASES = {
     'default': DATABASE_OPTIONS[get_database_key()]
 }
 ELASTIC_SEARCH_HOSTS = ["http://elasticsearch:9200", "http://{}:9201".format(get_docker_host, '9200')]
+if os.getenv('ENVIRONMENT') in ['production', 'acceptance']:
+    ELASTIC_SEARCH_HOSTS = ["atlas-index.service.consul"]
 
 
 ELASTIC_INDICES = dict(
