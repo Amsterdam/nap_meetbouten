@@ -140,14 +140,17 @@ DATABASES = {
         'NAME': os.getenv('DB_NAME', 'nap'),
         'USER': os.getenv('DB_USER', 'nap'),
         'PASSWORD': os.getenv('DB_PASSWORD', 'insecure'),
-        'HOST': os.getenv('DATABASE_HOST_OVERRIDE', 'database'),
-        'PORT': os.getenv('DATABASE_PORT_OVERRIDE', '5432')
+        'HOST': "database",
+        'PORT':'5401'
     }
 }
-
 ELASTIC_SEARCH_HOSTS = ["http://elasticsearch:9200", "http://{}:9201".format(get_docker_host, '9200')]
-if os.getenv('ENVIRONMENT') in ['production', 'acceptance']:
-    ELASTIC_SEARCH_HOSTS = ["atlas-index.service.consul"]
+
+DATABASES['default']['HOST'] = "nap-db.service.consul"
+DATABASES['default']['PORT'] = "5432"
+#if os.getenv('ENVIRONMENT') in ['production', 'acceptance']:
+ELASTIC_SEARCH_HOSTS = ["atlas-index.service.consul"]
+
 
 ELASTIC_INDICES = dict(
     MEETBOUTEN='meetbouten', NAP='nap')
