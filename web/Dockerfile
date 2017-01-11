@@ -28,4 +28,5 @@ COPY nap_meetbouten /app/
 
 RUN python manage.py collectstatic --noinput
 
+# Production no waits / migrates etc.
 CMD ["/app/docker-run.sh"]

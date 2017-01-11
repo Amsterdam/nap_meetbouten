@@ -30,3 +30,7 @@ services:
       DB_PASSWORD: insecure
       BAG_OBJECTSTORE_PASSWORD: insecure
     read_only: True
+    command: >
+      bash -c "/app/docker-wait.sh \
+              && /app/docker-migrate.sh \
+              && /app/docker-run.sh"
