@@ -39,7 +39,7 @@ services:
       DB_PASSWORD: insecure
       BAG_OBJECTSTORE_PASSWORD:
     command: >
-      bash -c "./docker-test.sh"
+      bash -c "./docker-wait.sh && ./docker-test.sh"
 
   db-backup:
     image: build.datapunt.amsterdam.nl:5000/atlas/postgres
