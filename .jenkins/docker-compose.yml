@@ -21,6 +21,7 @@ services:
       DB_USER: nap
       DB_PASSWORD: insecure
       BAG_OBJECTSTORE_PASSWORD:
+      DATABASE_HOST_OVERRIDE:
       METADATA_URL: "${METADATA_URL}"
     command: >
       bash -c "python objectstore/objectstore.py \
