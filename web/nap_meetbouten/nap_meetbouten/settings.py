@@ -10,7 +10,7 @@ OVERRIDE_PORT_ENV_VAR = 'DATABASE_PORT_OVERRIDE'
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DIVA_DIR = os.path.abspath(os.path.join(BASE_DIR, './', 'diva'))
 
-IN_DOCKER = in_docker()
+IN_DOCKER = False # in_docker()
 
 
 class Location_key:
@@ -107,6 +107,7 @@ WSGI_APPLICATION = 'nap_meetbouten.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/1.8/ref/settings/#databases
+
 
 DATABASE_OPTIONS = {
     Location_key.docker: {
