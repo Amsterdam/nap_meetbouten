@@ -16,12 +16,16 @@ services:
   importer:
     image: build.datapunt.amsterdam.nl:5000/datapunt/nap:${ENVIRONMENT}
     user: root
+    links:
+      - elasticsearch
+      - database
     environment:
       DB_NAME: nap
       DB_USER: nap
       DB_PASSWORD: insecure
       BAG_OBJECTSTORE_PASSWORD:
-      DATABASE_HOST_OVERRIDE:
+      DATABASE_HOST_OVERRIDE: database
+      DATABASE_PORT_OVERRIDE: 5432
       METADATA_URL: "${METADATA_URL}"
     command: >
       bash -c "python objectstore/objectstore.py \
