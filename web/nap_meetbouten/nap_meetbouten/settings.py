@@ -137,10 +137,16 @@ DATABASE_OPTIONS = {
 DATABASES = {
     'default': DATABASE_OPTIONS[get_database_key()]
 }
-ELASTIC_SEARCH_HOSTS = ["http://elasticsearch:9200", "http://{}:9201".format(get_docker_host, '9200')]
-if os.getenv('ENVIRONMENT') in ['production', 'acceptance']:
-    ELASTIC_SEARCH_HOSTS = ["atlas-index.service.consul"]
 
+ELASTIC_SEARCH_HOSTS = ["http://elasticsearch:9200", "http://{}:9201".format(get_docker_host, '9200')]
+if os.getenv('ENVIRONMENT') == 'acceptance':
+    ELASTIC_SEARCH_HOSTS = ["el01-acc.datapunt.amsterdam.nl",
+                            "el02-acc.datapunt.amsterdam.nl",
+                            "el03-acc.datapunt.amsterdam.nl", ]
+elif os.getenv('ENVIRONMENT') == 'production':
+    ELASTIC_SEARCH_HOSTS = ["el01.datapunt.amsterdam.nl",
+                            "el02.datapunt.amsterdam.nl",
+                            "el03.datapunt.amsterdam.nl", ]
 
 ELASTIC_INDICES = dict(
     MEETBOUTEN='meetbouten', NAP='nap')
