@@ -146,16 +146,7 @@ ELASTIC_OPTIONS = {
     Location_key.local: [f"http://{get_docker_host()}:9201"],
     Location_key.override: [f"http://{os.getenv(OVERRIDE_EL_HOST_VAR)}:{os.getenv(OVERRIDE_EL_PORT_VAR, '9200')}"],
 }
-ELASTIC_SEARCH_HOSTS = [ELASTIC_OPTIONS[get_database_key()]]
-
-# if os.getenv('ENVIRONMENT') == 'acceptance':
-#     ELASTIC_SEARCH_HOSTS = ["el01-acc.datapunt.amsterdam.nl",
-#                             "el02-acc.datapunt.amsterdam.nl",
-#                             "el03-acc.datapunt.amsterdam.nl", ]
-# elif os.getenv('ENVIRONMENT') == 'production':
-#     ELASTIC_SEARCH_HOSTS = ["el01.datapunt.amsterdam.nl",
-#                             "el02.datapunt.amsterdam.nl",
-#                             "el03.datapunt.amsterdam.nl", ]
+ELASTIC_SEARCH_HOSTS = ELASTIC_OPTIONS[get_database_key()]
 
 ELASTIC_INDICES = dict(
     MEETBOUTEN='meetbouten', NAP='nap')
