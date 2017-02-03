@@ -25,6 +25,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 USER datapunt
 COPY nap_meetbouten /app/
+COPY .jenkins-import /.jenkins-import/
 
 RUN python manage.py collectstatic --noinput
 
