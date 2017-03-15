@@ -1,5 +1,4 @@
 from django.core.management import BaseCommand
-from objectstore.objectstore import fetch_importfiles
 
 import datasets.nap.batch
 import datasets.meetbouten.batch

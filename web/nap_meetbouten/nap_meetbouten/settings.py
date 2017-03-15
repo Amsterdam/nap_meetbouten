@@ -1,4 +1,5 @@
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+
 import os
 import sys
 
@@ -11,7 +12,15 @@ OVERRIDE_EL_HOST_VAR = 'ELASTIC_HOST_OVERRIDE'
 OVERRIDE_EL_PORT_VAR = 'ELASTIC_PORT_OVERRIDE'
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-DIVA_DIR = os.path.abspath(os.path.join(BASE_DIR, './', 'diva'))
+
+PROJECT_DIR = os.path.abspath(os.path.join(BASE_DIR, '..', '..'))
+
+DIVA_DIR = '/app/data'
+
+if not os.path.exists(DIVA_DIR):
+    DIVA_DIR = os.path.abspath(os.path.join(PROJECT_DIR, 'diva'))
+    print("Geen lokale DIVA bestanden gevonden, maak gebruik van testset",
+          DIVA_DIR, "\n")
 
 
 class Location_key:
@@ -141,11 +150,17 @@ DATABASES = {
     'default': DATABASE_OPTIONS[get_database_key()]
 }
 
+
+EL_HOST_VAR = os.getenv(OVERRIDE_EL_HOST_VAR)
+EL_PORT_VAR = os.getenv(OVERRIDE_EL_PORT_VAR, '9200')
+
+
 ELASTIC_OPTIONS = {
     Location_key.docker: ["http://elasticsearch:9200"],
     Location_key.local: [f"http://{get_docker_host()}:9201"],
-    Location_key.override: [f"http://{os.getenv(OVERRIDE_EL_HOST_VAR)}:{os.getenv(OVERRIDE_EL_PORT_VAR, '9200')}"],
+    Location_key.override: [f"http://{EL_HOST_VAR}:{EL_PORT_VAR}"],
 }
+
 ELASTIC_SEARCH_HOSTS = ELASTIC_OPTIONS[get_database_key()]
 
 ELASTIC_INDICES = dict(
