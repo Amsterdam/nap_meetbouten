@@ -132,6 +132,7 @@ def download_zips(container_name, zips_mapper):
 
 zip_age_limits = {
   'NAP.zip': 14,
+  'MBT.zip': 14,
 }
 
 
