@@ -10,8 +10,9 @@ services:
       POSTGRES_PASSWORD: insecure
 
   elasticsearch:
-    image: build.datapunt.amsterdam.nl:5000/atlas/elasticsearch:latest
-    command: elasticsearch -Des.network.host=0.0.0.0
+    image: build.datapunt.amsterdam.nl:5000/atlas/elasticsearch5:latest
+    # build: elasticsearch5
+    command:  elasticsearch -Ehttp.host=0.0.0.0 -Etransport.host=127.0.0.1
     ports:
       - "9201:9200"
       - "9301:9300"
