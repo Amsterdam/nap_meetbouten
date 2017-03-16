@@ -11,7 +11,8 @@ services:
 
   elasticsearch:
     image: build.datapunt.amsterdam.nl:5000/atlas/elasticsearch5:latest
-    command: elasticsearch -Des.network.host=0.0.0.0
+    # build: elasticsearch5
+    command:  elasticsearch -Ehttp.host=0.0.0.0 -Etransport.host=127.0.0.1
     ports:
       - "9201:9200"
       - "9301:9300"
