@@ -54,7 +54,7 @@ services:
                           nap > /tmp/backups/database.dump"
 
   el-backup:
-    build: ../../elasticsearch5
+    image: build.datapunt.amsterdam.nl:5000/atlas/elasticsearch5
     volumes:
       - ./backups/elasticsearch:/tmp/backups
     user: root
