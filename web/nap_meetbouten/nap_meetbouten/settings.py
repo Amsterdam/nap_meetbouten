@@ -199,9 +199,18 @@ STATIC_ROOT = os.path.abspath(os.path.join(BASE_DIR, '..', 'static'))
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
+
+    'formatters': {
+       'console': {
+            # 'format': '%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+            'format': '%(levelname)s - %(name)s - %(message)s',
+        },
+    },
+
     'handlers': {
         'console': {
             'class': 'logging.StreamHandler',
+            'formatter': 'console',
         },
     },
     'loggers': {

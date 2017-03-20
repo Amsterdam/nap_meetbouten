@@ -163,7 +163,9 @@ class SearchMeetboutViewSet(searchviews.SearchViewSet):
 
 
 def get_autocomplete_response(client, query):
-    result = old_autocomplete_query(client, query)[0:20].execute()
+
+    result = old_autocomplete_query(client, query)[0:10].execute()
+
     content = [{
             '_display': '{v}'.format(v=hit['_display']),
             'uri': 'meetbouten/meetbout/{v}'.format(v=hit['meetboutnummer'])
@@ -180,7 +182,7 @@ class TypeaheadViewSet(searchviews.TypeaheadViewSet):
     Autocomplete boutnummers
     """
 
-    def get_autocomplete_response(self, client, query: int):
+    def get_autocomplete_response(self, client, query):
         return get_autocomplete_response(client, query)
 
     def list(self, request, *args, **kwargs):
