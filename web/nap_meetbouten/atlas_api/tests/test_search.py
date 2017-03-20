@@ -90,3 +90,13 @@ class SearchMeetbout(APITestCase):
         self.assertIn('results', response.data)
         self.assertIn('count', response.data)
         self.assertEqual(response.data['count'], 3)
+
+    def test_typeahead_query_boutnummer(self):
+        response = self.client.get(
+            "/meetbouten/typeahead/", dict(q="12345"))
+        self.assertEqual(response.status_code, 200)
+
+        data = str(response.data)
+
+        self.assertIn('Meetbouten', data)
+        self.assertIn('12345', data)

@@ -20,9 +20,9 @@ class Meetbout(es.DocType):
 
     meetboutnummer = es.Text(fielddata=True, analyzer=analyzers.boutnummer)
 
-    _display = es.Text(index=False)
+    _display = es.Text(fielddata=True, index=True)
 
-    subtype = es.Text(index=False)
+    subtype = es.Text(index=True)
 
     order = es.Integer()
 

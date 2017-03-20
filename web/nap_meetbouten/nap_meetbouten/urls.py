@@ -1,4 +1,5 @@
 from django.conf.urls import url, include
+from django.conf import settings
 from rest_framework import schemas, response
 from rest_framework.decorators import api_view, renderer_classes
 from rest_framework.renderers import CoreJSONRenderer
@@ -42,9 +43,13 @@ def peilmerken_schema_view(request):
 
 
 urlpatterns = [
-                  url('^meetbouten/docs/api-docs/meetbouten/$',
-                      meetbouten_schema_view),
-                  url('^meetbouten/docs/api-docs/nap/$',
-                      peilmerken_schema_view),
-              ] + [url for pattern_list in grouped_url_patterns.values()
-                   for url in pattern_list]
+    url('^meetbouten/docs/api-docs/meetbouten/$', meetbouten_schema_view),
+    url('^meetbouten/docs/api-docs/nap/$', peilmerken_schema_view),
+
+    ] + [url for pattern_list in grouped_url_patterns.values()
+         for url in pattern_list]
+
+
+if settings.DEBUG:
+    import debug_toolbar
+    urlpatterns.append(url(r'^__debug__/', include(debug_toolbar.urls)))
