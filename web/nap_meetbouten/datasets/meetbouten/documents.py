@@ -16,19 +16,19 @@ def get_centroid(geom):
 
 
 class Meetbout(es.DocType):
-    straatnaam = es.String(analyzer=analyzers.adres)
+    straatnaam = es.Text(analyzer=analyzers.adres)
 
-    meetboutnummer = es.String(analyzer=analyzers.boutnummer)
+    meetboutnummer = es.Text(fielddata=True, analyzer=analyzers.boutnummer)
 
-    _display = es.String(index='not_analyzed')
+    _display = es.Text(fielddata=True, index=True)
 
-    subtype = es.String(index='not_analyzed')
+    subtype = es.Text(index=True)
 
     order = es.Integer()
 
-    status = es.String()
+    status = es.Text()
 
-    locatie = es.String(analyzer=analyzers.adres)
+    locatie = es.Text(analyzer=analyzers.adres)
 
     x_coordinaat = es.Float()
     y_coordinaat = es.Float()
@@ -38,12 +38,12 @@ class Meetbout(es.DocType):
 
     beveiligd = es.Boolean()
 
-    eigenaar = es.String()
+    eigenaar = es.Text()
 
-    bouwblokzijde = es.String()
-    bouwbloknummer = es.String(analyzer=analyzers.boutnummer)
+    bouwblokzijde = es.Text()
+    bouwbloknummer = es.Text(analyzer=analyzers.boutnummer)
 
-    adres = es.String(analyzer=analyzers.adres)
+    adres = es.Text(analyzer=analyzers.adres)
 
     centroid = es.GeoPoint()
 

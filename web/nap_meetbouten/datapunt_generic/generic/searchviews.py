@@ -41,7 +41,7 @@ class TypeaheadViewSet(viewsets.ViewSet):
     """
 
     def get_autocomplete_response(self, client, query):
-        return []
+        raise NotImplementedError
 
     metadata_class = QueryMetadata
 
@@ -55,7 +55,7 @@ class TypeaheadViewSet(viewsets.ViewSet):
 
         query = request.query_params['q'].strip()
 
-        if len(query) < 5 or not query.isdigit():
+        if len(query) < 4 or not query.isdigit():
             return Response([])
 
         response = self.get_autocomplete_response(self.client, int(query))
@@ -97,14 +97,14 @@ def default_search_query(client, query: str):
 
     return (
         Search()
-            .using(client)
-            .query(
+        .using(client)
+        .query(
             mulitimatch_Q(query)
         )
     )
 
 
-def _get_url(request, hit):
+def _get_url(_request, _hit):
     """
     return url to your api endpoints
     """
