@@ -15,6 +15,6 @@ rm -rf ${DIR}/backups
 mkdir -p ${DIR}/backups
 
 dc build
-dc run importer
-dc run db-backup
-dc run el-backup
+dc run --rm importer
+dc run --rm db-backup
+dc run --rm el-backup
