@@ -11,6 +11,7 @@ services:
     # build: ../../elasticsearch5
     volumes:
       - ./backups/elasticsearch:/tmp/backups
+    user: root
     command: elasticsearch -Ehttp.host=0.0.0.0 -Etransport.host=127.0.0.1 -Epath.repo=/tmp
 
 
