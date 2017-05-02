@@ -1,5 +1,5 @@
 FROM amsterdam/docker_python:latest
-MAINTAINER datapunt.ois@amsterdam.nl
+MAINTAINER datapunt@amsterdam.nl
 
 ENV PYTHONUNBUFFERED 1
 ARG BAG_OBJECTSTORE_PASSWORD
@@ -7,8 +7,7 @@ ENV BAG_OBJECTSTORE_PASSWORD=$BAG_OBJECTSTORE_PASSWORD
 
 EXPOSE 8000
 
-RUN apt-get update \
-	&& apt-get install -y \
+RUN apt-get install -y \
 		gdal-bin \
 		libgeos-dev \
 		netcat \
