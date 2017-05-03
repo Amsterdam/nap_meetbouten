@@ -30,6 +30,12 @@ services:
       DB_USER: nap
       DB_PASSWORD: insecure
       BAG_OBJECTSTORE_PASSWORD: insecure
+      UWSGI_HTTP: ":8000"
+      UWSGI_MODULE: "nap_meetbouten.wsgi:application"
+      UWSGI_MASTER: 1
+      UWSGI_PROCESSES: 4
+      UWSGI_MASTER: 1
+      UWSGI_STATIC_MAP: "/static=/static"
     read_only: True
     command: >
       bash -c "/app/docker-wait.sh \

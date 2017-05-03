@@ -65,7 +65,7 @@ class Meetbout(mixins.ImportStatusMixin):
     objects = geo.GeoManager()
 
     def __str__(self):
-        return "{} ({})".format(self.adres, self.id)
+        return f"{self.id} (omg. {self.adres})"
 
 
 class Referentiepunt(mixins.ImportStatusMixin):

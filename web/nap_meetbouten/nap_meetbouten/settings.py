@@ -259,7 +259,7 @@ NAP_MAX_DIGITS = 7  # if this is not enough, we have bigger problems
 ZAKKING_DECIMAL_PLACES = 13
 ZAKKING_MAX_DIGITS = 20
 
-swag_path = 'api-acc.data.amsterdam.nl/meetbouten/docs'
+swag_path = 'acc.api.data.amsterdam.nl/meetbouten/docs'
 
 if DEBUG:
     swag_path = '127.0.0.1:8000/meetbouten/docs'

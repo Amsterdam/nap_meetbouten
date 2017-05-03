@@ -8,15 +8,14 @@ services:
 
   elasticsearch:
     image: build.datapunt.amsterdam.nl:5000/atlas/elasticsearch5
-    # build: ../../elasticsearch5
     volumes:
       - ./backups/elasticsearch:/tmp/backups
+    user: root
     command: elasticsearch -Ehttp.host=0.0.0.0 -Etransport.host=127.0.0.1 -Epath.repo=/tmp
 
 
   importer:
     image: build.datapunt.amsterdam.nl:5000/datapunt/nap:${ENVIRONMENT}
-    # build: ../
     user: root
     links:
       - elasticsearch
@@ -29,6 +28,7 @@ services:
       DATABASE_HOST_OVERRIDE: database
       DATABASE_PORT_OVERRIDE: 5432
       METADATA_URL: "${METADATA_URL}"
+      DATAPUNT_API_URL: ${DATAPUNT_API_URL:-https://api.data.amsterdam.nl/}
     command: >
       bash -c "/app/docker-wait.sh \
               && python objectstore/objectstore.py \
@@ -61,4 +61,5 @@ services:
     command: >
       bash -c "chmod -R 777 /tmp/backups \
               && curl -X PUT http://elasticsearch:9200/_snapshot/backup -d '{ \"type\": \"fs\", \"settings\": { \"location\": \"/tmp/backups\" }}' \
-              && curl -X PUT http://elasticsearch:9200/_snapshot/backup/meetbouten?wait_for_completion=true -d '{ \"indices\": \"meetbouten\" }'"
+              && curl -X PUT http://elasticsearch:9200/_snapshot/backup/meetbouten?wait_for_completion=true -d '{ \"indices\": \"meetbouten\" }' \
+              && chmod -R 777 /tmp/backups"
