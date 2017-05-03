@@ -13,6 +13,7 @@ class ManageView(Operation):
         super().__init__()
         self.view_name = view_name
         self.sql = sql
+        self.logger = logging.getLogger('datapunt.nap_meetbouten.ManageView')
 
     def push_history(self, app_label):
         view_name = '{}-{}'.format(app_label, self.view_name)
