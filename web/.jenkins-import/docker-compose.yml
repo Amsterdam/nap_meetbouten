@@ -8,7 +8,6 @@ services:
 
   elasticsearch:
     image: build.datapunt.amsterdam.nl:5000/atlas/elasticsearch5
-    # build: ../../elasticsearch5
     volumes:
       - ./backups/elasticsearch:/tmp/backups
     user: root
@@ -60,6 +59,7 @@ services:
       - ./backups/elasticsearch:/tmp/backups
     user: root
     command: >
-      bash -c "curl -X PUT http://elasticsearch:9200/_snapshot/backup -d '{ \"type\": \"fs\", \"settings\": { \"location\": \"/tmp/backups\" }}' \
+      bash -c "chmod -R 777 /tmp/backups \
+              && curl -X PUT http://elasticsearch:9200/_snapshot/backup -d '{ \"type\": \"fs\", \"settings\": { \"location\": \"/tmp/backups\" }}' \
               && curl -X PUT http://elasticsearch:9200/_snapshot/backup/meetbouten?wait_for_completion=true -d '{ \"indices\": \"meetbouten\" }' \
               && chmod -R 777 /tmp/backups"
