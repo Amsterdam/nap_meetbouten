@@ -1,6 +1,5 @@
 from urllib.parse import urlparse
 
-from django.contrib.sites.models import Site
 from django.core.management import BaseCommand
 
 
