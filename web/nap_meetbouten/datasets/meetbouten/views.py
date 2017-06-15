@@ -33,7 +33,7 @@ class MeetboutViewSet(rest.AtlasViewSet):
     """
 
     metadata_class = ExpansionMetadata
-    queryset = models.Meetbout.objects.all()
+    queryset = models.Meetbout.objects.all().order_by('id')
     serializer_detail_class = serializers.MeetboutDetail
     serializer_class = serializers.Meetbout
     filter_fields = ('bouwbloknummer', 'rollaag',)
@@ -66,7 +66,7 @@ class ReferentiepuntViewSet(rest.AtlasViewSet):
     """
 
     metadata_class = ExpansionMetadata
-    queryset = models.Referentiepunt.objects.all()
+    queryset = models.Referentiepunt.objects.all().order_by('id')
     serializer_detail_class = serializers.ReferentiepuntDetail
     serializer_class = serializers.Referentiepunt
     filter_fields = ('metingen__id',)
@@ -87,7 +87,7 @@ class RollaagViewSet(rest.AtlasViewSet):
     """
 
     metadata_class = ExpansionMetadata
-    queryset = models.Rollaag.objects.all()
+    queryset = models.Rollaag.objects.all().order_by('id')
     serializer_detail_class = serializers.RollaagDetail
     serializer_class = serializers.Rollaag
     filter_fields = ()
