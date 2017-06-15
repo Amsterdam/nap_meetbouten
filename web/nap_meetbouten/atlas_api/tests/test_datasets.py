@@ -26,6 +26,22 @@ class BrowseDatasetsTestCase(APITestCase):
         factories_meetbouten.RollaagFactory.create()
         factories_meetbouten.MetingFactory.create()
 
+    def test_root(self):
+        """
+        Test root views
+        """
+
+        for url in ['nap', 'meetbouten']:
+
+            response = self.client.get('/{}/'.format(url))
+
+            self.assertEqual(
+                response.status_code,
+                200, 'Wrong response code for {}'.format(url))
+
+
+
+
     def test_lists(self):
         for url in self.datasets:
             response = self.client.get('/{}/'.format(url))
