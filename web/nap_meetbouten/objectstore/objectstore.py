@@ -21,6 +21,7 @@ import proces.
 
 import logging
 import os
+import time
 
 import datetime
 import zipfile
@@ -28,6 +29,7 @@ import zipfile
 from functools import lru_cache
 from dateutil import parser
 from pathlib import Path
+
 
 from swiftclient.client import Connection
 
@@ -198,7 +200,7 @@ path_mapping = {
 }
 
 
-def unzip_files(zipsource):
+def unzip_files(zipsource, mtime):
     """
     Unzip single files to the right target directory
     """
@@ -217,6 +219,8 @@ def unzip_files(zipsource):
                 print(source)
                 print(target)
                 os.rename(source, target)
+                # set modification date from zipfile
+                os.utime(target, (mtime, mtime))
 
 
 def unzip_data(zips_mapper):
@@ -224,7 +228,7 @@ def unzip_data(zips_mapper):
     unzip the zips
     """
 
-    for zipkey, zipfiles in zips_mapper.items():
+    for _, zipfiles in zips_mapper.items():
 
         latestzip = zipfiles[0][1]
 
@@ -232,10 +236,15 @@ def unzip_data(zips_mapper):
         file_name = filepath[-1]
         zip_path = '{}/{}'.format(DIVA_DIR, file_name)
 
-        log.info("Unzip {}".format(zip_path))
+        log.info(f"Unzip {zip_path}")
 
         zipsource = zipfile.ZipFile(zip_path, 'r')
-        unzip_files(zipsource)
+
+        zip_date = file_name.split('_')[0]
+        log.debug('DATE: %s', zip_date)
+        zip_date = parser.parse(zip_date)
+        zip_seconds = time.mktime(zip_date.timetuple())
+        unzip_files(zipsource, zip_seconds)
 
 
 def delete_from_objectstore(container, object_name):
