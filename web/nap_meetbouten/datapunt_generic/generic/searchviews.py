@@ -91,7 +91,7 @@ def default_search_query(client, query: str):
     """
     Execute search.
 
-    ./manage.py test atlas_api.tests.test_query --keepdb
+    ./manage.py test datapunt_api.tests.test_query --keepdb
 
     """
 

@@ -57,6 +57,24 @@ class BrowseDatasetsTestCase(APITestCase):
                 response.data['count'], 0,
                 'Wrong result count for {}'.format(url))
 
+    def test_list_html(self):
+        for url in self.datasets:
+            response = self.client.get('/{}/?format=api'.format(url))
+
+            self.assertEqual(
+                response.status_code, 200,
+                'Wrong response code for {}'.format(url))
+            self.assertEqual(
+                response['Content-Type'], 'text/html; charset=utf-8',
+                'Wrong Content-Type for {}'.format(url))
+
+            self.assertIn(
+                'count', response.data, 'No count attribute in {}'.format(url))
+
+            self.assertNotEqual(
+                response.data['count'], 0,
+                'Wrong result count for {}'.format(url))
+
     def test_details(self):
         for url in self.datasets:
             response = self.client.get('/{}/'.format(url))

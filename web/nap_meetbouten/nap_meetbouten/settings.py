@@ -54,7 +54,7 @@ DATAPUNT_API_URL = os.getenv(
 
 INSTALLED_APPS = (
     'geo_views',
-    'atlas_api',
+    'datapunt_api',
     'datasets.nap',
     'datasets.meetbouten',
     'nap_commands',
@@ -64,6 +64,7 @@ INSTALLED_APPS = (
     'datapunt_generic.generic',
     'datapunt_generic.health',
 
+    'django_filters',
     'django_extensions',
     'django.contrib.admin',
     'django.contrib.auth',

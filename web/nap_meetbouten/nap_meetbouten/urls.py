@@ -6,7 +6,7 @@ from rest_framework.renderers import CoreJSONRenderer
 from rest_framework_swagger.renderers import OpenAPIRenderer
 from rest_framework_swagger.renderers import SwaggerUIRenderer
 
-import atlas_api.urls
+import datapunt_api.urls
 
 grouped_url_patterns = {
     'base_patterns': [
@@ -14,10 +14,10 @@ grouped_url_patterns = {
             include('datapunt_generic.health.urls', namespace='health')),
     ],
     'nap_patterns': [
-        url(r'^nap/', include(atlas_api.urls.nap.urls)),
+        url(r'^nap/', include(datapunt_api.urls.nap.urls)),
     ],
     'meetbouten_patterns': [
-        url(r'^meetbouten/', include(atlas_api.urls.meetbouten.urls)),
+        url(r'^meetbouten/', include(datapunt_api.urls.meetbouten.urls)),
     ],
 }
 
