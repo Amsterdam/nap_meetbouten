@@ -1,4 +1,4 @@
-version: '2.1'
+version: '3.0'
 services:
   database:
     image: build.datapunt.amsterdam.nl:5000/atlas/postgres
@@ -21,9 +21,9 @@ services:
       - elasticsearch
       - database
     environment:
-      DB_NAME: nap
-      DB_USER: nap
-      DB_PASSWORD: insecure
+      DATABASE_NAME: nap
+      DATABASE_USER: nap
+      DATABASE_PASSWORD: insecure
       BAG_OBJECTSTORE_PASSWORD:
       DATABASE_HOST_OVERRIDE: database
       DATABASE_PORT_OVERRIDE: 5432

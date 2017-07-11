@@ -1,4 +1,4 @@
-version: '2.1'
+version: '3.0'
 services:
   database:
     image: build.datapunt.amsterdam.nl:5000/atlas/postgres
@@ -26,9 +26,9 @@ services:
       - database
     environment:
       SECRET_KEY: hoi
-      DB_NAME: nap
-      DB_USER: nap
-      DB_PASSWORD: insecure
+      DATABASE_NAME: nap
+      DATABASE_USER: nap
+      DATABASE_PASSWORD: insecure
       BAG_OBJECTSTORE_PASSWORD: insecure
       UWSGI_HTTP: ":8000"
       UWSGI_MODULE: "nap_meetbouten.wsgi:application"
