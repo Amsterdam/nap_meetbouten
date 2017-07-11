@@ -289,7 +289,7 @@ SWAGGER_SETTINGS = {
         'description': 'This is a meetbouten metingen api server. ',
         'license': 'Not known yet. Apache 2.0',
         'licenseUrl': 'http://www.apache.org/licenses/LICENSE-2.0.html',
-        'termsOfServiceUrl': 'https://atlas.amsterdam.nl/terms/',
+        'termsOfServiceUrl': 'https://data.amsterdam.nl/terms/',
         'title': 'Meetbouten en metingen App',
     },
     'doc_expansion': 'list',
