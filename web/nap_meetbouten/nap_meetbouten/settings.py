@@ -122,25 +122,25 @@ WSGI_APPLICATION = 'nap_meetbouten.wsgi.application'
 DATABASE_OPTIONS = {
     Location_key.docker: {
         'ENGINE': 'django.contrib.gis.db.backends.postgis',
-        'NAME': os.getenv('DB_NAME', 'nap'),
-        'USER': os.getenv('DB_USER', 'nap'),
-        'PASSWORD': os.getenv('DB_PASSWORD', 'insecure'),
+        'NAME': os.getenv('DATABASE_NAME', 'nap'),
+        'USER': os.getenv('DATABASE_USER', 'nap'),
+        'PASSWORD': os.getenv('DATABASE_PASSWORD', 'insecure'),
         'HOST': 'database',
         'PORT': '5432'
     },
     Location_key.local: {
         'ENGINE': 'django.contrib.gis.db.backends.postgis',
-        'NAME': os.getenv('DB_NAME', 'nap'),
-        'USER': os.getenv('DB_USER', 'nap'),
-        'PASSWORD': os.getenv('DB_PASSWORD', 'insecure'),
+        'NAME': os.getenv('DATABASE_NAME', 'nap'),
+        'USER': os.getenv('DATABASE_USER', 'nap'),
+        'PASSWORD': os.getenv('DATABASE_PASSWORD', 'insecure'),
         'HOST': get_docker_host(),
         'PORT': '5401'
     },
     Location_key.override: {
         'ENGINE': 'django.contrib.gis.db.backends.postgis',
-        'NAME': os.getenv('DB_NAME', 'nap'),
-        'USER': os.getenv('DB_USER', 'nap'),
-        'PASSWORD': os.getenv('DB_PASSWORD', 'insecure'),
+        'NAME': os.getenv('DATABASE_NAME', 'nap'),
+        'USER': os.getenv('DATABASE_USER', 'nap'),
+        'PASSWORD': os.getenv('DATABASE_PASSWORD', 'insecure'),
         'HOST': os.getenv(OVERRIDE_HOST_ENV_VAR),
         'PORT': os.getenv(OVERRIDE_PORT_ENV_VAR, '5432')
     },
@@ -289,7 +289,7 @@ SWAGGER_SETTINGS = {
         'description': 'This is a meetbouten metingen api server. ',
         'license': 'Not known yet. Apache 2.0',
         'licenseUrl': 'http://www.apache.org/licenses/LICENSE-2.0.html',
-        'termsOfServiceUrl': 'https://atlas.amsterdam.nl/terms/',
+        'termsOfServiceUrl': 'https://data.amsterdam.nl/terms/',
         'title': 'Meetbouten en metingen App',
     },
     'doc_expansion': 'list',
