@@ -105,7 +105,7 @@ class MeetboutDetail(MeetboutenMixin, rest.HALSerializer):
         )
 
     def get_bouwblok_link(self, obj):
-        link = "/gebieden/bouwblok/?code={}".format(obj.bouwbloknummer)
+        link = "/gebieden/bouwblok/{}".format(obj.bouwbloknummer)
         req = self.context.get('request')
         if req:
             link = req.build_absolute_uri(link)
