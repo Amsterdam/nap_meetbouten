@@ -66,8 +66,6 @@ INSTALLED_APPS = (
 
     'django_filters',
     'django_extensions',
-    'django.contrib.admin',
-    'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
@@ -84,8 +82,6 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
@@ -106,7 +102,6 @@ TEMPLATES = [
             'context_processors': [
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
             ],
         },
@@ -228,6 +223,10 @@ INTERNAL_IPS = ['127.0.0.1']
 
 REST_FRAMEWORK = dict(
     PAGE_SIZE=25,
+
+    UNAUTHENTICATED_USER={},
+    UNAUTHENTICATED_TOKEN={},
+
     MAX_PAGINATE_BY=100,
     DEFAULT_AUTHENTICATION_CLASSES=(
         'rest_framework.authentication.BasicAuthentication',
@@ -239,8 +238,12 @@ REST_FRAMEWORK = dict(
         'rest_framework.renderers.JSONRenderer',
         'rest_framework.renderers.BrowsableAPIRenderer'
     ),
-    DEFAULT_FILTER_BACKENDS=('rest_framework.filters.DjangoFilterBackend',),
-    COERCE_DECIMAL_TO_STRING=False,
+    DEFAULT_FILTER_BACKENDS=(
+        'rest_framework.filters.DjangoFilterBackend',
+        # 'rest_framework.filters.OrderingFilter',
+
+    ),
+    COERCE_DECIMAL_TO_STRING=True,
 )
 
 # Security
