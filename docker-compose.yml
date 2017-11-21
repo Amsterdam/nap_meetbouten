@@ -8,9 +8,6 @@ services:
       POSTGRES_DB: nap
       POSTGRES_USER: nap
       POSTGRES_PASSWORD: insecure
-      LOCAL: "True"
-    extra_hosts:
-      admin.datapunt.amsterdam.nl: 10.99.157.24
     volumes:
         - "~/.ssh/datapunt.key:/root/.ssh/datapunt.key"
 
