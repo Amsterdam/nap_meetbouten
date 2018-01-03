@@ -1,7 +1,7 @@
 version: '3.0'
 services:
   database:
-    image: build.datapunt.amsterdam.nl:5000/atlas/postgres
+    image: amsterdam/postgres
     environment:
       POSTGRES_PASSWORD: insecure
       POSTGRES_USER: nap
@@ -9,7 +9,7 @@ services:
       admin.datapunt.amsterdam.nl: 10.99.157.24
 
   elasticsearch:
-    image: build.datapunt.amsterdam.nl:5000/atlas/elasticsearch5
+    image: amsterdam/elasticsearch5
     volumes:
       - ./backups/elasticsearch:/tmp/backups
     user: root
@@ -38,7 +38,7 @@ services:
               && python manage.py run_import"
 
   db-backup:
-    image: build.datapunt.amsterdam.nl:5000/atlas/postgres
+    image: amsterdam/postgres
     volumes:
       - ./backups:/tmp/backups
     command: >
@@ -56,7 +56,7 @@ services:
                           nap > /tmp/backups/database.dump"
 
   el-backup:
-    image: build.datapunt.amsterdam.nl:5000/atlas/elasticsearch5
+    image: amsterdam/elasticsearch5
     volumes:
       - ./backups/elasticsearch:/tmp/backups
     user: root
