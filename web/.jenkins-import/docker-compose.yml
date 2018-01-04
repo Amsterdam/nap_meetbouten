@@ -44,16 +44,7 @@ services:
     command: >
       bash -c "echo database:5432:nap:nap:insecure > ~/.pgpass \
               && chmod 600 ~/.pgpass \
-              && pg_dump --clean \
-                          -Fc \
-                          -t nap* \
-                          -t meetbout* \
-                          -t geo*  \
-                          -T django*  \
-                          -T auth*    \
-                          -U nap \
-                          -h database -p 5432 \
-                          nap > /tmp/backups/database.dump"
+              && pg_dump -Fc -U nap nap > /tmp/backups/database.dump"
 
   el-backup:
     image: amsterdam/elasticsearch5
