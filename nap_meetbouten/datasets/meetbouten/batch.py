@@ -6,7 +6,7 @@ import os
 from django.conf import settings
 from django.contrib.gis.geos import GEOSGeometry
 
-from datapunt_generic.batch import batch
+from batch import batch
 from datapunt_generic.generic import (
     csv as dp_csv, database, index, metadata, uva2
 )

@@ -1,5 +1,6 @@
 from django.test import TransactionTestCase
 
+
 class TaskTestCase(TransactionTestCase):
 
     def setUp(self):
@@ -12,17 +13,8 @@ class TaskTestCase(TransactionTestCase):
     def task(self):
         raise NotImplementedError()
 
-    def test_run_twice(self):
-        if self.__class__ == TaskTestCase:
-            # only run this on subclasses
-            return
-
-        self.run_task()
-        self.run_task()
-
     def test_task_attributes(self):
         if self.__class__ == TaskTestCase:
-            # only run this on subclasses
             return
 
         t = self.task()

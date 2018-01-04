@@ -1,7 +1,8 @@
 from . import factories
 
-from datapunt_generic.batch.tests.tasktestcase import TaskTestCase
-from .. import batch, models
+from datasets import meetbouten
+from datasets.meetbouten import models, batch
+from batch.test import TaskTestCase
 
 NAP = 'diva/meetbouten'
 

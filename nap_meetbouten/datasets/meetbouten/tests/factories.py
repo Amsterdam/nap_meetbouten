@@ -1,7 +1,7 @@
 import factory
 from factory import fuzzy
 
-from .. import models
+from datasets.meetbouten import models
 
 
 class RollaagFactory(factory.DjangoModelFactory):

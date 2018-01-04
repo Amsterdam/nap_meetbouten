@@ -60,7 +60,7 @@ INSTALLED_APPS = (
     'nap_commands',
 
     # legacy stuff? still used?
-    'datapunt_generic.batch',
+    'batch',
     'datapunt_generic.generic',
     'datapunt_generic.health',
 

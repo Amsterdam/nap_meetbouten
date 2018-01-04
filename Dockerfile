@@ -12,6 +12,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 RUN mkdir -p /static && chown datapunt /static
 
+ENV DJANGO_SETTINGS_MODULE=nap_meetbouten.settings.docker
+
 COPY nap_meetbouten /app/
 COPY .jenkins-import /.jenkins-import/
 

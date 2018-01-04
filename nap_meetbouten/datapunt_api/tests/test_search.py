@@ -5,7 +5,7 @@ from rest_framework.test import APITestCase
 import datasets.meetbouten.batch
 import datasets.nap.batch
 
-from datapunt_generic.batch import batch
+from batch import batch
 
 from unittest import skip
 

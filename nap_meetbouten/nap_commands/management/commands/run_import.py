@@ -3,7 +3,7 @@ from django.core.management import BaseCommand
 import datasets.nap.batch
 import datasets.meetbouten.batch
 
-from datapunt_generic.batch import batch
+from batch import batch
 
 
 class Command(BaseCommand):

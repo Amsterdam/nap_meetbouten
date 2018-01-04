@@ -7,7 +7,7 @@ import datasets
 import datasets.meetbouten.batch
 import datasets.nap.batch
 
-from datapunt_generic.batch import batch
+from batch import batch
 
 
 class Command(BaseCommand):

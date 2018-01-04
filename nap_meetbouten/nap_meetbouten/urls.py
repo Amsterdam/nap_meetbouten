@@ -11,7 +11,7 @@ import datapunt_api.urls
 grouped_url_patterns = {
     'base_patterns': [
         url(r'^status/',
-            include('datapunt_generic.health.urls', namespace='health')),
+            include('health.urls', namespace='health')),
     ],
     'nap_patterns': [
         url(r'^nap/', include(datapunt_api.urls.nap.urls)),
