@@ -23,11 +23,8 @@ dc up -d database
 dc up -d elasticsearch
 dc run importer ./docker-wait.sh
 
-echo "Starting Postgres importer"
+echo "Starting Postgres and Elastic importer"
 dc run --rm importer
-
-echo "Starting Elastic importer"
-dc run --rm importer ./docker-index-es.sh
 
 echo "Running backups"
 dc exec -T database ./backup-db.sh
