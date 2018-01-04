@@ -1,4 +1,4 @@
-version: '3.0'
+version: "3.0"
 services:
   database:
     image: amsterdam/postgres
@@ -9,36 +9,31 @@ services:
       POSTGRES_USER: nap
       POSTGRES_PASSWORD: insecure
     volumes:
-        - "~/.ssh/datapunt.key:/root/.ssh/datapunt.key"
+      - "~/.ssh/datapunt.key:/root/.ssh/datapunt.key"
 
   elasticsearch:
     image: amsterdam/elasticsearch5
-    command:  elasticsearch -Ehttp.host=0.0.0.0 -Etransport.host=127.0.0.1
+    command: elasticsearch -Ehttp.host=0.0.0.0 -Etransport.host=127.0.0.1
     ports:
       - "9201:9200"
       - "9301:9300"
 
-  web:
-    build: ./web
+  nap:
+    build: .
     ports:
       - "8100:8000"
     links:
-      - elasticsearch
       - database
+      - elasticsearch
     environment:
+      DATAPUNT_API_URL: ${DATAPUNT_API_URL:-https://api.data.amsterdam.nl/}
       SECRET_KEY: hoi
       DATABASE_NAME: nap
       DATABASE_USER: nap
       DATABASE_PASSWORD: insecure
       BAG_OBJECTSTORE_PASSWORD: insecure
+      JWT_SHARED_SECRET_KEY: atleast16characters
       UWSGI_HTTP: ":8000"
       UWSGI_MODULE: "nap_meetbouten.wsgi:application"
       UWSGI_MASTER: 1
-      UWSGI_PROCESSES: 4
-      UWSGI_MASTER: 1
       UWSGI_STATIC_MAP: "/static=/static"
-    read_only: True
-    command: >
-      bash -c "/app/docker-wait.sh \
-              && /app/docker-migrate.sh \
-              && /app/docker-run.sh"
