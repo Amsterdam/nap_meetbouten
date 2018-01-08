@@ -27,7 +27,7 @@ echo "Starting Postgres and Elastic importer"
 dc run --rm importer
 
 echo "Running backups"
-dc exec -T database ./backup-db.sh
+dc exec -T database backup-db.sh nap
 dc exec -T elasticsearch backup-indices.sh meetbouten meetbouten
 
 echo "Done"
