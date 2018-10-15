@@ -39,3 +39,4 @@ To import the latest elastic index from acceptance:
 
 	docker-compose exec elasticsearch update-el.sh meetbouten meetbouten
 	
+Test
