@@ -32,7 +32,6 @@ services:
       DATABASE_USER: nap
       DATABASE_PASSWORD: insecure
       BAG_OBJECTSTORE_PASSWORD: insecure
-      JWT_SHARED_SECRET_KEY: atleast16characters
       UWSGI_HTTP: ":8000"
       UWSGI_MODULE: "nap_meetbouten.wsgi:application"
       UWSGI_MASTER: 1

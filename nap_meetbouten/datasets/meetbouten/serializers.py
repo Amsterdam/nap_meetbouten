@@ -204,7 +204,7 @@ class RollaagDetail(MeetboutenMixin, rest.HALSerializer):
 
     def get_afbeelding(self, obj):
         if obj.bouwblok:
-            return 'http://data.amsterdam.nl/rollagen/{}.jpg'.format(
+            return 'https://data.amsterdam.nl/rollagen/{}.jpg'.format(
                 obj.bouwblok.lower())
 
         return None
