@@ -190,7 +190,8 @@ if not os.path.exists(DIVA_DIR):
 
 
 # The following JWKS data was obtained in the authz project :  jwkgen -create -alg ES256
-# This is a test public/private key def and added for testing .
+# This is a test public/private key def and added for testing.
+
 JWKS_TEST_KEY = """
     {
         "keys": [

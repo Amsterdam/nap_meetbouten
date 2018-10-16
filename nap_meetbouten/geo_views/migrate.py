@@ -55,7 +55,7 @@ class ManageView(Operation):
         return f"Create normal and materialized view {self.view_name}"
 
     def _drop_view_and_materialized_things(self, se, relname):
-        self.logger.info(f'Cleaning up: {relname}.')
+        # self.logger.info(f'Cleaning up: {relname}.')
         cursor = connection.cursor()
         base_stmt = "SELECT count(relname) FROM pg_class " \
                     "WHERE relkind = '{type}' AND relname = '{relname}'"

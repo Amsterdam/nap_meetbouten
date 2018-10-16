@@ -1,6 +1,6 @@
 from datasets.nap import batch as napbatch
 from datasets import nap
-from batch.test import TaskTestCase
+from batch.tests.test import TaskTestCase
 
 NAP = 'diva/nap'
 

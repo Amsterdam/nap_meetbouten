@@ -2,7 +2,7 @@ import elasticsearch_dsl as es
 
 from . import models
 
-from datapunt_generic.generic import analyzers
+from search import analyzers
 from django.conf import settings
 
 

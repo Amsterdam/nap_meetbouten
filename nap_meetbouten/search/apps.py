@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class RockNRollConfig(AppConfig):
+class SearchConfig(AppConfig):
     name = 'search'
     verbose_name = "search"

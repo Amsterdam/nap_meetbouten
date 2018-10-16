@@ -7,7 +7,10 @@ from django.conf import settings
 from django.contrib.gis.geos import GEOSGeometry
 
 from batch import batch
-from datapunt_generic.generic import csv as dp_csv, database, metadata
+from batch import csv as dp_csv
+from batch.clear import clear_models
+from batch import metadata
+
 
 from .models import Peilmerk
 
@@ -25,7 +28,7 @@ class ImportNapTask(batch.BasicTask):
 
     def before(self):
         self.merk_choices = dict(Peilmerk.MERK_CHOICES)
-        database.clear_models(Peilmerk)
+        clear_models(Peilmerk)
 
     def after(self):
         metadata.upload(self.dataset_id, self.mdate.year,
@@ -41,8 +44,9 @@ class ImportNapTask(batch.BasicTask):
                                (self.process_row(row) for row in rows) if
                                result]
 
-        Peilmerk.objects.bulk_create(self.peilmerken,
-                                     batch_size=database.BATCH_SIZE)
+        Peilmerk.objects.bulk_create(
+            self.peilmerken,
+            batch_size=settings.BATCH_SIZE)
 
     def process_row(self, r):
         row = dp_csv.cleanup_row(r, replace=True)

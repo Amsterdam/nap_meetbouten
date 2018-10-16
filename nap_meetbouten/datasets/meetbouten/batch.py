@@ -7,9 +7,11 @@ from django.conf import settings
 from django.contrib.gis.geos import GEOSGeometry
 
 from batch import batch
-from datapunt_generic.generic import (
-    csv as dp_csv, database, index, metadata, uva2
+from batch import (
+    csv as dp_csv, clear, metadata, uva2
 )
+from search import index
+
 from . import models, documents
 
 log = logging.getLogger(__name__)
@@ -29,7 +31,7 @@ class ImportMeetboutTask(batch.BasicTask):
         self.status_choices = dict(models.Meetbout.STATUS_CHOICES)
         self.rollagen = dict(
             models.Rollaag.objects.values_list('bouwblok', 'pk'))
-        database.clear_models(models.Meetbout)
+        clear.clear_models(models.Meetbout)
 
     def after(self):
         self.rollagen.clear()
@@ -47,7 +49,7 @@ class ImportMeetboutTask(batch.BasicTask):
                     self.process_row(row) for row in rows) if result]
 
         models.Meetbout.objects.bulk_create(
-            meetbouten, batch_size=database.BATCH_SIZE)
+            meetbouten, batch_size=settings.BATCH_SIZE)
 
     def process_row(self, r):
         row = dp_csv.cleanup_row(r, replace=True)
@@ -56,8 +58,8 @@ class ImportMeetboutTask(batch.BasicTask):
 
         if status not in self.status_choices:
             log.warn(
-                "Meetbout {} references non-existing status {}; skipping".format(
-                    pk, status))
+                "Meetbout %s references non-existing status %s; skipping",
+                pk, status)
             return
 
         bouwblok = row[15]
@@ -92,7 +94,7 @@ class ImportReferentiepuntTask(batch.BasicTask):
         self.path = path
 
     def before(self):
-        database.clear_models(models.Referentiepunt)
+        clear.clear_models(models.Referentiepunt)
 
     def after(self):
         pass
@@ -107,7 +109,7 @@ class ImportReferentiepuntTask(batch.BasicTask):
                     self.process_row(row) for row in rows) if result]
 
         models.Referentiepunt.objects.bulk_create(
-            referentiepunten, batch_size=database.BATCH_SIZE)
+            referentiepunten, batch_size=settings.BATCH_SIZE)
 
     def process_row(self, r):
         row = dp_csv.cleanup_row(r, replace=True)
@@ -136,7 +138,7 @@ class ImportMetingTask(batch.BasicTask):
         self.path = path
 
     def before(self):
-        database.clear_models(models.Meting)
+        clear.clear_models(models.Meting)
         self.type_choices = dict(models.Meting.TYPE_CHOICES)
         self.referentiepunten = frozenset(
             models.Referentiepunt.objects.values_list("pk", flat=True))
@@ -157,7 +159,7 @@ class ImportMetingTask(batch.BasicTask):
                 self.process_row(row)
             models.ReferentiepuntMeting.objects.bulk_create(
                 self.referentiepunt_relations,
-                batch_size=database.BATCH_SIZE)
+                batch_size=settings.BATCH_SIZE)
 
     def process_row(self, r):
         row = dp_csv.cleanup_row(r, replace=True)
@@ -165,14 +167,14 @@ class ImportMetingTask(batch.BasicTask):
         meting_type = row[2]
         if meting_type not in self.type_choices:
             log.warn(
-                "Meting {} references non-existing type {}; skipping".format(pk,
-                                                                             meting_type))
+                "Meting %s references non-existing type %s; skipping",
+                pk, meting_type)
             return
         meetbout_id = row[5]
         if meetbout_id not in self.meetbouten:
             log.warn(
-                "Meting {} references non-existing meetbout {}; skipping".format(
-                    pk, meetbout_id))
+                "Meting %s references non-existing meetbout %s; skipping",
+                pk, meetbout_id)
             return
         meting = models.Meting.objects.create(
             pk=pk,
@@ -211,7 +213,7 @@ class ImportRollaagTask(batch.BasicTask):
         self.path = path
 
     def before(self):
-        database.clear_models(models.Rollaag)
+        clear.clear_models(models.Rollaag)
 
     def process(self):
         source = os.path.join(self.path, "MBT_ROLLAAG.dat")
@@ -223,7 +225,7 @@ class ImportRollaagTask(batch.BasicTask):
                     self.process_row(row) for row in rows) if result]
 
             models.Rollaag.objects.bulk_create(
-                rollagen, batch_size=database.BATCH_SIZE)
+                rollagen, batch_size=settings.BATCH_SIZE)
 
     def process_row(self, r):
         row = dp_csv.cleanup_row(r, replace=True)

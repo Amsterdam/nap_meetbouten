@@ -13,7 +13,8 @@ def cleanup_row(csv_row, replace=False):
             val = val.replace("chr13", chr(13)).replace("^13", chr(13))
             val = val.replace("^36", chr(36))
 
-        # the double quotes setting with $ is not working like I would like it to
+        # the double quotes setting with $
+        # is not working like I would like it to
         if val[-2:] == '$$':
             val = val[0:len(val) - 2]
 

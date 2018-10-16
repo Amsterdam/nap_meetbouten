@@ -15,6 +15,7 @@ import os
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+BATCH_SIZE = 50000
 
 # SECURITY WARNING: keep the secret key used in production secret!
 insecure_key = 'insecure'
@@ -40,16 +41,15 @@ INSTALLED_APPS = [
     'django_filters',
     'django_extensions',
     'django.contrib.gis',
+    'datapunt_api',
 
     'batch',
     'health',
-    'datapunt_api',  # custom api templates
     'nap_commands',
     'datasets.nap',
     'datasets.meetbouten',
     'geo_views',
-
-    'datapunt_generic.generic',
+    'search',
 
     'rest_framework',
     'rest_framework_gis',

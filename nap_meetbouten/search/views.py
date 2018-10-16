@@ -54,7 +54,6 @@ def add_sorting():
     return (
         {"meetboutnummer": {
             "order": "asc", "missing": "_first", "unmapped_type": "long"}},
-        '-_score',
     )
 
 
