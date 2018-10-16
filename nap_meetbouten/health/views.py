@@ -45,12 +45,12 @@ def health(request):
 
 
 def check_data(request):
-    # check bag
+    # check nap
     try:
         assert model.objects.count() > 10
     except:
-        log.exception("No BAG data found")
-        return HttpResponse("No BAG data found", content_type="text/plain",
+        log.exception("No NAP data found")
+        return HttpResponse("No NAP data found", content_type="text/plain",
                             status=500)
 
     return HttpResponse("Data OK", content_type='text/plain', status=200)

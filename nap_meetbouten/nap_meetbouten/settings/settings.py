@@ -184,7 +184,7 @@ PROJECT_DIR = os.path.abspath(os.path.join(BASE_DIR, '..', '..'))
 DIVA_DIR = os.path.abspath(os.path.join(PROJECT_DIR, 'data'))
 
 if not os.path.exists(DIVA_DIR):
-    DIVA_DIR = os.path.abspath(os.path.join(PROJECT_DIR, 'bag', 'diva'))
+    DIVA_DIR = os.path.abspath(os.path.join(PROJECT_DIR, 'nap_meetbouten', 'diva'))
     print("Geen lokale DIVA bestanden gevonden, maak gebruik van testset",
           DIVA_DIR, "\n")
 
