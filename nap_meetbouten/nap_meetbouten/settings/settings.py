@@ -50,7 +50,7 @@ DATABASE_OPTIONS = {
         'USER': os.getenv('DATABASE_USER', 'nap'),
         'PASSWORD': os.getenv('DATABASE_PASSWORD', 'insecure'),
         'HOST': 'database',
-        'PORT': '5401'
+        'PORT': '5432'
     },
     LocationKey.local: {
         'ENGINE': 'django.contrib.gis.db.backends.postgis',
