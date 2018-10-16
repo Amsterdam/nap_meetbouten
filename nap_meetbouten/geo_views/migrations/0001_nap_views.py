@@ -12,8 +12,8 @@ URL = settings.DATAPUNT_API_URL
 
 class Migration(migrations.Migration):
     dependencies = [
-        ('meetbouten', '0008_auto_20160511_0844'),
-        ('nap', '0003_auto_20160127_1246'),
+        ('meetbouten', '0001_initial'),
+        ('nap', '0001_initial'),
     ]
 
     operations = [

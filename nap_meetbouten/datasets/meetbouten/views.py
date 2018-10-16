@@ -1,6 +1,7 @@
 from rest_framework import metadata
 
-from datapunt_generic.generic import rest
+from django_filters.rest_framework import DjangoFilterBackend
+from datapunt_api import rest
 from . import serializers, models
 
 
@@ -17,7 +18,7 @@ class ExpansionMetadata(metadata.SimpleMetadata):
         return result
 
 
-class MeetboutViewSet(rest.AtlasViewSet):
+class MeetboutViewSet(rest.DatapuntViewSet):
     """
     Meetbouten. De meetbouten (roestvast stalen boutjes met een doorsnede
     van 6 mm) zijn op ongeveer een halve meter van het
@@ -36,10 +37,14 @@ class MeetboutViewSet(rest.AtlasViewSet):
     queryset = models.Meetbout.objects.all().order_by('id')
     serializer_detail_class = serializers.MeetboutDetail
     serializer_class = serializers.Meetbout
-    filter_fields = ('bouwbloknummer', 'rollaag',)
+    filter_fields = (
+        'bouwbloknummer', 'rollaag', 'status',
+        'buurt', 'stadsdeel', 'bouwbloknummer')
+
+    filter_backends = (DjangoFilterBackend,)
 
 
-class MetingViewSet(rest.AtlasViewSet):
+class MetingViewSet(rest.DatapuntViewSet):
     """
     Metingen. De meetbouten worden ten opzichte van een vast punt 'ingemeten',
     zodat de hoogte vastgesteld kan worden. De eerste meting, de zogenaamde
@@ -54,10 +59,13 @@ class MetingViewSet(rest.AtlasViewSet):
     queryset = models.Meting.objects.order_by('datum', 'id')
     serializer_detail_class = serializers.MetingDetail
     serializer_class = serializers.Meting
-    filter_fields = ('meetbout', 'refereert_aan__id')
+    filter_fields = (
+        'meetbout', 'refereert_aan__id', 'stadsdeel', 'type')
+
+    filter_backends = (DjangoFilterBackend,)
 
 
-class ReferentiepuntViewSet(rest.AtlasViewSet):
+class ReferentiepuntViewSet(rest.DatapuntViewSet):
     """
     Referentiepunten
 
@@ -71,8 +79,10 @@ class ReferentiepuntViewSet(rest.AtlasViewSet):
     serializer_class = serializers.Referentiepunt
     filter_fields = ('metingen__id',)
 
+    filter_backends = (DjangoFilterBackend,)
 
-class RollaagViewSet(rest.AtlasViewSet):
+
+class RollaagViewSet(rest.DatapuntViewSet):
     """
     Rollagen
 
@@ -91,3 +101,5 @@ class RollaagViewSet(rest.AtlasViewSet):
     serializer_detail_class = serializers.RollaagDetail
     serializer_class = serializers.Rollaag
     filter_fields = ()
+
+    filter_backends = (DjangoFilterBackend,)

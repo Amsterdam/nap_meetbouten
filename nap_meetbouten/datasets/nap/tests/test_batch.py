@@ -1,3 +1,4 @@
+from datasets.nap import batch as napbatch
 from datasets import nap
 from batch.test import TaskTestCase
 
@@ -6,7 +7,7 @@ NAP = 'diva/nap'
 
 class ImportNapTest(TaskTestCase):
     def task(self):
-        return nap.batch.ImportNapTask(NAP)
+        return napbatch.ImportNapTask(NAP)
 
     def test_import(self):
         self.run_task()

@@ -1,6 +1,7 @@
 from rest_framework import metadata
+from django_filters.rest_framework import DjangoFilterBackend
 
-from datapunt_generic.generic import rest
+from datapunt_api import rest
 from . import serializers, models
 
 
@@ -17,7 +18,7 @@ class ExpansionMetadata(metadata.SimpleMetadata):
         return result
 
 
-class PeilViewSet(rest.AtlasViewSet):
+class PeilViewSet(rest.DatapuntViewSet):
     """
     Peilmerken. Het Amsterdams Peil (meestal afgekort tot NAP)
     is de referentiehoogte waaraan hoogtemetingen in Nederland
@@ -29,4 +30,6 @@ class PeilViewSet(rest.AtlasViewSet):
     queryset = models.Peilmerk.objects.all().order_by('id')
     serializer_detail_class = serializers.PeilmerkDetail
     serializer_class = serializers.Peilmerk
-    filter_fields = ('omschrijving',)
+    filter_fields = ('omschrijving', 'merk', 'jaar', 'hoogte', 'rws_nummer')
+
+    filter_backends = (DjangoFilterBackend,)

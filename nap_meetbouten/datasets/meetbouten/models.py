@@ -1,14 +1,8 @@
-from django.db import models
 from django.conf import settings
-from django.contrib.gis.db import models as geo
-
-from datapunt_generic.generic import mixins
+from django.contrib.gis.db import models
 
 
-# from datasets.nap.models import Peilmerk
-
-
-class Meetbout(mixins.ImportStatusMixin):
+class Meetbout(models.Model):
     STATUS_ACTUEEL = 'A'
     STATUS_VERVALLEN = 'V'
 
@@ -58,17 +52,17 @@ class Meetbout(mixins.ImportStatusMixin):
     blokeenheid = models.SmallIntegerField(null=True)
 
     rollaag = models.ForeignKey(
-        'Rollaag', related_name="meetbouten", null=True)
+        'Rollaag', related_name="meetbouten", null=True,
+        on_delete=models.SET_NULL
+    )
 
-    geometrie = geo.PointField(null=True, srid=28992)
-
-    objects = geo.GeoManager()
+    geometrie = models.PointField(null=True, srid=28992)
 
     def __str__(self):
         return f"{self.id} (omg. {self.adres})"
 
 
-class Referentiepunt(mixins.ImportStatusMixin):
+class Referentiepunt(models.Model):
     id = models.CharField(max_length=10, primary_key=True)
     x_coordinaat = models.DecimalField(
         max_digits=10,
@@ -87,15 +81,13 @@ class Referentiepunt(mixins.ImportStatusMixin):
     )
     datum = models.DateField(null=True)
     locatie = models.CharField(max_length=255, null=True)
-    geometrie = geo.PointField(null=True, srid=28992)
-
-    objects = geo.GeoManager()
+    geometrie = models.PointField(null=True, srid=28992)
 
     def __str__(self):
         return '{}'.format(self.pk)
 
 
-class Meting(mixins.ImportStatusMixin):
+class Meting(models.Model):
     TYPE_NULMETING = 'N'
     TYPE_HERHALINGSMETING = 'H'
     TYPE_TUSSENTIJDS = 'T'
@@ -121,7 +113,9 @@ class Meting(mixins.ImportStatusMixin):
         decimal_places=settings.ZAKKING_DECIMAL_PLACES,
         null=True
     )
-    meetbout = models.ForeignKey(Meetbout, related_name="metingen")
+    meetbout = models.ForeignKey(
+        Meetbout, related_name="metingen", on_delete=models.CASCADE
+    )
 
     refereert_aan = models.ManyToManyField(
         Referentiepunt,
@@ -150,14 +144,15 @@ class Meting(mixins.ImportStatusMixin):
 
 
 class ReferentiepuntMeting(models.Model):
-    referentiepunt = models.ForeignKey(Referentiepunt)
-    meting = models.ForeignKey(Meting)
+    referentiepunt = models.ForeignKey(
+        Referentiepunt, on_delete=models.CASCADE)
+    meting = models.ForeignKey(Meting, on_delete=models.CASCADE)
 
     def __str__(self):
         return "{}-{}".format(self.referentiepunt_id, self.meting_id)
 
 
-class Rollaag(mixins.ImportStatusMixin):
+class Rollaag(models.Model):
     id = models.IntegerField(primary_key=True)
 
     bouwblok = models.CharField(max_length=4, null=True)
@@ -174,9 +169,7 @@ class Rollaag(mixins.ImportStatusMixin):
         null=True
     )
 
-    geometrie = geo.PointField(null=True, srid=28992)
-
-    objects = geo.GeoManager()
+    geometrie = models.PointField(null=True, srid=28992)
 
     def __str__(self):
         return "{}".format(self.id)

@@ -1,15 +1,15 @@
 from rest_framework import serializers
 
-from datapunt_generic.generic import rest
+from datapunt_api.serializers import DisplayField
+from datapunt_api.serializers import HALSerializer
+from datapunt_api.serializers import DataSetSerializerMixin as DS
+
 from . import models
 
 
-class NapMixin(rest.DataSetSerializerMixin):
+class Peilmerk(DS, HALSerializer):
+    _display = DisplayField()
     dataset = 'nap'
-
-
-class Peilmerk(NapMixin, rest.HALSerializer):
-    _display = rest.DisplayField()
 
     class Meta:
         model = models.Peilmerk
@@ -20,9 +20,10 @@ class Peilmerk(NapMixin, rest.HALSerializer):
         )
 
 
-class PeilmerkDetail(NapMixin, rest.HALSerializer):
+class PeilmerkDetail(DS, HALSerializer):
+    dataset = 'nap'
     merk = serializers.CharField(source='get_merk_display')
-    _display = rest.DisplayField()
+    _display = DisplayField()
 
     peilmerkidentificatie = serializers.CharField(source='id')
     hoogte_nap = serializers.CharField(source='hoogte')

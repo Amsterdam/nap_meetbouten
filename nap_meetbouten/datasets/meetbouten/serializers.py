@@ -1,16 +1,17 @@
 from rest_framework import serializers
 
-from datapunt_generic.generic import rest
+from datapunt_api.serializers import DisplayField
+from datapunt_api.serializers import RelatedSummaryField
+from datapunt_api.serializers import HALSerializer
+from datapunt_api.serializers import DataSetSerializerMixin as DS
+
 from . import models
 
 
-class MeetboutenMixin(rest.DataSetSerializerMixin):
-    dataset = 'meetbouten'
-
-
 # list serializers
-class Meetbout(MeetboutenMixin, rest.HALSerializer):
-    _display = rest.DisplayField()
+class Meetbout(DS, HALSerializer):
+    dataset = 'meetbouten'
+    _display = DisplayField()
 
     class Meta:
         model = models.Meetbout
@@ -21,8 +22,9 @@ class Meetbout(MeetboutenMixin, rest.HALSerializer):
         )
 
 
-class Meting(MeetboutenMixin, rest.HALSerializer):
-    _display = rest.DisplayField()
+class Meting(DS, HALSerializer):
+    dataset = 'meetbouten'
+    _display = DisplayField()
 
     class Meta:
         model = models.Meting
@@ -38,8 +40,9 @@ class Meting(MeetboutenMixin, rest.HALSerializer):
         )
 
 
-class Referentiepunt(MeetboutenMixin, rest.HALSerializer):
-    _display = rest.DisplayField()
+class Referentiepunt(DS, HALSerializer):
+    dataset = 'meetbouten'
+    _display = DisplayField()
 
     class Meta:
         model = models.Referentiepunt
@@ -50,8 +53,9 @@ class Referentiepunt(MeetboutenMixin, rest.HALSerializer):
         )
 
 
-class Rollaag(MeetboutenMixin, rest.HALSerializer):
-    _display = rest.DisplayField()
+class Rollaag(DS, HALSerializer):
+    dataset = 'meetbouten'
+    _display = DisplayField()
 
     class Meta:
         model = models.Rollaag
@@ -63,12 +67,13 @@ class Rollaag(MeetboutenMixin, rest.HALSerializer):
 
 
 # detail serializers
-class MeetboutDetail(MeetboutenMixin, rest.HALSerializer):
+class MeetboutDetail(DS, HALSerializer):
+    dataset = 'meetbouten'
     status = serializers.CharField(source='get_status_display')
     bouwblok_link = serializers.SerializerMethodField()
     stadsdeel_link = serializers.SerializerMethodField()
-    metingen = rest.RelatedSummaryField()
-    _display = rest.DisplayField()
+    metingen = RelatedSummaryField()
+    _display = DisplayField()
 
     meetboutidentificatie = serializers.CharField(source='id')
     bouwblok = serializers.CharField(source='bouwbloknummer')
@@ -119,9 +124,10 @@ class MeetboutDetail(MeetboutenMixin, rest.HALSerializer):
         return link
 
 
-class ReferentiepuntDetail(MeetboutenMixin, rest.HALSerializer):
-    metingen = rest.RelatedSummaryField()
-    _display = rest.DisplayField()
+class ReferentiepuntDetail(DS, HALSerializer):
+    dataset = 'meetbouten'
+    metingen = RelatedSummaryField()
+    _display = DisplayField()
 
     referentiepuntidentificatie = serializers.CharField(source='id')
 
@@ -146,15 +152,16 @@ class ReferentiepuntDetail(MeetboutenMixin, rest.HALSerializer):
         )
 
 
-class MetingDetail(MeetboutenMixin, rest.HALSerializer):
+class MetingDetail(DS, HALSerializer):
+    dataset = 'meetbouten'
     type = serializers.CharField(source='get_type_display')
-    # refereert_aan = rest.RelatedSummaryField()
-    _display = rest.DisplayField()
+    # refereert_aan = RelatedSummaryField()
+    _display = DisplayField()
 
     metingidentificatie = serializers.CharField(source='id')
     aantal_dagen = serializers.CharField(source='dagen_vorige_meting')
     # referentiepunt = serializers.CharField(source='refereert_aan')
-    referentiepunt = rest.RelatedSummaryField(source='refereert_aan')
+    referentiepunt = RelatedSummaryField(source='refereert_aan')
     onderneming = serializers.CharField(source='ploeg')
 
     class Meta:
@@ -178,10 +185,11 @@ class MetingDetail(MeetboutenMixin, rest.HALSerializer):
         )
 
 
-class RollaagDetail(MeetboutenMixin, rest.HALSerializer):
+class RollaagDetail(DS, HALSerializer):
+    dataset = 'meetbouten'
     afbeelding = serializers.SerializerMethodField()
-    meetbouten = rest.RelatedSummaryField()
-    _display = rest.DisplayField()
+    meetbouten = RelatedSummaryField()
+    _display = DisplayField()
 
     rollaagidentificatie = serializers.CharField(source='id')
 

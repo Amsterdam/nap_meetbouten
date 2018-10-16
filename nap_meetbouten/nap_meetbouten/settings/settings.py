@@ -1,7 +1,6 @@
 import os
 import sys
 
-from nap_meetbouten.settings.settings_common import DEBUG
 from nap_meetbouten.settings.settings_common import BASE_DIR
 from nap_meetbouten.settings.settings_common import * # noqa F403
 
@@ -18,6 +17,16 @@ from .checks import check_database  # noqa
 
 NO_INTEGRATION_TEST = os.getenv('NO_INTEGRATION_TEST', True)
 NO_INTEGATION_TEST = True
+
+
+# SECURITY WARNING: keep the secret key used in production secret!
+insecure_key = 'insecure'
+SECRET_KEY = os.getenv('SECRET_KEY', insecure_key)
+
+DEBUG = SECRET_KEY == insecure_key
+
+ALLOWED_HOSTS = ['*']
+
 
 # Application definition
 PARTIAL_IMPORT = dict(
@@ -41,7 +50,7 @@ DATABASE_OPTIONS = {
         'USER': os.getenv('DATABASE_USER', 'nap'),
         'PASSWORD': os.getenv('DATABASE_PASSWORD', 'insecure'),
         'HOST': 'database',
-        'PORT': '5432'
+        'PORT': '5401'
     },
     LocationKey.local: {
         'ENGINE': 'django.contrib.gis.db.backends.postgis',
@@ -49,7 +58,7 @@ DATABASE_OPTIONS = {
         'USER': os.getenv('DATABASE_USER', 'nap'),
         'PASSWORD': os.getenv('DATABASE_PASSWORD', 'insecure'),
         'HOST': get_docker_host(),
-        'PORT': '5434'
+        'PORT': '5401'
     },
     LocationKey.override: {
         'ENGINE': 'django.contrib.gis.db.backends.postgis',
@@ -91,34 +100,22 @@ BATCH_SETTINGS = dict(
     batch_size=500
 )
 
-
-ALLOWED_HOSTS = [
-    '127.0.0.1',
-    'localhost',
-    '.localdomain',
-    '.data.amsterdam.nl',
-    'nap-api.service.consul',
-    '.amsterdam.nl',
-    '.service.consul',
-]
+ALLOWED_HOSTS = ['*']
 
 REST_FRAMEWORK = dict(
     PAGE_SIZE=25,
-    MAX_PAGINATE_BY=100,
+    MAX_PAGINATE_BY=10000,
 
     UNAUTHENTICATED_USER={},
     UNAUTHENTICATED_TOKEN={},
 
-    DEFAULT_PAGINATION_CLASS='drf_hal_json.pagination.HalPageNumberPagination',
-    DEFAULT_PARSER_CLASSES=(
-        'drf_hal_json.parsers.JsonHalParser',
-    ),
+    DEFAULT_PAGINATION_CLASS=("datapunt_api.pagination.HALPagination",),
     DEFAULT_RENDERER_CLASSES=(
         'rest_framework.renderers.JSONRenderer',
         'rest_framework.renderers.BrowsableAPIRenderer'
     ),
     DEFAULT_FILTER_BACKENDS=(
-        'django_filters.rest_framework.DjangoFilterBackend',
+        "django_filters.rest_framework.DjangoFilterBackend"
     ),
 )
 

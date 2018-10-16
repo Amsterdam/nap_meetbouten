@@ -35,7 +35,8 @@ class ImportNapTask(batch.BasicTask):
         source = os.path.join(self.path, "NAP_PEILMERK.dat")
         self.mdate = datetime.date.fromtimestamp(os.path.getmtime(source))
         with open(source, encoding='cp1252') as f:
-            rows = csv.reader(f, delimiter='|', quotechar='$', doublequote=True)
+            rows = csv.reader(
+                f, delimiter='|', quotechar='$', doublequote=True)
             self.peilmerken = [result for result in
                                (self.process_row(row) for row in rows) if
                                result]

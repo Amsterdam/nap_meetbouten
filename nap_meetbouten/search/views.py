@@ -1,12 +1,10 @@
 import logging
-from collections import OrderedDict
-
 from django.conf import settings
-
 from elasticsearch_dsl import Search, Q
 
-from datapunt_generic.generic import rest
-from datapunt_generic.generic import searchviews
+from . import searchviews
+from datapunt_api import rest
+
 
 log = logging.getLogger('search')
 
@@ -66,11 +64,10 @@ def search_meetbout_query(view, client, query):
     """
     return (
         Search()
-            .using(client)
-            .index(MEETBOUTEN)
-            .query(
-            mulitimatch_meetbout_Q(query)
-        ).sort(*add_sorting())
+        .using(client)
+        .index(MEETBOUTEN)
+        .query(mulitimatch_meetbout_Q(query))
+        .sort(*add_sorting())
     )
 
 
@@ -100,17 +97,19 @@ def autocomplete_query(client, query):
 
     return (
         Search()
-            .using(client)
-            .index(MEETBOUTEN)
-            .query(match_Q(query))
-            .highlight(*completions, pre_tags=[''], post_tags=[''])
+        .using(client)
+        .index(MEETBOUTEN)
+        .query(match_Q(query))
+        .highlight(*completions, pre_tags=[''], post_tags=[''])
     )
 
 
 def old_autocomplete_query(client, query: int):
     """
-    replicated the current behavior in atlas where we only autocompleet meetboutnummers and not on underlying data.
-    :return: Ordered set of responses (on meetboutnummer) closest to the requested query
+    replicated the current behavior in atlas where we only autocompleet
+    meetboutnummers and not on underlying data.
+    :return: Ordered set of responses (on meetboutnummer)
+    closest to the requested query
     """
     return (
         Search()

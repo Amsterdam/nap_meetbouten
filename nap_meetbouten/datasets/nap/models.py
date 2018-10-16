@@ -1,10 +1,7 @@
-from django.db import models
-from django.contrib.gis.db import models as geo
-
-from datapunt_generic.generic import mixins
+from django.contrib.gis.db import models
 
 
-class Peilmerk(mixins.ImportStatusMixin):
+class Peilmerk(models.Model):
     MERK_0 = 0
     MERK_1 = 1
     MERK_2 = 2
@@ -48,10 +45,8 @@ class Peilmerk(mixins.ImportStatusMixin):
     windrichting = models.CharField(max_length=2, null=True)
     muurvlak_x = models.IntegerField(null=True)
     muurvlak_y = models.IntegerField(null=True)
-    geometrie = geo.PointField(null=True, srid=28992)
+    geometrie = models.PointField(null=True, srid=28992)
     rws_nummer = models.CharField(max_length=10, null=True)
-
-    objects = geo.GeoManager()
 
     def __str__(self):
         return "{} {}".format(self.id, self.omschrijving)

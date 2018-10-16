@@ -12,11 +12,11 @@ services:
       - "~/.ssh/datapunt.key:/root/.ssh/datapunt.key"
 
   elasticsearch:
-    image: amsterdam/elasticsearch5
+    image: amsterdam/elasticsearch6
     command: elasticsearch -Ehttp.host=0.0.0.0 -Etransport.host=127.0.0.1
     ports:
-      - "9201:9200"
-      - "9301:9300"
+      - "9200:9200"
+      - "9300:9300"
 
   nap:
     build: .
