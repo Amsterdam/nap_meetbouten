@@ -9,7 +9,7 @@ dc() {
 	docker-compose -p nap -f ${DIR}/docker-compose.yml $*
 }
 
-trap 'dc kill ; dc rm -f' EXIT
+trap 'dc kill ; dc down ; dc rm -f' EXIT
 
 rm -rf ${DIR}/backups
 mkdir -p ${DIR}/backups
@@ -29,5 +29,5 @@ dc run --rm importer
 echo "Running backups"
 dc exec -T database backup-db.sh nap
 dc exec -T elasticsearch backup-indices.sh meetbouten meetbouten
-
+dc down -v
 echo "Done"
