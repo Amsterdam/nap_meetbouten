@@ -14,7 +14,7 @@ _details = {
 
 
 def _get_url(request, hit):
-    doc_type, id = hit.meta.doc_type, hit.meta.id
+    doc_type, id = hit.subtype, hit.meta.id
 
     if doc_type in _details:
         return rest.get_links(
