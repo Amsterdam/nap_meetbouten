@@ -1,6 +1,9 @@
 import os
 import sys
 
+import sentry_sdk
+from sentry_sdk.integrations.django import DjangoIntegration
+
 from nap_meetbouten.settings.settings_common import BASE_DIR
 from nap_meetbouten.settings.settings_common import * # noqa F403
 
@@ -214,3 +217,10 @@ JWKS_TEST_KEY = """
 DATAPUNT_AUTHZ = {
     'JWKS': os.getenv('PUB_JWKS', JWKS_TEST_KEY)
 }
+
+SENTRY_DSN = os.getenv('SENTRY_DSN')
+if SENTRY_DSN:
+    sentry_sdk.init(
+        dsn=SENTRY_DSN,
+        integrations=[DjangoIntegration()]
+    )
