@@ -55,7 +55,7 @@ class TypeaheadViewSet(viewsets.ViewSet):
 
         query = request.query_params['q'].strip()
 
-        if len(query) < 4 or not query.isdigit():
+        if len(query) < 5 or not query.isdigit():
             return Response([])
 
         response = self.get_autocomplete_response(self.client, int(query))
