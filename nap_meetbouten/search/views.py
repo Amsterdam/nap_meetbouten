@@ -166,7 +166,7 @@ def get_autocomplete_response(client, query):
 
     content = [{
             '_display': '{v}'.format(v=hit['_display']),
-            'uri': 'meetbouten/meetbout/{v}'.format(v=hit['meetboutnummer'])
+            'uri': 'meetbouten/meetbout/{v}/'.format(v=hit['meetboutnummer'])
         } for hit in result.hits]
 
     return [{
