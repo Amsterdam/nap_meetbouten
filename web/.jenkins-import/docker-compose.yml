@@ -1,7 +1,7 @@
 version: '3.0'
 services:
   database:
-    image: build.datapunt.amsterdam.nl:5000/atlas/postgres
+    image: amsterdam/postgres11
     environment:
       POSTGRES_PASSWORD: insecure
       POSTGRES_USER: nap
@@ -17,7 +17,7 @@ services:
 
 
   importer:
-    image: build.datapunt.amsterdam.nl:5000/datapunt/nap:${ENVIRONMENT}
+    image: repo.data.amsterdam.nl/datapunt/nap:${ENVIRONMENT}
     user: root
     links:
       - elasticsearch
@@ -38,7 +38,7 @@ services:
               && python manage.py run_import"
 
   db-backup:
-    image: build.datapunt.amsterdam.nl:5000/atlas/postgres
+    image: amsterdam/postgres11
     volumes:
       - ./backups:/tmp/backups
     command: >
