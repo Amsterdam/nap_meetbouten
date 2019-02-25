@@ -18,7 +18,7 @@ services:
     command: elasticsearch -Ehttp.host=0.0.0.0 -Etransport.host=127.0.0.1
 
   importer:
-    image: build.datapunt.amsterdam.nl:5000/datapunt/nap:${ENVIRONMENT}
+    image: repo.data.amsterdam.nl/datapunt/nap:${ENVIRONMENT}
     links:
       - database
       - elasticsearch
