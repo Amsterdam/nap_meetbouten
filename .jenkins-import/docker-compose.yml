@@ -1,0 +1,34 @@
+version: "3.0"
+services:
+  database:
+    image: amsterdam/postgres
+    environment:
+      POSTGRES_PASSWORD: insecure
+      POSTGRES_USER: nap
+    extra_hosts:
+      admin.datapunt.amsterdam.nl: 10.99.157.24
+    volumes:
+      - ./backups:/tmp/backups
+
+  elasticsearch:
+    image: amsterdam/elasticsearch5
+    volumes:
+      - ./backups/elasticsearch:/tmp/backups
+    user: root
+    command: elasticsearch -Ehttp.host=0.0.0.0 -Etransport.host=127.0.0.1
+
+  importer:
+    image: build.datapunt.amsterdam.nl:5000/datapunt/nap:${ENVIRONMENT}
+    links:
+      - database
+      - elasticsearch
+    user: root
+    environment:
+      DATABASE_NAME: nap
+      DATABASE_USER: nap
+      DATABASE_PASSWORD: insecure
+      BAG_OBJECTSTORE_PASSWORD:
+      METADATA_URL:
+      DATAPUNT_API_URL:
+    command: >
+      bash -c "/app/docker-import-db.sh"

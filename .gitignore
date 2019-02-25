@@ -9,3 +9,4 @@ reports
 web/static/*
 .env
 .jenkins/backups
+/.jenkins-import/backups/
