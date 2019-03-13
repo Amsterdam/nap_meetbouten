@@ -5,16 +5,18 @@ services:
     environment:
       POSTGRES_PASSWORD: insecure
       POSTGRES_USER: nap
-    extra_hosts:
-      admin.datapunt.amsterdam.nl: 10.99.157.24
     volumes:
       - ./backups:/tmp/backups
 
   elasticsearch:
-    image: amsterdam/elasticsearch5
+    image: amsterdam/elasticsearch6
     volumes:
       - ./backups/elasticsearch:/tmp/backups
     user: root
+    environment:
+      HTTP_PROXY:
+      HTTPS_PROXY:
+      NO_PROXY:
     command: elasticsearch -Ehttp.host=0.0.0.0 -Etransport.host=127.0.0.1
 
   importer:
@@ -30,5 +32,8 @@ services:
       BAG_OBJECTSTORE_PASSWORD:
       METADATA_URL:
       DATAPUNT_API_URL:
+      HTTP_PROXY:
+      HTTPS_PROXY:
+      NO_PROXY:
     command: >
       bash -c "/app/docker-import-db.sh"
