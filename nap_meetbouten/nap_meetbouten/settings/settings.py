@@ -169,6 +169,9 @@ SWAGGER_SETTINGS = {
     'doc_expansion': 'list',
 }
 
+FILE_URL_DOMAIN = os.getenv('FILE_URL_DOMAIN', "https://files.data.amsterdam.nl")
+FILE_URL_PATH = os.getenv('FILE_URL_PATH', "/rollagen")
+
 OBJECTSTORE = {
     'auth_version': '2.0',
     'authurl': 'https://identity.stack.cloudvps.com/v2.0',
