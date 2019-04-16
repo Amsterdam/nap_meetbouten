@@ -50,6 +50,9 @@ DATAPUNT_API_URL = os.getenv(
     # note the ending /
     'DATAPUNT_API_URL', 'https://api.data.amsterdam.nl/')
 
+FILE_URL_DOMAIN = os.getenv('FILE_URL_DOMAIN', "https://files.data.amsterdam.nl")
+FILE_URL_PATH = os.getenv('FILE_URL_PATH', "/rollagen")
+
 # Application definition
 
 INSTALLED_APPS = (

@@ -1,3 +1,4 @@
+from django.conf import settings
 from rest_framework import serializers
 
 from datapunt_api.serializers import DisplayField
@@ -212,7 +213,6 @@ class RollaagDetail(DS, HALSerializer):
 
     def get_afbeelding(self, obj):
         if obj.bouwblok:
-            return 'https://data.amsterdam.nl/rollagen/{}.jpg'.format(
-                obj.bouwblok.lower())
+            return f'{settings.FILE_URL_DOMAIN}{settings.FILE_URL_PATH}/{obj.bouwblok.lower()}.jpg'
 
         return None
