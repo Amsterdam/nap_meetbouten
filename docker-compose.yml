@@ -33,7 +33,7 @@ services:
       DATABASE_NAME: nap
       DATABASE_USER: nap
       DATABASE_PASSWORD: insecure
-      BAG_OBJECTSTORE_PASSWORD: insecure
+      GOB_OBJECTSTORE_PASSWORD: insecure
       UWSGI_HTTP: ":8000"
       UWSGI_MODULE: "nap_meetbouten.wsgi:application"
       UWSGI_MASTER: 1

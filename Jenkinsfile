@@ -24,7 +24,7 @@ node {
 
     stage('Test') {
         tryStep "test", {
-            withCredentials([[$class: 'StringBinding', credentialsId: 'BAG_OBJECTSTORE_PASSWORD', variable: 'BAG_OBJECTSTORE_PASSWORD']]) {
+            withCredentials([[$class: 'StringBinding', credentialsId: 'GOB_OBJECTSTORE_PASSWORD', variable: 'GOB_OBJECTSTORE_PASSWORD']]) {
                 sh "docker-compose -p nap -f .jenkins-test/docker-compose.yml build && " +
                    "docker-compose -p nap -f .jenkins-test/docker-compose.yml run -u root --rm tests"
         }

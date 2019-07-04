@@ -175,13 +175,12 @@ FILE_URL_PATH = os.getenv('FILE_URL_PATH', "/rollagen")
 OBJECTSTORE = {
     'auth_version': '2.0',
     'authurl': 'https://identity.stack.cloudvps.com/v2.0',
-    'user': os.getenv('OBJECTSTORE_USER', 'bag_brk'),
-    'key': os.getenv('BAG_OBJECTSTORE_PASSWORD', 'insecure'),
-    'tenant_name': 'BGE000081_BAG',
+    'user': 'GOB_user',
+    'key': os.getenv('GOB_OBJECTSTORE_PASSWORD', 'insecure'),
+    'tenant_name': 'BGE000081_GOB',
     'os_options': {
-        'tenant_id': '4f2f4b6342444c84b3580584587cfd18',
+        'tenant_id': '2ede4a78773e453db73f52500ef748e5',
         'region_name': 'NL',
-        'endpoint_type': 'internalURL'
     }
 }
 

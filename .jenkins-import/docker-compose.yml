@@ -25,7 +25,7 @@ services:
       DATABASE_NAME: nap
       DATABASE_USER: nap
       DATABASE_PASSWORD: insecure
-      BAG_OBJECTSTORE_PASSWORD:
+      GOB_OBJECTSTORE_PASSWORD:
       METADATA_URL:
       DATAPUNT_API_URL:
     command: >
