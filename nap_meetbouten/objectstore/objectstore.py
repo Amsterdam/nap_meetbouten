@@ -30,8 +30,6 @@ from pathlib import Path
 
 from swiftclient.client import Connection
 
-from nap_meetbouten.nap_meetbouten.settings.settings import OBJECTSTORE
-
 log = logging.getLogger(__name__)
 
 logging.getLogger("requests").setLevel(logging.WARNING)
@@ -40,11 +38,23 @@ logging.getLogger("swiftclient").setLevel(logging.WARNING)
 
 DIVA_DIR = '/app/data'
 
+os_connect = {
+    'auth_version': '2.0',
+    'authurl': 'https://identity.stack.cloudvps.com/v2.0',
+    'user': 'GOB_user',
+    'key': os.getenv('GOB_OBJECTSTORE_PASSWORD', 'insecure'),
+    'tenant_name': 'BGE000081_GOB',
+    'os_options': {
+        'tenant_id': '2ede4a78773e453db73f52500ef748e5',
+        'region_name': 'NL',
+    }
+}
+
 
 @lru_cache(maxsize=None)
 def get_conn():
     assert os.getenv('GOB_OBJECTSTORE_PASSWORD')
-    return Connection(**OBJECTSTORE)
+    return Connection(**os_connect)
 
 
 def file_exists(target):
