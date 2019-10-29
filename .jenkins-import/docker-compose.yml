@@ -26,6 +26,7 @@ services:
       DATABASE_USER: nap
       DATABASE_PASSWORD: insecure
       GOB_OBJECTSTORE_PASSWORD:
+      GOB_OBJECTSTORE_ENV:
       METADATA_URL:
       DATAPUNT_API_URL:
     command: >

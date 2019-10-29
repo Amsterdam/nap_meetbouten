@@ -27,7 +27,6 @@ from functools import lru_cache
 from dateutil import parser
 from pathlib import Path
 
-
 from swiftclient.client import Connection
 
 log = logging.getLogger(__name__)
@@ -38,6 +37,7 @@ logging.getLogger("swiftclient").setLevel(logging.WARNING)
 
 DIVA_DIR = '/app/data'
 
+environment = os.getenv('GOB_OBJECTSTORE_ENV', 'productie')
 os_connect = {
     'auth_version': '2.0',
     'authurl': 'https://identity.stack.cloudvps.com/v2.0',
@@ -161,6 +161,6 @@ if __name__ == "__main__":
     logging.basicConfig(level=logging.DEBUG)
     # Download files from objectstore
     log.info("Start downloading files from objectstore")
-    fetch_gob_files('productie', 'meetbouten')
-    fetch_gob_files('productie', 'nap')
+    fetch_gob_files(environment, 'meetbouten')
+    fetch_gob_files(environment, 'nap')
     log.info("Finished downloading files from objectstore")
