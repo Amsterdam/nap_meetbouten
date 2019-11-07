@@ -28,7 +28,7 @@ class Migration(migrations.Migration):
                 ('beveiligd', models.NullBooleanField(default=None)),
                 ('stadsdeel', models.CharField(max_length=50, null=True)),
                 ('adres', models.CharField(max_length=255, null=True)),
-                ('locatie', models.CharField(max_length=50, null=True)),
+                ('locatie', models.CharField(max_length=255, null=True)),
                 ('zakkingssnelheid', models.DecimalField(decimal_places=13, max_digits=20, null=True)),
                 ('status', models.CharField(choices=[('A', 'actueel'), ('V', 'vervallen')], max_length=1, null=True)),
                 ('bouwbloknummer', models.CharField(max_length=4, null=True)),

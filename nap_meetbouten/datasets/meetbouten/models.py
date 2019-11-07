@@ -41,7 +41,7 @@ class Meetbout(models.Model):
     beveiligd = models.NullBooleanField(default=None)
     stadsdeel = models.CharField(max_length=50, null=True)
     adres = models.CharField(max_length=255, null=True)
-    locatie = models.CharField(max_length=50, null=True)
+    locatie = models.CharField(max_length=255, null=True)
     zakkingssnelheid = models.DecimalField(
         max_digits=settings.ZAKKING_MAX_DIGITS,
         decimal_places=settings.ZAKKING_DECIMAL_PLACES,
