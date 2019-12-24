@@ -25,11 +25,11 @@ def _get_url(request, hit):
 MEETBOUTEN = settings.ELASTIC_INDICES['MEETBOUTEN']
 
 
-def mulitimatch_meetbout_Q(query):
+def multimatch_meetbout_Q(query):
     """
     Main 'One size fits all' search query used
     """
-    log.debug('%20s %s', mulitimatch_meetbout_Q.__name__, query)
+    log.debug('%20s %s', multimatch_meetbout_Q.__name__, query)
 
     return Q(
         "multi_match",
@@ -47,16 +47,6 @@ def mulitimatch_meetbout_Q(query):
     )
 
 
-def add_sorting():
-    """
-    Give human understandable sorting to the output
-    """
-    return (
-        {"meetboutnummer": {
-            "order": "asc", "missing": "_first", "unmapped_type": "long"}},
-    )
-
-
 def search_meetbout_query(view, client, query):
     """
     Execute search on adresses
@@ -65,8 +55,8 @@ def search_meetbout_query(view, client, query):
         Search()
         .using(client)
         .index(MEETBOUTEN)
-        .query(mulitimatch_meetbout_Q(query))
-        .sort(*add_sorting())
+        .query(multimatch_meetbout_Q(query))
+        .sort('_display')
     )
 
 
