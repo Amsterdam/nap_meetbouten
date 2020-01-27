@@ -127,7 +127,7 @@ class SearchMeetboutViewSet(searchviews.SearchViewSet):
 
     """
 
-    url_name = 'search/meetbouten'
+    url_name = 'search-list'
     search_query = search_meetbout_query
 
     def get_url(self, request, hit):
