@@ -7,8 +7,6 @@ import datasets.nap.batch
 
 from batch import batch
 
-from unittest import skip
-
 from datasets.meetbouten.tests import factories as mb_factories
 
 # from datasets.nap.tests import factories as nap_factories
@@ -87,9 +85,64 @@ class SearchMeetbout(APITestCase):
         response = self.client.get(
             "/meetbouten/search/", dict(q="1"))
         self.assertEqual(response.status_code, 200)
-        self.assertIn('results', response.data)
-        self.assertIn('count', response.data)
+        self.assertEqual(len(response.data['results']), 3)
         self.assertEqual(response.data['count'], 3)
+
+    def test_search_pagination_first_page(self):
+        response = self.client.get(
+            "/meetbouten/search/", dict(q="1", page_size="1"))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.data['results']), 1)
+        self.assertEqual(response.data['count'], 3)
+        self.assertEqual(response.data['_links']['self'], dict(
+            href="http://testserver/meetbouten/search/?q=1&page_size=1"
+        ))
+        self.assertEqual(response.data['_links']['next'], dict(
+            href="http://testserver/meetbouten/search/?q=1&page_size=1&page=2"
+        ))
+        self.assertEqual(response.data['_links']['previous'], None)
+
+    def test_search_pagination_middle_page(self):
+        response = self.client.get(
+            "/meetbouten/search/", dict(q="1", page_size="1", page=2))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.data['results']), 1)
+        self.assertEqual(response.data['count'], 3)
+        self.assertEqual(response.data['_links']['self'], dict(
+            href="http://testserver/meetbouten/search/?q=1&page_size=1&page=2"
+        ))
+        self.assertEqual(response.data['_links']['next'], dict(
+            href="http://testserver/meetbouten/search/?q=1&page_size=1&page=3"
+        ))
+        self.assertEqual(response.data['_links']['previous'], dict(
+            href="http://testserver/meetbouten/search/?q=1&page_size=1"
+        ))
+
+    def test_search_pagination_last_page(self):
+        response = self.client.get(
+            "/meetbouten/search/", dict(q="1", page_size="1", page=3))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.data['results']), 1)
+        self.assertEqual(response.data['count'], 3)
+        self.assertEqual(response.data['_links']['self'], dict(
+            href="http://testserver/meetbouten/search/?q=1&page_size=1&page=3"
+        ))
+        self.assertEqual(response.data['_links']['next'], None)
+        self.assertEqual(response.data['_links']['previous'], dict(
+            href="http://testserver/meetbouten/search/?q=1&page_size=1&page=2"
+        ))
+
+    def test_search_links_no_pagination(self):
+        response = self.client.get(
+            "/meetbouten/search/", dict(q="1"))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.data['results']), 3)
+        self.assertEqual(response.data['count'], 3)
+        self.assertEqual(response.data['_links']['self'], dict(
+            href="http://testserver/meetbouten/search/?q=1"
+        ))
+        self.assertEqual(response.data['_links']['next'], None)
+        self.assertEqual(response.data['_links']['previous'], None)
 
     def test_typeahead_query_boutnummer(self):
         response = self.client.get(

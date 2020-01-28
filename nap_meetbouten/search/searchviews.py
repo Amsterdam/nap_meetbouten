@@ -125,8 +125,8 @@ class SearchViewSet(viewsets.ViewSet):
     """
 
     metadata_class = QueryMetadata
-    page_size = 100
     search_query = default_search_query
+    page_size = 100
     url_name = 'search-list'
 
     def _set_followup_url(self, request, result, end,
@@ -135,24 +135,35 @@ class SearchViewSet(viewsets.ViewSet):
         Add pageing links for result set to response object
         """
 
-        followup_url = reverse(self.url_name, request=request)
+        followup_url = "{}?q={}".format(
+            reverse(self.url_name, request=request),
+            query)
+        if 'page_size' in request.query_params:
+            followup_url = "{}&page_size={}".format(
+                followup_url,
+                int(request.query_params['page_size']))
 
+        prev_page = None
         if page == 1:
-            prev_page = None
+            pass
         elif page == 2:
-            prev_page = "{}?q={}".format(followup_url, query)
+            prev_page = followup_url
         else:
-            prev_page = "{}?q={}&page={}".format(followup_url, query, page - 1)
+            prev_page = "{}&page={}".format(followup_url, page - 1)
 
         total = result.hits.total
 
         if end >= total:
             next_page = None
         else:
-            next_page = "{}?q={}&page={}".format(followup_url, query, page + 1)
+            next_page = "{}&page={}".format(followup_url, page + 1)
+
+        self_url = followup_url
+        if page != 1:
+            self_url = "{}&page={}".format(self_url, page)
 
         response['_links'] = OrderedDict([
-            ('self', dict(href=followup_url)),
+            ('self', dict(href=self_url)),
         ])
 
         if next_page:
@@ -164,6 +175,7 @@ class SearchViewSet(viewsets.ViewSet):
             response['_links']['previous'] = dict(href=prev_page)
         else:
             response['_links']['previous'] = None
+        return response
 
     def list(self, request, *args, **kwargs):
 
@@ -174,8 +186,12 @@ class SearchViewSet(viewsets.ViewSet):
         if 'page' in request.query_params:
             page = int(request.query_params['page'])
 
-        start = ((page - 1) * self.page_size)
-        end = (page * self.page_size)
+        page_size = self.page_size
+        if 'page_size' in request.query_params:
+            page_size = int(request.query_params['page_size'])
+
+        start = ((page - 1) * page_size)
+        end = (page * page_size)
 
         query = request.query_params['q']
         query = query.lower()
@@ -197,8 +213,13 @@ class SearchViewSet(viewsets.ViewSet):
 
         response = OrderedDict()
 
-        # self._set_followup_url(request, result, end, response, query, page)
-        # import pdb; pdb.set_trace()
+        response = self._set_followup_url(
+            request=request,
+            result=result,
+            end=end,
+            response=response,
+            query=query,
+            page=page)
 
         response['count'] = result.hits.total
 
