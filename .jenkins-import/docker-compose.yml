@@ -16,7 +16,7 @@ services:
     command: elasticsearch -Ehttp.host=0.0.0.0 -Etransport.host=127.0.0.1
 
   importer:
-    image: docker-registry.data.amsterdam.nl/datapunt/nap:${ENVIRONMENT}
+    image: ${DOCKER_REGISTRY_HOST}/datapunt/nap:${ENVIRONMENT}
     links:
       - database
       - elasticsearch
