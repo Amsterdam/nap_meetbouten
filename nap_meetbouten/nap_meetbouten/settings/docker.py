@@ -67,7 +67,7 @@ LOGGING = {
 
 # DEBUG=False
 STATIC_ROOT = '/static/'
-STATIC_URL = '/static/'
+STATIC_URL = '/nap/static/'
 
 DIVA_DIR = '/app/data/'
 

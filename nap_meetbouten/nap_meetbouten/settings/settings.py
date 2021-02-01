@@ -38,7 +38,7 @@ PARTIAL_IMPORT = dict(
 )
 
 STATIC_ROOT = 'static/'
-STATIC_URL = '/static/'
+STATIC_URL = '/nap/static/'
 
 ROOT_URLCONF = 'nap_meetbouten.urls'
 
