@@ -5,12 +5,12 @@ coreapi==2.3.3
 coreschema==0.0.4
 debtcollector==1.20.0
 defusedxml==0.5.0
-Django==2.2.13
+Django==2.2.18
 django-debug-toolbar==1.11
 django-extensions==2.1.4
 django-filter==2.0.0
 django-rest-swagger==2.2.0
-djangorestframework==3.9.1
+djangorestframework==3.11.2
 djangorestframework-csv==2.1.0
 djangorestframework-gis==0.14
 djangorestframework-xml==1.4.0
@@ -25,7 +25,7 @@ idna==2.8
 ipaddress==1.0.22
 iso8601==0.1.12
 itypes==1.1.0
-Jinja2==2.10.1
+Jinja2==2.11.3
 keystoneauth1==3.11.2
 MarkupSafe==1.1.0
 monotonic==1.5
@@ -45,7 +45,7 @@ python-dateutil==2.7.5
 python-keystoneclient==3.18.0
 python-swiftclient==3.6.0
 pytz==2018.9
-PyYAML==4.2b4
+PyYAML==5.4
 requests==2.21.0
 rfc3986==1.2.0
 sentry-sdk==0.6.6
