@@ -61,9 +61,9 @@ meetbouten.register(r'referentiepunt', m_views.ReferentiepuntViewSet)
 meetbouten.register(r'rollaag', m_views.RollaagViewSet)
 
 meetbouten.register(r'typeahead', searchviews.TypeaheadViewSet,
-                    base_name='typeahead')
+                    basename='typeahead')
 meetbouten.register(r'search', searchviews.SearchMeetboutViewSet,
-                    base_name='search')
+                    basename='search')
 
 nap = NAPRouter()
 nap.register(r'peilmerk', PeilViewSet)
