@@ -27,7 +27,7 @@ iso8601==0.1.12
 itypes==1.1.0
 Jinja2==2.11.3
 keystoneauth1==3.11.2
-MarkupSafe==1.1.0
+MarkupSafe==2.1.1
 monotonic==1.5
 msgpack==0.6.0
 netaddr==0.7.19
@@ -46,7 +46,7 @@ python-keystoneclient==3.18.0
 python-swiftclient==3.6.0
 pytz==2018.9
 PyYAML==5.4
-requests==2.25.0
+requests==2.28.2
 rfc3986==1.2.0
 sentry-sdk==1.14.0
 simplejson==3.16.0
@@ -56,6 +56,6 @@ stevedore==1.30.0
 text-unidecode==1.2
 unicodecsv==0.14.1
 uritemplate==3.0.0
-urllib3==1.26.5
+urllib3==1.26.15
 Werkzeug==2.2.3
 wrapt==1.10.11
